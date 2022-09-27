@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="book-recommendations.book-recommendations.main~1" target="17" />
+      <module name="book-recommendations.book-recommendations.test~1" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
