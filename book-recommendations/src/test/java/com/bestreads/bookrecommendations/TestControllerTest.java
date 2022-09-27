@@ -23,6 +23,7 @@ class TestControllerTest {
     @Test
     @WithMockUser
     void test() throws Exception {
-        mockMvc.perform(get("/test")).andExpect(content().string("Hello"));
+        mockMvc.perform(get("/test"))
+            .andExpect(content().string("Hello"));
     }
 }
