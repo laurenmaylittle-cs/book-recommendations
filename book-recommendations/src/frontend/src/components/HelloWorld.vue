@@ -9,13 +9,6 @@ export default {
     return {
       msg: ''
     }
-  },
-  mounted() {
-    fetch("/api/test")
-        .then((response) => response.text())
-        .then((data) => {
-          this.msg = data;
-        });
   }
 }
 </script>
