@@ -1,16 +1,16 @@
 package com.bestreads.bookrecommendations;
 
+import com.bestreads.bookrecommendations.Testing.BookRepository;
+import com.bestreads.bookrecommendations.Testing.TestController;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
@@ -19,6 +19,9 @@ class TestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private BookRepository bookRepository;
 
     @Test
     @WithMockUser
