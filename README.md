@@ -8,4 +8,5 @@ Press Ctrl+Alt+S to open the IDE settings and select Editor | Code Style. and se
 
 ## How to set up the database?
 
-* Please refer to the set up article on confluence: https://best-reads-confluence.atlassian.net/wiki/spaces/FYGP/pages/1933313/Setting+up
+* Please refer to the set up article on confluence: 
+https://best-reads-confluence.atlassian.net/wiki/spaces/FYGP/pages/1933313/Setting+up
