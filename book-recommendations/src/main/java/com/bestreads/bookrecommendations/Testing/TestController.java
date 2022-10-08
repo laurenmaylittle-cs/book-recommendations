@@ -1,5 +1,6 @@
 package com.bestreads.bookrecommendations.Testing;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,6 +11,7 @@ public class TestController {
 
     public BookRepository bookRepository;
 
+    @Autowired
     public TestController(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
@@ -19,7 +21,7 @@ public class TestController {
         return "Hello";
     }
 
-    @GetMapping("/getListOfBooks")
+    @GetMapping("/get-list-of-books")
     public List<Book> getListOfBooks() {
         return bookRepository.findAll();
     }
