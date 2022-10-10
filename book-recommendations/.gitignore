@@ -20,6 +20,8 @@ bin/
 ### IntelliJ IDEA ###
 .idea
 .idea/
+.idea/dataSources.xml
+.idea/vcs.xml
 *.iws
 *.iml
 *.ipr
