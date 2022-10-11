@@ -30,4 +30,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Spring test report
-          path: build/reports/tests/test
+          path: book-recommendations/build/reports/tests/test
