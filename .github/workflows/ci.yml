@@ -12,9 +12,10 @@ permissions:
 
 jobs:
   build-spring:
-
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: 'book-recommendations'
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
