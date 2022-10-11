@@ -26,4 +26,9 @@ class TestControllerTest {
         mockMvc.perform(get("/test"))
             .andExpect(content().string("Hello"));
     }
+
+    @Test
+    void failingTest() {
+        fail("This test should fail");
+    }
 }
