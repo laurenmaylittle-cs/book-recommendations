@@ -1,3 +1,5 @@
+[![CI workflow](https://github.com/laurenmaylittle-cs/book-recommendations/actions/workflows/ci.yml/badge.svg)](https://github.com/laurenmaylittle-cs/book-recommendations/actions/workflows/ci.yml)
+
 # book-recommendations
 
 For codestyle:
