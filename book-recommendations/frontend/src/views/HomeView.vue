@@ -1,15 +1,23 @@
 <template>
-  <hello-world />
+  <p>{{testData}}</p>
 </template>
 
 <script>
-import HelloWorld from '../components/HelloWorld'
+
+import { getTestData } from '@/api/test'
 
 export default {
   name: 'HomeView',
-
-  components: {
-    HelloWorld
+  data: () => ({
+    testData: ''
+  }),
+  mounted () {
+    this.getTest()
+  },
+  methods: {
+    async getTest () {
+      this.testData = await getTestData()
+    }
   }
 }
 </script>
