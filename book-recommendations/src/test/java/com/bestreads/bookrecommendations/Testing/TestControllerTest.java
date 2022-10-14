@@ -1,8 +1,5 @@
-package com.bestreads.bookrecommendations;
+package com.bestreads.bookrecommendations.Testing;
 
-import com.bestreads.bookrecommendations.Testing.TestBook;
-import com.bestreads.bookrecommendations.Testing.TestBookRepository;
-import com.bestreads.bookrecommendations.Testing.TestController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
