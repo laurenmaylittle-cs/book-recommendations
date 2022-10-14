@@ -8,22 +8,22 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-class TestController {
+public class TestController {
 
-    TestBookRepository testBookRepository;
+    private final TestBookRepository testBookRepository;
 
     @Autowired
-    TestController(TestBookRepository testBookRepository) {
+    public TestController(TestBookRepository testBookRepository) {
         this.testBookRepository = testBookRepository;
     }
 
     @GetMapping("/test")
-    String getTestPage() {
+    public String getTestPage() {
         return "Hello";
     }
 
     @GetMapping("/get-list-of-books")
-    List<TestBook> getListOfBooks() {
+    public List<TestBook> getListOfBooks() {
         return Streamable.of(testBookRepository.findAll())
                 .stream()
                 .toList();
