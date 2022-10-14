@@ -10,20 +10,20 @@ import java.util.List;
 @RestController
 class TestController {
 
-    public TestBookRepository testBookRepository;
+    TestBookRepository testBookRepository;
 
     @Autowired
-    public TestController(TestBookRepository testBookRepository) {
+    TestController(TestBookRepository testBookRepository) {
         this.testBookRepository = testBookRepository;
     }
 
     @GetMapping("/test")
-    public String getTestPage() {
+    String getTestPage() {
         return "Hello";
     }
 
     @GetMapping("/get-list-of-books")
-    public List<TestBook> getListOfBooks() {
+    List<TestBook> getListOfBooks() {
         return Streamable.of(testBookRepository.findAll())
                 .stream()
                 .toList();
