@@ -25,5 +25,8 @@ npm run test:unit
 npm run lint
 ```
 
+### To set up eslint in intellij
+https://eslint.vuejs.org/user-guide/#editor-integrations
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).

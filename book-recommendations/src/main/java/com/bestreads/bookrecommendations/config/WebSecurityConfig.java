@@ -1,4 +1,4 @@
-package com.bestreads.bookrecommendations.configuration;
+package com.bestreads.bookrecommendations.config;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
