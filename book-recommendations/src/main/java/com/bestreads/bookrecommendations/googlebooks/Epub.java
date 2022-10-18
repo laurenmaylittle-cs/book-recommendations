@@ -1,5 +1,3 @@
 package com.bestreads.bookrecommendations.googlebooks;
 
-public record SearchInfo(String textSnippet){
-
-}
+public record Epub(boolean isAvailable) {}
