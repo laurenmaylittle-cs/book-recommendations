@@ -25,7 +25,7 @@ class TestControllerTest {
     @Test
     @WithMockUser
     void test() throws Exception {
-        mockMvc.perform(get("/test"))
+        mockMvc.perform(get("/api/test"))
                 .andExpect(content().string("Hello"));
     }
 
@@ -37,7 +37,7 @@ class TestControllerTest {
         testBook.setTitle("Test Book");
         when(testBookRepository.findAll()).thenReturn(List.of(testBook));
 
-        mockMvc.perform(get("/get-list-of-books"))
+        mockMvc.perform(get("/api/get-list-of-books"))
                 .andExpect(content().string("[{\"id\":1,\"title\":\"Test Book\"}]"));
     }
 }
