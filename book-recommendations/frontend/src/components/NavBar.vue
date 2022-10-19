@@ -12,7 +12,7 @@
           :style="{ 'background-color': hover ? 'white' : '#46648c', 'color' : hover ? '#46648c' : 'white' }"
         >
           <v-icon>mdi-book-open-page-variant</v-icon>
-          <span class="mr-2">{{ brandingData }}</span>
+          <span class="mr-2">{{ branding }}</span>
         </v-btn>
       </v-hover>
     </div>
@@ -22,20 +22,11 @@
 </template>
 
 <script>
-import {getBranding} from "@/api/branding";
 
 export default {
   name: 'NavBar',
-  data: () => ({
-    brandingData: ''
-  }),
-  mounted() {
-    this.getBrandingData()
-  },
-  methods: {
-    async getBrandingData() {
-      this.brandingData = await getBranding()
-    }
+  props: {
+    branding: String
   }
 }
 </script>
