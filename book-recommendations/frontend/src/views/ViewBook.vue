@@ -8,24 +8,11 @@
     </div>
 
     <div class="bookInfo">
-      <table>
-        <tr>
-          <th>Book title</th>
-          <td>PLACEHOLDER</td>
-        </tr>
-        <tr>
-          <th>Author</th>
-          <td>PLACEHOLDER</td>
-        </tr>
-        <tr>
-          <th>Genre</th>
-          <td>PLACEHOLDER</td>
-        </tr>
-        <tr>
-          <th>Description</th>
-          <td>PLACEHOLDER</td>
-        </tr>
-      </table>
+      <h1>BOOK TITLE</h1>
+      <h2>AUTHOR</h2>
+      <h3>GENRE</h3>
+      <br>
+      <span>Description</span>
     </div>
 
     <div class="rating">
@@ -57,8 +44,8 @@
   }
 
   .bookInfo, .rating{
-    float: bottom;
-    padding-top: 50px;
+    float: top;
+    padding-top: 30px;
     padding-left: 400px;
     padding-bottom: 50px;
   }
