@@ -1,46 +1,43 @@
 <template>
   <v-app-bar
     app
-    color="primary"
+    color="#46648c"
     dark
   >
     <div class="d-flex align-center">
-      <v-img
-        alt="Vuetify Logo"
-        class="shrink mr-2"
-        contain
-        src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-        transition="scale-transition"
-        width="40"
-      />
-
-      <v-img
-        alt="Vuetify Name"
-        class="shrink mt-1 hidden-sm-and-down"
-        contain
-        min-width="100"
-        src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-        width="100"
-      />
+      <v-hover v-slot="{ hover }">
+        <v-btn
+          href="/home"
+          text
+          :style="{ 'background-color': hover ? 'white' : '#46648c', 'color' : hover ? '#46648c' : 'white' }"
+        >
+          <v-icon>mdi-book-open-page-variant</v-icon>
+          <span class="mr-2">{{ brandingData }}</span>
+        </v-btn>
+      </v-hover>
     </div>
 
     <v-spacer />
-
-    <v-btn
-      href="https://github.com/vuetifyjs/vuetify/releases/latest"
-      target="_blank"
-      text
-    >
-      <span class="mr-2">Latest Release</span>
-      <v-icon>mdi-open-in-new</v-icon>
-    </v-btn>
   </v-app-bar>
 </template>
 
 <script>
-  export default {
-    name: 'NavBar'
+import {getBranding} from "@/api/branding";
+
+export default {
+  name: 'NavBar',
+  data: () => ({
+    brandingData: ''
+  }),
+  mounted() {
+    this.getBrandingData()
+  },
+  methods: {
+    async getBrandingData() {
+      this.brandingData = await getBranding()
+    }
   }
+}
 </script>
 
 <style scoped>
