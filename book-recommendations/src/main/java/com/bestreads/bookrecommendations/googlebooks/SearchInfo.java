@@ -1,5 +1,5 @@
 package com.bestreads.bookrecommendations.googlebooks;
 
-public record SearchInfo(String textSnippet){
+record SearchInfo(String textSnippet) {
 
 }
