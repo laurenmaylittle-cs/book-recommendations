@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import ViewBook from "@/views/ViewBook";
+
 
 Vue.use(VueRouter)
 
@@ -9,6 +11,11 @@ const routes = [
     path: '/default-home-vue',
     name: 'home',
     component: HomeView
+  },
+  {
+    path: '/view-book',
+    name: 'view book',
+    component: ViewBook
   },
   {
     path: '/default-about-vue',
