@@ -1,9 +1,6 @@
 <template>
   <v-footer color="#46648c">
-    <v-spacer />
-    <div class="div_center">
-      <span>{{ new Date().getFullYear() }} — {{ branding }}</span>
-    </div>
+    <span class="div_center">{{ new Date().getFullYear() }} — {{ branding }}</span>
   </v-footer>
 </template>
 
@@ -11,13 +8,17 @@
 export default {
   name: 'FooterBar',
   props: {
-    branding: String
+    branding: {
+      type: String,
+      default: ""
+    }
   }
 }
 </script>
 
 <style scoped>
 .div_center {
-  text-align: center;
+  display: table;
+  margin: 0 auto;
 }
 </style>

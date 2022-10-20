@@ -26,7 +26,10 @@
 export default {
   name: 'NavBar',
   props: {
-    branding: String
+    branding: {
+      type: String,
+      default: ""
+    }
   }
 }
 </script>
