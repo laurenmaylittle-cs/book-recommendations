@@ -5,6 +5,12 @@
 For codestyle:
 Press Ctrl+Alt+S to open the IDE settings and select Editor | Code Style. and select Import Scheme. Navigate to book-recommendations and select the codestyle.xml file. 
 
+## Environment Variables
+
+| Key  | Value |
+| ------------- | ------------- |
+| google_books_api_key  | (see confluence)  |
+
 
 ## How to set up the database?
 
