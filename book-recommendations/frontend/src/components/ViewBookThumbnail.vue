@@ -1,16 +1,19 @@
 <template>
+  <!-- Need to decide on thumbnail size -->
   <v-img
-    lazy-src="https://m.media-amazon.com/images/I/51mtZy7oJVL.jpg"
+    :lazy-src="thumbnail"
     max-height="600px"
     max-width="400px"
-    aspect-ratio="3/4"
-    src="https://m.media-amazon.com/images/I/51mtZy7oJVL.jpg"
+    :src="thumbnail"
   />
 </template>
 
 <script>
   export default {
-    name: 'ViewBookThumbnail'
+    name: 'ViewBookThumbnail',
+    props: {
+      thumbnail: {type: String, default: 'https://m.media-amazon.com/images/I/51mtZy7oJVL.jpg'} //replace this with a default image
+    }
   }
 </script>
 

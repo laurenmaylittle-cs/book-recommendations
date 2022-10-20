@@ -1,17 +1,23 @@
 <template>
   <div>
-    <h1>Harry Potter and the Philosopher's Stone</h1>
-    <h2>J.K.Rowling</h2>
-    <h3>Fantasy</h3>
+    <h1>{{ title }}</h1>
+    <h2>{{ author }}</h2>
+    <h3>{{ genre }}</h3>
     <br>
-    <p>Description</p>
+    <p>{{ description }}</p>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'ViewBookDetails'
-}
+  export default {
+    name: 'ViewBookDetails',
+    props: {
+      title: { type: String, default: 'Book Title'},
+      author: { type: String, default: 'Author'},
+      genre: { type: String, default: 'Genre'},
+      description: { type: String, default: 'Description'}
+    }
+  }
 </script>
 
 <style scoped>
