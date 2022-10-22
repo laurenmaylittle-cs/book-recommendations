@@ -1,13 +1,13 @@
 package com.bestreads.bookrecommendations.book;
 
 import com.bestreads.bookrecommendations.googlebooks.GoogleBooksService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.net.URLEncoder;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 @Service
 public class BookSearchService {
@@ -16,7 +16,8 @@ public class BookSearchService {
     private final HttpResponseToBook httpResponseToBook;
 
     @Autowired
-    public BookSearchService(GoogleBooksService googleBooksService, HttpResponseToBook httpResponseToBook) {
+    public BookSearchService(GoogleBooksService googleBooksService,
+        @Qualifier("googleBooksHttpResponseToBook") HttpResponseToBook httpResponseToBook) {
         this.googleBooksService = googleBooksService;
         this.httpResponseToBook = httpResponseToBook;
     }
