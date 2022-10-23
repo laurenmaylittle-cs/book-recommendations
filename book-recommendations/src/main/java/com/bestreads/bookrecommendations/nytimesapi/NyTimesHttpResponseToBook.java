@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -23,14 +24,28 @@ public class NyTimesHttpResponseToBook implements HttpResponseToBook {
     }
 
     var objectMapper = getObjectMapper();
+    var bookLists = new ArrayList<com.bestreads.bookrecommendations.nytimesapi.List>();
 
     try {
-      var lists = objectMapper.readValue(httpResponse.body(), Root.class).results().lists();
+      bookLists = objectMapper.readValue(httpResponse.body(), Root.class).results().lists();
+      return getBooksFromLists(bookLists, List.of(BestSellerCategories.HARDCOVER_FICTION,
+          BestSellerCategories.HARDCOVER_NONFICTION));
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     }
 
-    return null;
+  }
+
+  //Todo update the custom deserilizer to map the list to something else
+  private List<Book> getBooksFromLists(
+      List<com.bestreads.bookrecommendations.nytimesapi.List> bookList,
+      List<BestSellerCategories> bestSellerCategories) {
+
+    return bookList.stream()
+        .filter(list -> bestSellerCategories.stream()
+            .anyMatch(category -> list.list_name().equals(category.getCategory())))
+        .flatMap(list -> list.books().stream())
+        .toList();
   }
 
 

@@ -23,10 +23,7 @@ public class BestSellersService {
   }
 
   public List<Book> getBestSellers() {
-
     HttpResponse<String> httpResponse = nyTimesService.getCurrentBestSellers();
-
-    var books = httpResponseToBook.extractFromHttpResponse(httpResponse);
-    return null;
+    return httpResponseToBook.extractFromHttpResponse(httpResponse);
   }
 }
