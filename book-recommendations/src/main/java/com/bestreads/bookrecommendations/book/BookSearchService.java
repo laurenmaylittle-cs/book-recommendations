@@ -26,6 +26,10 @@ public class BookSearchService {
     }
 
     public List<Book> searchByTitle(String searchTerm, int startIndex, int maxResults) {
+        if (maxResults < 0 || maxResults > 40) {
+            throw new IllegalArgumentException("maxResults should be between 0 and 40");
+        }
+
         HttpResponse<String> httpResponse = googleBooksService.searchVolumeByTitle(
                 encodeSearchTerm(searchTerm),
                 startIndex,
