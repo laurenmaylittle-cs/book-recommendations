@@ -2,8 +2,8 @@
   <!-- Need to decide on thumbnail size -->
   <v-img
     :lazy-src="thumbnail"
-    max-height="600px"
-    max-width="400px"
+    max-height="300px"
+    max-width="200px"
     :src="thumbnail"
   />
 </template>

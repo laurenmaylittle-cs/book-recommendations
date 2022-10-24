@@ -20,8 +20,8 @@
 
 <style scoped>
 
-.layout {
-  margin: 75px;
-}
+  .layout {
+    margin: 75px;
+  }
 
 </style>
