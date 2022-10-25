@@ -1,6 +1,6 @@
 <template>
   <v-footer color="#46648c">
-    <span class="div_center">{{ new Date().getFullYear() }} — {{ branding }}</span>
+    <span>{{ new Date().getFullYear() }} — {{ branding }}</span>
   </v-footer>
 </template>
 
@@ -17,8 +17,7 @@ export default {
 </script>
 
 <style scoped>
-.div_center {
-  display: table;
-  margin: 0 auto;
+span {
+  color: white;
 }
 </style>
