@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import ViewBook from "@/views/ViewBook";
+import ViewBook from "@/pages/ViewBook";
 
 
 Vue.use(VueRouter)
