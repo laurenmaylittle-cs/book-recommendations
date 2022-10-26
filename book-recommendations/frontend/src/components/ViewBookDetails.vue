@@ -40,7 +40,7 @@
     outline: solid black 1px;
     border-radius: 5px;
     width: auto;
-    max-height: 200px;
+    height: auto;
     display: block;
     float: left;
   }
