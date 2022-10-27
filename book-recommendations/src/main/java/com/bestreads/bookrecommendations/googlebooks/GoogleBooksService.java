@@ -25,7 +25,7 @@ public class GoogleBooksService {
     @Value("${googlebooks.api.uri}")
     private String googleBooksApiUri;
 
-    @Value("${googlebooks.api.key}")
+    @Value("${google_books.api.key}")
     private String apiKey;
 
     public HttpResponse<String> searchVolumeByTitle(String searchTerm, int startIndex, int maxResults) {
@@ -45,6 +45,16 @@ public class GoogleBooksService {
                 googleBooksApiUri,
                 searchTerm,
                 startIndex,
+                maxResults,
+                apiKey
+        );
+        return sendHttpRequest(getGetHttpRequest(uri));
+    }
+
+    public HttpResponse<String> getVolumeByID(String id, int maxResults) {
+        var uri = "%s/volumes/%s?maxResults=%d&key=%s".formatted(
+                googleBooksApiUri,
+                id,
                 maxResults,
                 apiKey
         );
