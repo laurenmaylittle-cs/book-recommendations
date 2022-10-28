@@ -9,10 +9,10 @@
         <v-btn
           href="/home"
           text
-          :style="{ 'background-color': hover ? 'white' : '#46648c', 'color' : hover ? '#46648c' : 'white' }"
+          :style="{ ...styleComputed(hover) }"
         >
           <v-icon>mdi-book-open-page-variant</v-icon>
-          <span class="mr-2">{{ branding }}</span>
+          <span class="mr-2">{{ serviceName }}</span>
         </v-btn>
       </v-hover>
     </div>
@@ -22,13 +22,17 @@
 </template>
 
 <script>
-
 export default {
   name: 'NavBar',
   props: {
-    branding: {
+    serviceName: {
       type: String,
       default: ""
+    }
+  },
+  methods: {
+    styleComputed(hover) {
+      return {'background-color': hover ? 'white' : '#46648c', 'color': hover ? '#46648c' : 'white'}
     }
   }
 }

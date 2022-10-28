@@ -16,9 +16,9 @@ public class BrandingController {
     this.brandingService = brandingService;
   }
 
-  @GetMapping
-  public String getBrandingForService() {
-    return brandingService.getBranding();
+  @GetMapping("/service-name")
+  public String getNameForService() {
+    return brandingService.getServiceName();
   }
 
 }
