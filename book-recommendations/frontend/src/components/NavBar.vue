@@ -16,26 +16,16 @@
         </v-btn>
       </v-hover>
     </div>
-
-    <div class="div_center d-flex align-center">
-      <v-text-field
-        v-model="title"
-        clearable
-      />
-      <v-btn
-        href="/search"
-        text
-        :style="{ 'background-color': '#46648c', 'color': 'white' }"
-      >
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-    </div>
+    <search-bar :title="title" />
   </v-app-bar>
 </template>
 
 <script>
+import SearchBar from '@/components/SearchBar'
+
 export default {
   name: 'NavBar',
+  components: {SearchBar},
   props: {
     serviceName: {
       type: String,
@@ -57,11 +47,6 @@ export default {
 </script>
 
 <style scoped>
-.div_center {
-  display: table;
-  margin: 0 auto;
-}
-
 /deep/ .v-text-field {
   width: 300px;
 }
