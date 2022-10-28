@@ -17,7 +17,7 @@ class BrandingServiceTest {
 
   @Test
   void getBranding() {
-    assertThat(brandingService.getBranding())
+    assertThat(brandingService.getServiceName())
         .isEqualTo(SERVICE_NAME);
   }
 }

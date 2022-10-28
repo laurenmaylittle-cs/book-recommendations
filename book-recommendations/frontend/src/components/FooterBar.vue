@@ -1,6 +1,6 @@
 <template>
   <v-footer color="#46648c">
-    <span class="div_center">{{ new Date().getFullYear() }} — {{ branding }}</span>
+    <span>{{ currentDate() }} — {{ serviceName }}</span>
   </v-footer>
 </template>
 
@@ -8,17 +8,21 @@
 export default {
   name: 'FooterBar',
   props: {
-    branding: {
+    serviceName: {
       type: String,
       default: ""
+    }
+  },
+  methods: {
+    currentDate() {
+      return new Date().getFullYear()
     }
   }
 }
 </script>
 
 <style scoped>
-.div_center {
-  display: table;
-  margin: 0 auto;
+span {
+  color: white;
 }
 </style>

@@ -10,11 +10,11 @@ public class BrandingService {
   private final String serviceName;
 
   @Autowired
-  public BrandingService(@Value("${best-reads.service.name}") String serviceName) {
+  public BrandingService(@Value("${branding.service.name}") String serviceName) {
     this.serviceName = serviceName;
   }
 
-  public String getBranding() {
+  public String getServiceName() {
     return serviceName;
   }
 

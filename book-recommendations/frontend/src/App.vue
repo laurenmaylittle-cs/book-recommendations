@@ -1,31 +1,31 @@
 <template>
   <v-app>
-    <nav-bar :branding="brandingData" />
+    <nav-bar :service-name="serviceName" />
     <v-main>
       <router-view />
     </v-main>
-    <footer-bar :branding="brandingData" />
+    <footer-bar :service-name="serviceName" />
   </v-app>
 </template>
 
 <script>
 
 import NavBar from '@/components/NavBar'
-import {getBranding} from "@/api/branding";
 import FooterBar from "@/components/FooterBar";
+import {getServiceName} from "@/api/branding";
 
 export default {
   name: 'App',
   components: {FooterBar, NavBar},
   data: () => ({
-    brandingData: ''
+    serviceName: ''
   }),
   mounted() {
-    this.getBrandingData()
+    this.getServiceName()
   },
   methods: {
-    async getBrandingData() {
-      this.brandingData = await getBranding()
+    async getServiceName() {
+      this.serviceName = await getServiceName()
     }
   }
 }
