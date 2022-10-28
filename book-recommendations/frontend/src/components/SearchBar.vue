@@ -17,8 +17,6 @@
 </template>
 
 <script>
-import {searchByAuthor} from "@/api/search";
-
 export default {
   name: "SearchBar",
   props: {
@@ -28,18 +26,15 @@ export default {
     }
   },
   data: () => ({
-    searchResults: [],
     authorName: ""
   }),
   methods: {
-    async searchByAuthor(author) {
-      this.searchResults = await searchByAuthor(author)
-    },
     setAuthorName(author) {
       this.authorName = author.target.value
     },
     loadSearch(searchTerm) {
-      this.$router.push({name: 'search', params: {searchTerm: searchTerm}})
+      this.$router.push({name: 'search', params: {searchTerm: searchTerm}}).catch(() => {
+      })
     }
   }
 }
