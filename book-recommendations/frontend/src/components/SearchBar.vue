@@ -35,6 +35,7 @@ export default {
     loadSearch(searchTerm) {
       this.$router.push({name: 'search', params: {searchTerm: searchTerm}}).catch(() => {
       })
+      window.location.reload()
     }
   }
 }

@@ -20,6 +20,6 @@ public class BookSearchController {
 
   @GetMapping("/author")
   public List<Book> searchByAuthor(@Param("author") String author) {
-    return bookSearchService.searchByAuthor(author, 1);
+    return bookSearchService.searchByAuthor(author, 10);
   }
 }
