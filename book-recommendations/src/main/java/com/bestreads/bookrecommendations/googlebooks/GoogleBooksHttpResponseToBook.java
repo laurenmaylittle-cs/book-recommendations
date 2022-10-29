@@ -6,6 +6,8 @@ import com.bestreads.bookrecommendations.book.ImageLinks;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.http.HttpResponse;
@@ -15,6 +17,12 @@ import java.util.List;
 
 @Service
 public class GoogleBooksHttpResponseToBook implements HttpResponseToBook {
+
+    private final String bookThumbnailPlaceholderLink;
+
+    public GoogleBooksHttpResponseToBook(@Value("${book.placeholder.url}") String bookThumbnailPlaceholderLink) {
+        this.bookThumbnailPlaceholderLink = bookThumbnailPlaceholderLink;
+    }
 
     @Override
     public List<Book> extractFromHttpResponse(HttpResponse<String> httpResponse) {
@@ -39,10 +47,7 @@ public class GoogleBooksHttpResponseToBook implements HttpResponseToBook {
                         item.volumeInfo().description(),
                         item.volumeInfo().pageCount(),
                         item.volumeInfo().categories(),
-                        new ImageLinks(
-                                item.volumeInfo().imageLinks().smallThumbnail(),
-                                item.volumeInfo().imageLinks().thumbnail()
-                        ),
+                        getImageLinks(item),
                         item.volumeInfo().language(),
                         item.volumeInfo().averageRating(),
                         item.volumeInfo().ratingsCount()
@@ -58,5 +63,33 @@ public class GoogleBooksHttpResponseToBook implements HttpResponseToBook {
         var objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return objectMapper;
+    }
+
+    private ImageLinks getImageLinks(Item item) {
+
+        if (item.volumeInfo().imageLinks() == null) {
+            return new ImageLinks(bookThumbnailPlaceholderLink, bookThumbnailPlaceholderLink);
+        }
+
+        String smallThumbnail;
+        String thumbnail;
+        var thumbnailExist = false;
+
+        if (!StringUtils.isEmpty(item.volumeInfo().imageLinks().thumbnail())) {
+            thumbnail = item.volumeInfo().imageLinks().thumbnail();
+            thumbnailExist = true;
+        } else {
+            thumbnail = bookThumbnailPlaceholderLink;
+        }
+
+        if (!StringUtils.isEmpty(item.volumeInfo().imageLinks().smallThumbnail())) {
+            smallThumbnail = item.volumeInfo().imageLinks().smallThumbnail();
+        } else if (thumbnailExist) {
+            smallThumbnail = thumbnail;
+        } else {
+            smallThumbnail = bookThumbnailPlaceholderLink;
+        }
+
+        return new ImageLinks(smallThumbnail, thumbnail);
     }
 }
