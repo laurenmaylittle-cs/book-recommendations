@@ -67,7 +67,9 @@ public class GoogleBooksHttpResponseToBook implements HttpResponseToBook {
 
     private ImageLinks getImageLinks(Item item) {
 
-        if (item.volumeInfo().imageLinks() == null) {
+        var itemImageLinks = item.volumeInfo().imageLinks();
+
+        if (itemImageLinks == null) {
             return new ImageLinks(bookThumbnailPlaceholderLink, bookThumbnailPlaceholderLink);
         }
 
@@ -75,15 +77,15 @@ public class GoogleBooksHttpResponseToBook implements HttpResponseToBook {
         String thumbnail;
         var thumbnailExist = false;
 
-        if (!StringUtils.isEmpty(item.volumeInfo().imageLinks().thumbnail())) {
-            thumbnail = item.volumeInfo().imageLinks().thumbnail();
-            thumbnailExist = true;
-        } else {
+        if (StringUtils.isEmpty(itemImageLinks.thumbnail())) {
             thumbnail = bookThumbnailPlaceholderLink;
+        } else {
+            thumbnail = itemImageLinks.thumbnail();
+            thumbnailExist = true;
         }
 
-        if (!StringUtils.isEmpty(item.volumeInfo().imageLinks().smallThumbnail())) {
-            smallThumbnail = item.volumeInfo().imageLinks().smallThumbnail();
+        if (!StringUtils.isEmpty(itemImageLinks.smallThumbnail())) {
+            smallThumbnail = itemImageLinks.smallThumbnail();
         } else if (thumbnailExist) {
             smallThumbnail = thumbnail;
         } else {
