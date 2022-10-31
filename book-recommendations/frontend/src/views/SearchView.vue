@@ -10,6 +10,7 @@
       <book-details
         :author="item.authors[0]"
         :title="item.title"
+        :published-date="item.publishedDate"
       />
     </section>
   </div>

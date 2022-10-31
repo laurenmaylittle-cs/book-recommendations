@@ -1,12 +1,16 @@
 <template>
   <div>
     <h1>
-      <v-icon>mdi-book-open-page-variant</v-icon>
       {{ title }}
     </h1>
     <h2>
-      <v-icon>mdi-account-edit</v-icon>
       {{ author }}
+    </h2>
+    <h2>
+      {{ publishedDate }}
+    </h2>
+    <h2>
+      {{ genre }}
     </h2>
   </div>
 </template>
@@ -15,25 +19,23 @@
 export default {
   name: 'BookDetails',
   props: {
-    title: {type: String, default: 'Book Title'},
-    author: {type: String, default: 'Author'}
+    title: {type: String, default: 'Book title'},
+    author: {type: String, default: 'Author'},
+    publishedDate: {type: String, default: 'Published date'},
+    genre: {type: String, default: 'Genre'},
   }
 }
 </script>
 
 <style scoped>
 div {
-  margin: 50px;
-  padding: 10px;
-  outline: solid black 1px;
-  border-radius: 5px;
+  margin: 15px;
   width: auto;
   height: auto;
-  display: block;
-  float: left;
+  font-size: small;
 }
 
-p {
+h2 {
   font-style: italic;
   font-size: small;
 }
