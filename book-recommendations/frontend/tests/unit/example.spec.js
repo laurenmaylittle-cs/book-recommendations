@@ -13,7 +13,7 @@ function createComponentWrapper({...props} = {}) {
 }
 
 describe('HomeView.vue', () => {
-  it('renders props.msg when passed', async () => {
+  it('Renders the HomeView', async () => {
     getTestData.mockImplementation(() => Promise.resolve("test data"));
 
     const wrapper = await createComponentWrapper();
