@@ -22,8 +22,6 @@ public class NyTimesService {
   @Value("${nytimes.api.key}")
   private String apiKey;
 
-  //Todo: parameterize this for list types
-  //https://api.nytimes.com/svc/books/v3/lists/overview.json
   public HttpResponse<String> getCurrentBestSellers() {
     var uri = "%s/lists/overview.json?api-key=%s".formatted(
         nyTimesApiUri,

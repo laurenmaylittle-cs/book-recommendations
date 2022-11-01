@@ -1,29 +1,29 @@
 package com.bestreads.bookrecommendations.homepage;
 
-import com.bestreads.bookrecommendations.book.Book;
-import com.bestreads.bookrecommendations.book.HttpResponseToBook;
+import com.bestreads.bookrecommendations.nytimesapi.Category;
+import com.bestreads.bookrecommendations.nytimesapi.NyTimesHttpResponseToBook;
 import com.bestreads.bookrecommendations.nytimesapi.NyTimesService;
 import java.net.http.HttpResponse;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BestSellersService {
+class BestSellersService {
 
   private final NyTimesService nyTimesService;
-  private final HttpResponseToBook httpResponseToBook;
+  private final NyTimesHttpResponseToBook nyTimesHttpResponseToBook;
 
   @Autowired
-  public BestSellersService(NyTimesService nyTimesService,
-      @Qualifier("nyTimesHttpResponseToBook") HttpResponseToBook httpResponseToBook) {
+  BestSellersService(NyTimesService nyTimesService,
+      NyTimesHttpResponseToBook nyTimesHttpResponseToBook) {
     this.nyTimesService = nyTimesService;
-    this.httpResponseToBook = httpResponseToBook;
+    this.nyTimesHttpResponseToBook = nyTimesHttpResponseToBook;
   }
 
-  public List<Book> getBestSellers() {
+  List<Category> getBestSellers() {
     HttpResponse<String> httpResponse = nyTimesService.getCurrentBestSellers();
-    return httpResponseToBook.extractFromHttpResponse(httpResponse);
+    return nyTimesHttpResponseToBook.extractFromHttpResponse(httpResponse);
   }
+
 }
