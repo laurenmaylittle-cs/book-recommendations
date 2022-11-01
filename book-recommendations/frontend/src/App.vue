@@ -3,7 +3,7 @@
     <nav-bar :service-name="serviceName" />
     <v-main>
       <v-contaner>
-        <router-view/>
+        <router-view />
       </v-contaner>
     </v-main>
     <footer-bar :service-name="serviceName" />
