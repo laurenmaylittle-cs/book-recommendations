@@ -16,7 +16,7 @@
         </v-btn>
       </v-hover>
     </div>
-    <search-bar :title="title" />
+    <search-bar :search-term="searchTerm" />
   </v-app-bar>
 </template>
 
@@ -34,7 +34,7 @@ export default {
   },
   data() {
     return {
-      title: 'Search',
+      searchTerm: 'Search',
       rules: [v => v.length <= 25 || 'Max 25 characters']
     }
   },

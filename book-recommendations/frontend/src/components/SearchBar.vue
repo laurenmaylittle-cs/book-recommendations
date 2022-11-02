@@ -1,7 +1,7 @@
 <template>
   <div class="div_center d-flex align-center">
     <v-text-field
-      :v-model="title"
+      :v-model="searchTerm"
       clearable
       type="String"
       @input.native="setAuthorName"
@@ -20,7 +20,7 @@
 export default {
   name: "SearchBar",
   props: {
-    title: {
+    searchTerm: {
       type: String,
       default: ""
     }

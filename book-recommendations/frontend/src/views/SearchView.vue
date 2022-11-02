@@ -1,37 +1,57 @@
 <template>
   <div>
-    <p>{{ getNumberOfResults() }} for "{{ searchTerm }}"</p>
-    <section
-      v-for="item in searchResults"
-      :key="item.id"
-      class="layout"
+    <v-row
+      v-if="isLoading"
+      class="justify-center pt-10"
     >
-      <search-book-thumbnail :thumbnail="item.imageLinks.smallThumbnail" />
-      <book-details
-        :author="item.authors[0]"
-        :title="item.title"
-        :published-date="item.publishedDate"
+      <v-progress-circular
+        :size="70"
+        :width="7"
+        color="primary"
+        indeterminate
       />
-    </section>
+    </v-row>
+    <v-row
+      v-else
+      class="pt-6"
+    >
+      <p>{{ getNumberOfResults() }} for "{{ searchTerm }}"</p>
+    </v-row>
+    <v-container>
+      <v-row no-gutters>
+        <v-col
+          v-for="book in searchResults"
+          :key="book.title"
+        >
+          <book-details
+            :author="checkForMultipleAuthors(book.authors)"
+            :title="book.title"
+            :published-date="book.publishedDate"
+            :thumbnail="book.imageLinks.smallThumbnail"
+          />
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
 <script>
 import {searchByAuthor} from "@/api/search";
-import SearchBookThumbnail from "@/components/SearchBookThumbnail";
 import BookDetails from "@/components/BookDetails";
 
 export default {
   name: "SearchView",
-  components: {BookDetails, SearchBookThumbnail},
+  components: {BookDetails},
   data: function () {
     return {
       searchResults: [],
-      searchTerm: this.$route.params.searchTerm
+      searchTerm: this.$route.params.searchTerm,
+      isLoading: true
     }
   },
-  mounted() {
-    this.searchByAuthor(this.searchTerm)
+  async mounted() {
+    await this.searchByAuthor(this.searchTerm)
+    this.isLoading = false
   },
   methods: {
     async searchByAuthor(author) {
@@ -46,6 +66,16 @@ export default {
         return "Showing " + numberOfResults + " result"
       }
       return "There are no results"
+    },
+    checkForMultipleAuthors(authors) {
+      if (authors === undefined) {
+        return ""
+      }
+      var authorList = "";
+      for (let i = 0; i < authors.length; i++) {
+        authorList === "" ? authorList = authors[i] : authorList = authorList + ", " + authors[i]
+      }
+      return authorList
     }
   }
 }
@@ -53,7 +83,11 @@ export default {
 
 <style scoped>
 p {
-  margin-left: 10px;
+  padding-left: 100px;
   margin-top: 10px;
+}
+
+section {
+  display: grid;
 }
 </style>
