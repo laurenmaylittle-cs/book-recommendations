@@ -37,7 +37,7 @@
 
 <script>
 import {searchByAuthor} from "@/api/search";
-import BookDetails from "@/components/BookDetails";
+import BookDetails from "@/components/search/BookDetails";
 
 export default {
   name: "SearchView",

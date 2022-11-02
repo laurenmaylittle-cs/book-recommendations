@@ -2,7 +2,7 @@
   <div>
     <v-card>
       <v-card-actions class="justify-center mb-0 pt-6">
-        <a href="/">
+        <a href="/frontend/public">
           <v-img
             class="rounded"
             :lazy-src="thumbnail"

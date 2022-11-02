@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import SearchBar from '@/components/SearchBar'
+import SearchBar from '@/components/search/SearchBar'
 
 export default {
   name: 'NavBar',
