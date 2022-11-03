@@ -24,7 +24,7 @@ class BrandingControllerTest {
   @WithMockUser
   void getBrandingForService() throws Exception {
     Mockito.when(brandingService.getServiceName()).thenReturn("BestReads");
-    mockMvc.perform(get("/api/branding"))
+    mockMvc.perform(get("/api/branding/service-name"))
         .andExpect(content().string("BestReads"));
   }
 }
