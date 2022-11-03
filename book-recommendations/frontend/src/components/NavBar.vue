@@ -9,7 +9,7 @@
         <v-btn
           href="/home"
           text
-          :style="{ ...styleComputed(hover) }"
+          :style="{ ...getHoverEffect(hover) }"
         >
           <v-icon>mdi-book-open-page-variant</v-icon>
           <span class="mr-2">{{ serviceName }}</span>
@@ -31,7 +31,7 @@ export default {
     }
   },
   methods: {
-    styleComputed(hover) {
+    getHoverEffect(hover) {
       return {'background-color': hover ? 'white' : '#46648c', 'color': hover ? '#46648c' : 'white'}
     }
   }
