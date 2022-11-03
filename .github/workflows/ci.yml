@@ -32,3 +32,28 @@ jobs:
         with:
           name: Spring test report
           path: book-recommendations/build/reports/tests/test
+
+  build-vue:
+    runs-on: ubuntu-latest
+    defaults:
+        run:
+          working-directory: 'book-recommendations/frontend'
+    steps:
+        - uses: actions/checkout@v3
+        - name: Setup node
+          uses: actions/setup-node@v3
+          with:
+            node-version: 16
+            cache: 'npm'
+            cache-dependency-path: '**/package-lock.json'
+        - run: |
+            npm install
+            npm run lint
+            npm run test:unit
+            npm run build
+        - name: Save vue test reports
+          if: success() || failure()
+          uses: actions/upload-artifact@v3
+          with:
+            name: Vue test report
+            path: book-recommendations/frontend/test-report/index.html
