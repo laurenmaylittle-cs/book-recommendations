@@ -2,7 +2,7 @@
   <div>
     <v-card>
       <v-card-actions class="justify-center mb-0 pt-6">
-        <a href="/frontend/public">
+        <a href="/">
           <v-img
             class="rounded"
             :lazy-src="thumbnail"
@@ -13,9 +13,9 @@
         </a>
       </v-card-actions>
       <v-card-text class="mt-0">
-        {{ title }}
+        {{ truncateText(title, 50) }}
         <h2>
-          {{ author }} - {{ formatDate() }}
+          {{ truncateText(author, 50) }} - {{ formatDate() }}
         </h2>
         <h2 />
       </v-card-text>
@@ -38,8 +38,14 @@ export default {
   },
   methods: {
     formatDate() {
-      var dateToFormat = new Date(this.publishedDate)
+      let dateToFormat = new Date(this.publishedDate)
       return dateToFormat.getFullYear();
+    },
+    truncateText(text, maxCharacterCount) {
+      if (text.length > maxCharacterCount) {
+        return text.substring(0, maxCharacterCount) + '...'
+      }
+      return text
     }
   }
 }
