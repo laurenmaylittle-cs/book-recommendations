@@ -16,7 +16,7 @@ public class NyTimesHttpResponseToBook {
 
   public List<Category> extractFromHttpResponse(HttpResponse<String> httpResponse) {
     if (!checkHttpStatusResponse200Ok(httpResponse)) {
-      //retry
+      //TODO BES-55 retry calling the API before returning empty list
       return Collections.emptyList();
     }
 

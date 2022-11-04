@@ -22,7 +22,7 @@ public class CustomBookDeserializer extends StdDeserializer<Book> {
     ObjectCodec codec = p.getCodec();
     JsonNode node = codec.readTree(p);
 
-    // Todo: null check
+    //TODO-BES-60: check for the node values before assessing them and provide sensible defaults
     try {
       return new Book(
           node.get("title").asText(),
