@@ -23,18 +23,13 @@ public class CustomBookDeserializer extends StdDeserializer<Book> {
     JsonNode node = codec.readTree(p);
 
     //TODO-BES-60: check for the node values before assessing them and provide sensible defaults
-    try {
-      return new Book(
-          node.get("title").asText(),
-          List.of(node.get("author").asText()),
-          node.get("publisher").asText(),
-          node.get("description").asText(),
-          new ImageLinks(null, node.get("book_image").asText())
-      );
-
-    } catch (Exception e) {
-      throw new RuntimeException("Error parsing book", e);
-    }
+    return new Book(
+        node.get("title").asText(),
+        List.of(node.get("author").asText()),
+        node.get("publisher").asText(),
+        node.get("description").asText(),
+        new ImageLinks(null, node.get("book_image").asText())
+    );
 
   }
 }

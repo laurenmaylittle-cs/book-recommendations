@@ -37,6 +37,7 @@ public class NyTimesHttpResponseToBook {
   /**
    * This method is used to configure the object mapper to deserialize the json response from the NY
    * Times API, so it gets mapped to the global book object we have.
+   * https://www.baeldung.com/jackson-deserialization
    */
   private ObjectMapper getObjectMapper() {
     var objectMapper = new ObjectMapper();
@@ -50,6 +51,5 @@ public class NyTimesHttpResponseToBook {
     objectMapper.registerModule(bookDeserializer);
 
     return objectMapper;
-
   }
 }

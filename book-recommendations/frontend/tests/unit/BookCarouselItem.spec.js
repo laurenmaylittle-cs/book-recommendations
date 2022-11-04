@@ -1,8 +1,8 @@
-import {mount} from "@vue/test-utils";
+import {shallowMount} from "@vue/test-utils";
 import BookCarouselItem from "@/components/home/BookCarouselItem";
 
 function createComponentWrapper({...props} = {}) {
-  return mount(BookCarouselItem, {
+  return shallowMount(BookCarouselItem, {
     propsData: {
       bookImageLink: "https://google/com/image.jpg",
       bookTitle: "THE LORD OF THE RINGS",

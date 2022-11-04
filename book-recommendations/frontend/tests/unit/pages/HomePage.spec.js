@@ -21,6 +21,10 @@ it("'Gets the best sellers", async () => {
       "books": [
         {
           "title": "The Fellowship of the Ring",
+          "imageLinks": {
+            "smallThumbnail": null,
+            "thumbnail": "https://storage.googleapis.com/some-image.jpg"
+          },
         }
       ]
     }
