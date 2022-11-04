@@ -58,7 +58,7 @@ class HomePageRestControllerTest {
                   "Test Author"
                 ],
                 "publisher": "Test Description",
-                "publishedDate": null,
+                "publishedDate": "Unknown",
                 "description": "Test Publisher",
                 "pageCount": 0,
                 "categories": [],
@@ -66,7 +66,7 @@ class HomePageRestControllerTest {
                   "smallThumbnail": "smallThumbnail",
                   "thumbnail": "thumbnail"
                 },
-                "language": null,
+                "language": "Unknown",
                 "averageRating": 0,
                 "ratingsCount": 0
               }
