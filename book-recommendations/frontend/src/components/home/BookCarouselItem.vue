@@ -10,7 +10,7 @@
         <v-img
           class="rounded"
           max-width="200"
-          :src="getBookImageLink"
+          :src="bookImageLink"
         />
         <div class="flex-wrap text-body-2 mt-1">
           {{ getUpdatedTitle(bookTitle) }}
@@ -36,11 +36,6 @@ export default {
       required: true,
       default: "Unavailable",
     }
-  },
-  computed: {
-    getBookImageLink() {
-      return this.bookImageLink;
-    },
   },
   methods: {
     getUpdatedTitle(title) {
