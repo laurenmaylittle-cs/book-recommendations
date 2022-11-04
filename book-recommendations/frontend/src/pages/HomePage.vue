@@ -22,7 +22,7 @@
 
 <script>
 import BookCategoryCarousel from "@/components/home/BookCategoryCarousel";
-import getBestSellers from "@/api/home-page-api-calls";
+import {getBestSellers} from "@/api/home-page-api-calls";
 
 export default {
   name: "HomePage",
@@ -32,14 +32,8 @@ export default {
     isLoading: true
   }),
   async mounted() {
-    await this.getBestSellers();
+    this.categories = await getBestSellers();
     this.isLoading = false;
-  },
-  methods: {
-    async getBestSellers() {
-      const response = await getBestSellers();
-      this.categories = response.data;
-    },
   }
 }
 </script>

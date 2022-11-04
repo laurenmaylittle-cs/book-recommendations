@@ -1,5 +1,8 @@
 import axios from "axios";
 
-export default function getBestSellers() {
-  return axios.get("/api/home/best-sellers");
-};
+export async function getBestSellers() {
+   return axios.get("/api/home/best-sellers")
+      .then(response => {
+          return response.data;
+      });
+}
