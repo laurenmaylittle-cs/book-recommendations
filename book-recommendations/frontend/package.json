@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "core-js": "^3.8.3",
+    "jest-html-reporter": "^3.7.0",
     "vue": "^2.6.14",
     "vue-router": "^3.5.1",
     "vuetify": "^2.6.0",

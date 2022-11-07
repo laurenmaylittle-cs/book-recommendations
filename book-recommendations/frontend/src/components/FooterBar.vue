@@ -1,6 +1,6 @@
 <template>
   <v-footer color="#46648c">
-    <span>{{ currentDate() }} — {{ serviceName }}</span>
+    <span>{{ getFooterInfo() }} </span>
   </v-footer>
 </template>
 
@@ -16,6 +16,9 @@ export default {
   methods: {
     currentDate() {
       return new Date().getFullYear()
+    },
+    getFooterInfo() {
+      return this.currentDate() + ` - ${this.serviceName}`
     }
   }
 }
