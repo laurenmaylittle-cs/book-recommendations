@@ -24,12 +24,12 @@
     data: () => ({
       bookData: ''
     }),
-    mounted () {
-      this.getBookData()
+    async mounted () {
+      await this.getBookData()
     },
     methods: {
       async getBookData () {
-        this.bookData = await getBookInfo('0I0YfQauX0sC') //hard set id for now, this will need to change
+        this.bookData = await getBookInfo('3cmKzgEACAAJ') //hard set id for now, this will need to change
       }
     }
   }
