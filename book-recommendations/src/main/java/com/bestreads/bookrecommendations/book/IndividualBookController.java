@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class IndividualBookController {
-
     private final IndividualBookService individualBookService;
 
     @Autowired
@@ -18,7 +17,7 @@ public class IndividualBookController {
         this.individualBookService = individualBookService;
     }
 
-    @GetMapping("/view-book")
+    @GetMapping("/book")
     public Item getBookInfo(@Param("id") String id) {
         return individualBookService.viewBook(id);
     }
