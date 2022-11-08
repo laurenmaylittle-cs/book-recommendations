@@ -13,8 +13,8 @@ const routes = [
     component: HomeView
   },
   {
-    path: '/view-book',
-    name: 'view book',
+    path: '/book',
+    name: 'book',
     component: ViewBook
   },
   {
