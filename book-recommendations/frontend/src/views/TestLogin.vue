@@ -1,5 +1,4 @@
 <template>
-  <!-- Check that the SDK client is not currently loading before accessing is methods -->
   <div v-if="!$auth.loading">
     <!-- show login when not authenticated -->
     <button v-if="!$auth.isAuthenticated" @click="login">Log in</button>
@@ -9,21 +8,9 @@
 </template>
 
 <script>
-
-import {getTestData} from '@/api/test'
-
 export default {
-  name: 'HomeView',
-  data: () => ({
-    testData: ''
-  }),
-  mounted () {
-    this.getTest()
-  },
+  name: "TestLogin",
   methods: {
-    async getTest () {
-      this.testData = await getTestData()
-    },
     // Log the user in
     login() {
       this.$auth.loginWithRedirect();
@@ -37,3 +24,7 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+
+</style>
