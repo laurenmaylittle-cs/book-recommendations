@@ -1,10 +1,16 @@
 <template>
   <!-- Check that the SDK client is not currently loading before accessing is methods -->
-  <div v-if="!$auth.loading">
-    <!-- show login when not authenticated -->
-    <button v-if="!$auth.isAuthenticated" @click="login">Log in</button>
-    <!-- show logout when authenticated -->
-    <button v-if="$auth.isAuthenticated" @click="logout">Log out</button>
+  <!--  <div v-if="!$auth.loading">-->
+  <!--    &lt;!&ndash; show login when not authenticated &ndash;&gt;-->
+  <!--    <button v-if="!$auth.isAuthenticated" @click="login`">Log in</button>-->
+  <!--    &lt;!&ndash; show logout when authenticated &ndash;&gt;-->
+  <!--&lt;!&ndash;    <button v-if="$auth.isAuthenticated" @click="logout">Log out</button>&ndash;&gt;-->
+  <!--  </div>-->
+
+  <div>
+    <button @click="logout">
+      Log out
+    </button>
   </div>
 </template>
 
