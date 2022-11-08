@@ -21,32 +21,30 @@
 </template>
 
 <script>
-  export default {
-    name: 'ViewBookDetails',
-    props: {
-      title: { type: String, default: 'Book Title'},
-      author: { type: String, default: 'Author'},
-      genre: { type: String, default: 'Genre'},
-      description: { type: String, default: 'Description'}
-    }
+export default {
+  name: 'ViewBookDetails',
+  props: {
+    title: {type: String, default: 'Book Title'},
+    author: {type: String, default: 'Author'},
+    genre: {type: String, default: 'Genre'},
+    description: {type: String, default: 'Description'}
   }
+}
 </script>
 
 <style scoped>
 
-  div {
-    margin: 50px;
-    padding: 10px;
-    outline: solid black 1px;
-    border-radius: 5px;
-    width: auto;
-    height: auto;
-    display: block;
-    float: left;
-  }
+div {
+  margin: 50px;
+  padding: 10px;
+  width: auto;
+  height: auto;
+  display: block;
+  float: left;
+}
 
-  p {
-    font-style: italic;
-  }
+p {
+  font-style: italic;
+}
 
 </style>
