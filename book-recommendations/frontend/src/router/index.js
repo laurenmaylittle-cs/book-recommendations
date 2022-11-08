@@ -12,6 +12,11 @@ const routes = [
     component: HomeView
   },
   {
+    path: '/',
+    name: 'test-login',
+    component: TestLogin
+  },
+  {
     path: '/default-about-vue',
     name: 'about',
     // route level code-splitting
@@ -19,11 +24,6 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
-  {
-    path: '/login-test',
-    name: 'login',
-    component: TestLogin
-  }
 ]
 
 const router = new VueRouter({

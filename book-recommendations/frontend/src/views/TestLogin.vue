@@ -1,17 +1,21 @@
 <template>
-  <div v-if="!$auth.loading">
+  <v-container>
     <!-- show login when not authenticated -->
-    <button
-      v-if="!$auth.isAuthenticated"
-      @click="login"
-    >
-      Log in
-    </button>
-    <!-- show logout when authenticated -->
-    <button @click="logout">
-      Log out
-    </button>
-  </div>
+    <div v-if="!$auth.loading">
+      <v-btn
+        v-if="!$auth.isAuthenticated"
+        @click="login"
+      >
+        Log in
+      </v-btn>
+      <v-btn
+        v-if="$auth.isAuthenticated"
+        @click="logout"
+      >
+        Log out
+      </v-btn>
+    </div>
+  </v-container>
 </template>
 
 <script>
@@ -19,8 +23,8 @@ export default {
   name: "TestLogin",
   methods: {
     // Log the user in
-    async login() {
-      await this.$auth.loginWithRedirect();
+    login() {
+       this.$auth.loginWithRedirect();
     },
     // Log the user out
     logout() {
