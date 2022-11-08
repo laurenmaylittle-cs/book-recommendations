@@ -1,19 +1,27 @@
 <template>
   <div>
-    <h1>
+    <h1
+      v-if="title !== 'defaultTitle'"
+    >
       <v-icon>mdi-book-open-page-variant</v-icon>
       {{ title }}
     </h1>
-    <h2>
+    <h2
+      v-if="author !== 'defaultAuthor'"
+    >
       <v-icon>mdi-account-edit</v-icon>
       {{ author }}
     </h2>
-    <h3>
+    <h3
+      v-if="genre !== 'defaultGenre'"
+    >
       <v-icon>mdi-filter</v-icon>
       {{ genre }}
     </h3>
     <br>
-    <p>
+    <p
+      v-if="description !== 'defaultDescription'"
+    >
       <v-icon>mdi-card-text-outline</v-icon>
       {{ description }}
     </p>
@@ -24,10 +32,10 @@
 export default {
   name: 'ViewBookDetails',
   props: {
-    title: {type: String, default: 'Book Title'},
-    author: {type: String, default: 'Author'},
-    genre: {type: String, default: 'Genre'},
-    description: {type: String, default: 'Description'}
+    title: {type: String, default: 'defaultTitle'},
+    author: {type: String, default: 'defaultAuthor'},
+    genre: {type: String, default: 'defaultGenre'},
+    description: {type: String, default: 'defaultDescription'}
   }
 }
 </script>
