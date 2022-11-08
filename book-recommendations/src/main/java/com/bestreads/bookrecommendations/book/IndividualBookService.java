@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 
 @Service
 class IndividualBookService {
+
     private final GoogleBooksService googleBooksService;
     private final HttpResponseToBook httpResponseToBook;
 
