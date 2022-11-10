@@ -22,7 +22,7 @@ class IndividualBookService {
     }
 
     Item viewBook(String id) {
-        HttpResponse<String> httpResponse = googleBooksService.getVolumeByID(
+        HttpResponse<String> httpResponse = googleBooksService.getVolumeById(
                 encodeURLTerm(id),
                 1
         );
