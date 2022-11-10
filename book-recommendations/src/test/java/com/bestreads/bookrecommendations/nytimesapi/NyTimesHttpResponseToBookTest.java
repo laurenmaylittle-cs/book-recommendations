@@ -42,8 +42,8 @@ class NyTimesHttpResponseToBookTest {
           "results": {
              "lists": [
                 {
-                  "listId": 1,
-                  "listName": "Hardcover Fiction",
+                  "list_id": 1,
+                  "list_name": "Hardcover Fiction",
                   "books": [
                     {
                       "title": "The Midnight Library",
