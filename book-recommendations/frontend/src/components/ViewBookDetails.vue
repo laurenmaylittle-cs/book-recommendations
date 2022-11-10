@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="ma-12 pa-2">
     <h1
       v-if="title !== 'defaultTitle'"
     >
@@ -21,6 +21,7 @@
     <br>
     <p
       v-if="description !== 'defaultDescription'"
+      class="font-italic"
     >
       <v-icon>mdi-card-text-outline</v-icon>
       {{ description }}
@@ -43,16 +44,10 @@ export default {
 <style scoped>
 
 div {
-  margin: 50px;
-  padding: 10px;
   width: auto;
   height: auto;
   display: block;
   float: left;
-}
-
-p {
-  font-style: italic;
 }
 
 </style>
