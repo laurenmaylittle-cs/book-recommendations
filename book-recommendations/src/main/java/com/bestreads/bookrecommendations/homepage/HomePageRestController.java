@@ -19,7 +19,7 @@ public class HomePageRestController {
   }
 
   @GetMapping("/best-sellers")
-  public List<Category> getLIstOfBestSellers() {
+  public List<Category> getListOfBestSellers() {
     return bestSellersService.getBestSellers();
   }
 

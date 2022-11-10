@@ -10,10 +10,9 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import java.io.IOException;
 import java.util.List;
 
-public class CustomBookDeserializer extends StdDeserializer<Book> {
+class CustomBookDeserializer extends StdDeserializer<Book> {
 
-
-  protected CustomBookDeserializer(Class<?> vc) {
+  CustomBookDeserializer(Class<?> vc) {
     super(vc);
   }
 

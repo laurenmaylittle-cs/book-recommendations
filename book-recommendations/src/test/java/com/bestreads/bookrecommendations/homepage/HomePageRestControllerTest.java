@@ -49,8 +49,8 @@ class HomePageRestControllerTest {
     var expectedJson = """
         [
           {
-            "list_id": 123,
-            "list_name": "Hardcover Fiction",
+            "listId": 123,
+            "listName": "Hardcover Fiction",
             "books": [
               {
                 "title": "Test Book",

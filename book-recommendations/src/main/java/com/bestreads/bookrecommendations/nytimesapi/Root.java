@@ -1,8 +1,10 @@
 package com.bestreads.bookrecommendations.nytimesapi;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 record Root(String status,
             String copyright,
-            int num_results,
+            @JsonProperty("num_results") int numResults,
             Results results) {
 
 }

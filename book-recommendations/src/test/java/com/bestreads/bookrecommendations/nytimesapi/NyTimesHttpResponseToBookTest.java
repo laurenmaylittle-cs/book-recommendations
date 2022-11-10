@@ -42,8 +42,8 @@ class NyTimesHttpResponseToBookTest {
           "results": {
              "lists": [
                 {
-                  "list_id": 1,
-                  "list_name": "Hardcover Fiction",
+                  "listId": 1,
+                  "listName": "Hardcover Fiction",
                   "books": [
                     {
                       "title": "The Midnight Library",
@@ -60,10 +60,11 @@ class NyTimesHttpResponseToBookTest {
         """
     );
 
-    List<Category> results = (List<Category>) nyTimesHttpResponseToBook.extractFromHttpResponse(httpResponse);
+    List<Category> results = (List<Category>) nyTimesHttpResponseToBook.extractFromHttpResponse(
+        httpResponse);
 
     assertThat(results)
-        .extracting(Category::list_id, Category::list_name, Category::books)
+        .extracting(Category::listId, Category::listName, Category::books)
         .containsExactly(
             tuple(1, "Hardcover Fiction",
                 List.of(new Book("The Midnight Library", List.of("Matt Haig"), "ABC publishing",

@@ -34,7 +34,7 @@ it("'Gets the best sellers", async () => {
 
   const wrapper = await createComponentWrapper();
 
-  expect(wrapper.vm.isLoading).toBeFalsy();
+  expect(wrapper.vm.isLoading).toBe(false);
   expect(wrapper.vm.categories).toStrictEqual(bestSellers);
 })
 
