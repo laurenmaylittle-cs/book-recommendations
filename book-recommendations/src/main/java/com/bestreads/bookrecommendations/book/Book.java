@@ -13,6 +13,5 @@ public record Book(String title,
                    ImageLinks imageLinks,
                    String language,
                    int averageRating,
-                   int ratingsCount,
-                   String selfLink) {
+                   int ratingsCount) {
 }
