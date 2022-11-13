@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-container>
     <v-row
       v-if="isLoading"
       class="justify-center pt-10"
@@ -15,24 +15,24 @@
       v-else
       class="pt-6"
     >
-      <p>{{ getNumberOfResults() }} for "{{ searchTerm }}"</p>
+      <p>
+        {{ getNumberOfResults() }}
+      </p>
     </v-row>
-    <v-container>
-      <v-row no-gutters>
-        <v-col
-          v-for="book in searchResults"
-          :key="book.title"
-        >
-          <book-details
-            :author="checkForMultipleAuthors(book.authors)"
-            :title="book.title"
-            :published-date="book.publishedDate"
-            :thumbnail="book.imageLinks.smallThumbnail"
-          />
-        </v-col>
-      </v-row>
-    </v-container>
-  </div>
+    <v-row no-gutters>
+      <v-col
+        v-for="book in searchResults"
+        :key="book.title"
+      >
+        <book-details
+          :author="checkForMultipleAuthors(book.authors)"
+          :title="book.title"
+          :published-date="book.publishedDate"
+          :thumbnail="book.imageLinks.smallThumbnail"
+        />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -55,20 +55,19 @@ export default {
   },
   methods: {
     async searchByAuthor(author) {
-      console.log(author)
       this.searchResults = await searchByAuthor(author)
     },
     getNumberOfResults() {
       const numberOfResults = this.searchResults.length
       if (numberOfResults > 1) {
-        return "Showing " + numberOfResults + " results"
+        return "Showing " + numberOfResults + " results for " + this.searchTerm
       } else if (numberOfResults === 1) {
-        return "Showing " + numberOfResults + " result"
+        return "Showing " + numberOfResults + " result for " + this.searchTerm
       }
-      return "There are no results"
+      return "There are no results for " + this.searchTerm
     },
     checkForMultipleAuthors(authors) {
-      if (authors === undefined) {
+      if (authors === undefined || authors === null) {
         return ""
       }
       var authorList = "";
@@ -82,11 +81,6 @@ export default {
 </script>
 
 <style scoped>
-p {
-  padding-left: 100px;
-  margin-top: 10px;
-}
-
 section {
   display: grid;
 }

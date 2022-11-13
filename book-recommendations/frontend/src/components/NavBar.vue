@@ -35,8 +35,7 @@ export default {
   },
   data() {
     return {
-      searchTerm: 'Search',
-      rules: [v => v.length <= 25 || 'Max 25 characters']
+      searchTerm: 'Search'
     }
   },
   methods: {

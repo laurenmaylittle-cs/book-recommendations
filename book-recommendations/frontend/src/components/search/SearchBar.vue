@@ -1,10 +1,11 @@
 <template>
   <div class="div_center d-flex align-center">
     <v-text-field
-      :v-model="searchTerm"
+      v-model="authorName"
+      label="Search"
       clearable
       type="String"
-      @input.native="setAuthorName"
+      @keyup.enter="loadSearch(authorName)"
     />
     <v-btn
       text
@@ -29,11 +30,8 @@ export default {
     authorName: ""
   }),
   methods: {
-    setAuthorName(author) {
-      this.authorName = author.target.value
-    },
-    loadSearch(searchTerm) {
-      this.$router.push({name: 'search', params: {searchTerm: searchTerm}}).catch(() => {
+    loadSearch() {
+      this.$router.push({name: 'search', params: {searchTerm: this.authorName}}).catch(() => {
       })
       window.location.reload()
     }

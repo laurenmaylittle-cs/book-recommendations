@@ -2,7 +2,9 @@
   <v-app>
     <nav-bar :service-name="serviceName" />
     <v-main :style="style">
-      <router-view />
+      <v-container fluid>
+        <router-view />
+      </v-container>
     </v-main>
     <footer-bar :service-name="serviceName" />
   </v-app>
