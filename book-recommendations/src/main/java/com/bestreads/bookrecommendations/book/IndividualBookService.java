@@ -2,6 +2,7 @@ package com.bestreads.bookrecommendations.book;
 
 import com.bestreads.bookrecommendations.googlebooks.GoogleBooksService;
 import com.bestreads.bookrecommendations.googlebooks.Item;
+import com.bestreads.bookrecommendations.utils.SearchTermUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,14 +24,12 @@ class IndividualBookService {
 
     Item viewBook(String id) {
         HttpResponse<String> httpResponse = googleBooksService.getVolumeById(
-                encodeURLTerm(id),
+                SearchTermUtils.encodeURLTerm(id),
                 1
         );
 
         return httpResponseToBook.extractBookFromHttpResponse(httpResponse);
     }
 
-    private String encodeURLTerm(String urlTerm) {
-        return URLEncoder.encode(urlTerm, StandardCharsets.UTF_8);
-    }
+
 }
