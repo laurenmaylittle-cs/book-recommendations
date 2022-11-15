@@ -5,6 +5,7 @@
         <view-book-thumbnail :thumbnail="bookData.volumeInfo.imageLinks.thumbnail" />
       </v-col>
       <v-col>
+        <!-- TODO BES-70 show all authors and genres depending on the data returned from the API -->
         <view-book-details
           :title="bookData.volumeInfo.title"
           :author="bookData.volumeInfo.authors[0]"
@@ -35,7 +36,7 @@ export default {
   },
   methods: {
     async getBookData () {
-      this.bookData = await getBookInfo('hxL2qWMAgv8C') //hard set id for now, this will need to change
+      this.bookData = await getBookInfo('hxL2qWMAgv8C') //TODO BES-63 get the book info using ISBN not the ID
     }
   }
 }

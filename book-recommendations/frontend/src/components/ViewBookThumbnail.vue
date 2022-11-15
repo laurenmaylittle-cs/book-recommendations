@@ -13,7 +13,7 @@
 export default {
   name: 'ViewBookThumbnail',
   props: {
-    thumbnail: {type: String, default: 'https://storage.googleapis.com/du-prd/books/images/9781538719824.jpg'} //replace this with a default image
+    thumbnail: {type: String, default: 'https://storage.googleapis.com/du-prd/books/images/9781538719824.jpg'} //TODO BES-66 once merged to master link to default thumbnail component
   }
 }
 </script>
