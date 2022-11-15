@@ -1,6 +1,6 @@
 package com.bestreads.bookrecommendations.googlebooks;
 
-public record Item(String kind,
+record Item(String kind,
             String id,
             String etag,
             String selfLink,

@@ -2,15 +2,15 @@
   <v-container>
     <v-row align="center">
       <v-col>
-        <view-book-thumbnail :thumbnail="bookData.volumeInfo.imageLinks.thumbnail" />
+        <view-book-thumbnail :thumbnail="bookData.imageLinks.thumbnail" />
       </v-col>
       <v-col>
         <!-- TODO BES-70 show all authors and genres depending on the data returned from the API -->
         <view-book-details
-          :title="bookData.volumeInfo.title"
-          :author="bookData.volumeInfo.authors[0]"
-          :genre="bookData.volumeInfo.categories[0]"
-          :description="bookData.volumeInfo.description"
+          :title="bookData.title"
+          :author="bookData.authors"
+          :genre="bookData.categories"
+          :description="bookData.description"
         />
       </v-col>
     </v-row>
@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     async getBookData () {
-      this.bookData = await getBookInfo('hxL2qWMAgv8C') //TODO BES-63 get the book info using ISBN not the ID
+      this.bookData = await getBookInfo('9780261103252')
     }
   }
 }

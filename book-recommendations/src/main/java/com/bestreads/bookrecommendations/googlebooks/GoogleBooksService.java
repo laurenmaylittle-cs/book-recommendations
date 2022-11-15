@@ -61,6 +61,17 @@ public class GoogleBooksService {
         return sendHttpRequest(getGetHttpRequest(uri));
     }
 
+    public HttpResponse<String> getVolumeByIsbn(String isbn, int startIndex, int maxResults) {
+        var uri = "%s/volumes/?q=ISBN:%s&startIndex=%s&maxResults=%s&key=%s".formatted(
+                googleBooksApiUri,
+                isbn,
+                startIndex,
+                maxResults,
+                apiKey
+        );
+        return sendHttpRequest(getGetHttpRequest(uri));
+    }
+
     private HttpRequest getGetHttpRequest(String uri) {
         try {
             return HttpRequest.newBuilder()

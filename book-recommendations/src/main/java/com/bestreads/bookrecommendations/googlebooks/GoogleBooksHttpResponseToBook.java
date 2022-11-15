@@ -50,20 +50,6 @@ public class GoogleBooksHttpResponseToBook implements HttpResponseToBook {
                 .toList();
     }
 
-    @Override
-    public Item extractBookFromHttpResponse(HttpResponse<String> httpResponse) {
-        if(!checkHttpStatusResponse200Ok(httpResponse)) {
-            return null; //TODO BES-55 retry calling the API before returning empty list
-        }
-        var objectMapper = getObjectMapper();
-
-        try {
-            return objectMapper.readValue(httpResponse.body(), Item.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private boolean checkHttpStatusResponse200Ok(HttpResponse<String> httpResponse) {
         return httpResponse.statusCode() == 200;
     }

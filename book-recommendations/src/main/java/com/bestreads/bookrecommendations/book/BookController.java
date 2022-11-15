@@ -1,6 +1,5 @@
 package com.bestreads.bookrecommendations.book;
 
-import com.bestreads.bookrecommendations.googlebooks.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,15 +9,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class BookController {
-    private final IndividualBookService individualBookService;
+    private final BookSearchService bookSearchService;
 
     @Autowired
-    public BookController(IndividualBookService individualBookService) {
-        this.individualBookService = individualBookService;
+    public BookController(BookSearchService bookSearchService) {
+        this.bookSearchService = bookSearchService;
     }
 
     @GetMapping("/book")
-    public Item getBookInfo(@Param("id") String id) {
-        return individualBookService.viewBook(id);
+    public Book getBookInfo(@Param("isbn") String isbn) {
+        return bookSearchService.viewIndividualBook(isbn);
     }
 }
