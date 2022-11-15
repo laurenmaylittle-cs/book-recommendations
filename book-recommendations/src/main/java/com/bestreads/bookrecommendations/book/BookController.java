@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
-public class IndividualBookController {
+public class BookController {
     private final IndividualBookService individualBookService;
 
     @Autowired
-    public IndividualBookController(IndividualBookService individualBookService) {
+    public BookController(IndividualBookService individualBookService) {
         this.individualBookService = individualBookService;
     }
 
