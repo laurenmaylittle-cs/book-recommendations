@@ -6,7 +6,7 @@ import java.nio.charset.StandardCharsets;
 public class SearchTermUtils {
 
     private SearchTermUtils() {
-        throw new UtilsClassInitalisationException(this.getClass());
+        throw new UtilsClassInitialisationException(this.getClass());
     }
 
     public static String encodeURLTerm(String urlTerm) {
