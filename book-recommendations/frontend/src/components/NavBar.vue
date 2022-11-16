@@ -26,20 +26,33 @@
 
     <v-spacer />
 
-    <v-btn
-      href="https://github.com/vuetifyjs/vuetify/releases/latest"
-      target="_blank"
-      text
-    >
-      <span class="mr-2">Latest Release</span>
-      <v-icon>mdi-open-in-new</v-icon>
-    </v-btn>
+    <div v-if="!$auth.loading">
+      <router-link v-if="$auth.isAuthenticated" to="/profile"
+        >Profile</router-link
+      >
+      <!-- show login when not authenticated -->
+      <button v-if="!$auth.isAuthenticated" @click="login">Log in</button>
+      <!-- show logout when authenticated -->
+      <button v-if="$auth.isAuthenticated" @click="logout">Log out</button>
+    </div>
   </v-app-bar>
 </template>
 
 <script>
   export default {
-    name: 'NavBar'
+    name: 'NavBar',
+    methods: {
+      // Log the user in
+      login() {
+        this.$auth.loginWithRedirect();
+      },
+      // Log the user out
+      logout() {
+        this.$auth.logout({
+          returnTo: window.location.origin
+        });
+      }
+    }
   }
 </script>
 
