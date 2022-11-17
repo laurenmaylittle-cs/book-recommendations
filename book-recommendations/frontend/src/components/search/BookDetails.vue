@@ -14,7 +14,7 @@
       </v-card-actions>
       <v-card-text class="mt-0">
         <div class="text-subtitle-2 text--primary mt-0">
-          {{ truncateText(title, 40) }}
+          {{ truncateText(title, 30) }}
         </div>
         <div class="text-subtitle-2 font-italic font-size-small">
           {{ getTruncatedAuthor }}

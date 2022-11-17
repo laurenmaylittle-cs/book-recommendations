@@ -28,7 +28,7 @@
           :author="checkForMultipleAuthors(book.authors)"
           :title="book.title"
           :published-date="book.publishedDate"
-          :thumbnail="book.imageLinks.smallThumbnail"
+          :thumbnail="book.imageLinks.thumbnail"
         />
       </v-col>
     </v-row>
