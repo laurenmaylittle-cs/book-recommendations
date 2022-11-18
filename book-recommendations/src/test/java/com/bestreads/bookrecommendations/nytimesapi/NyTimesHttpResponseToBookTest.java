@@ -69,7 +69,8 @@ class NyTimesHttpResponseToBookTest {
             tuple(1, "Hardcover Fiction",
                 List.of(new Book("The Midnight Library", List.of("Matt Haig"), "ABC publishing",
                     "Some say it's a good book to read",
-                    new ImageLinks(null, "https://google.com/image.jpg")))));
+                    new ImageLinks("https://google.com/image.jpg",
+                        "https://google.com/image.jpg")))));
 
   }
 }

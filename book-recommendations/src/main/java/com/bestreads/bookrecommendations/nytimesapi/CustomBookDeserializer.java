@@ -27,7 +27,7 @@ class CustomBookDeserializer extends StdDeserializer<Book> {
         List.of(node.get("author").asText()),
         node.get("publisher").asText(),
         node.get("description").asText(),
-        new ImageLinks(null, node.get("book_image").asText())
+        new ImageLinks(node.get("book_image").asText(), node.get("book_image").asText())
     );
 
   }
