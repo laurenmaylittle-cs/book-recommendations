@@ -45,21 +45,21 @@ class TestingSecurityControllerTest {
 
   @Test
   void privateScoped_whenUnauthenticatedThen401() throws Exception {
-    mockMvc.perform(get("/api/private/private-scoped"))
+    mockMvc.perform(get("/api/private-scoped/test"))
         .andExpect(status().isUnauthorized());
   }
 
   @Test
   @WithMockUser
   void privateScoped_whenNoPrivilegesThen403() throws Exception {
-    mockMvc.perform(get("/api/private-scoped"))
+    mockMvc.perform(get("/api/private-scoped/test"))
         .andExpect(status().isForbidden());
   }
 
   @Test
   @WithMockUser(authorities = "SCOPE_read:messages")
   void privateScoped_withCorrectPrivilegesReturnsString() throws Exception {
-    mockMvc.perform(get("/api/private/private-scoped"))
+    mockMvc.perform(get("/api/private-scoped/test"))
         .andExpect(status().isOk())
         .andExpect(content().string("Scoped private"));
   }
