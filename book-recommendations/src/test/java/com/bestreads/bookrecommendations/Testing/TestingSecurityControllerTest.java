@@ -59,7 +59,7 @@ class TestingSecurityControllerTest {
   @Test
   @WithMockUser(authorities = "SCOPE_read:messages")
   void privateScoped_withCorrectPrivilegesReturnsString() throws Exception {
-    mockMvc.perform(get("/api/private-scoped"))
+    mockMvc.perform(get("/api/private/private-scoped"))
         .andExpect(status().isOk())
         .andExpect(content().string("Scoped private"));
   }

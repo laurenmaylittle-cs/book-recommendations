@@ -18,7 +18,7 @@ public class TestingSecurityController {
     return "This is only for private stuff";
   }
 
-  @GetMapping("/private-scoped")
+  @GetMapping("/private/private-scoped")
   public String privateScoped() {
     return "Scoped private";
   }
