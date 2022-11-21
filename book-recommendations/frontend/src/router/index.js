@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import TestLogin from "@/views/TestLogin"
 import ProfileView from '../views/ProfileView.vue';
 import {authGuard} from '@/auth/authGuard';
 
@@ -12,11 +11,6 @@ const routes = [
     path: '/default-home-vue',
     name: 'home',
     component: HomeView
-  },
-  {
-    path: '/',
-    name: 'test-login',
-    component: TestLogin
   },
   {
     path: '/default-about-vue',
