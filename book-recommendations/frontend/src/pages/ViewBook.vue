@@ -28,17 +28,21 @@ export default {
     ViewBookThumbnail,
     ViewBookDetails
   },
+
   data: () => ({
     bookData: ''
   }),
+
   async mounted () {
     await this.getBookData()
   },
+
   methods: {
     async getBookData () {
-      this.bookData = await getBookInfo('9780261103252')
+      this.bookData = await getBookInfo('9781905294930');
     }
   }
+
 }
 </script>
 
