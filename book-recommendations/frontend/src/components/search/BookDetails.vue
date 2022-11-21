@@ -3,6 +3,7 @@
     <v-card>
       <v-card-actions class="justify-center mb-0 pt-6">
         <a href="/">
+          <!-- TODO BES-66 redirect to view book page-->
           <v-img
             class="rounded mb-0"
             :lazy-src="thumbnail"
