@@ -19,8 +19,8 @@
         <!-- TODO BES-70 show all authors and genres depending on the data returned from the API -->
         <view-book-details
           :title="bookData.title"
-          :author="bookData.authors.toString()"
-          :genre="bookData.categories.toString()"
+          :author="bookData.authors"
+          :genre="bookData.categories"
           :description="bookData.description"
         />
       </v-col>
