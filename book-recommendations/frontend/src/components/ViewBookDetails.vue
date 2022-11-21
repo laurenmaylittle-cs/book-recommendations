@@ -42,13 +42,3 @@ export default {
 }
 </script>
 
-<style scoped>
-
-div {
-  width: auto;
-  height: auto;
-  display: block;
-  float: left;
-}
-
-</style>
