@@ -11,32 +11,40 @@
         indeterminate
       />
     </v-row>
-    <v-row
-      v-else
-      class="pt-6"
-    >
-      <p>
-        {{ getNumberOfResults() }}
-      </p>
-    </v-row>
-    <v-row no-gutters>
-      <v-col
-        v-for="book in searchResults"
-        :key="book.title"
+    <div v-else>
+      <v-row>
+        <p>
+          {{ getNumberOfResults() }}
+        </p>
+      </v-row>
+      <v-row no-gutters>
+        <v-col
+          v-for="book in searchResults"
+          :key="book.title"
+        >
+          <book-details
+            :author="checkForMultipleAuthors(book.authors)"
+            :title="book.title"
+            :published-date="book.publishedDate"
+            :thumbnail="book.imageLinks.thumbnail"
+          />
+        </v-col>
+      </v-row>
+      <v-row
+        class="pt-6 justify-center mb-5"
       >
-        <book-details
-          :author="checkForMultipleAuthors(book.authors)"
-          :title="book.title"
-          :published-date="book.publishedDate"
-          :thumbnail="book.imageLinks.thumbnail"
+        <v-pagination
+          v-model="page"
+          :length="6"
+          @input="nextPage"
         />
-      </v-col>
-    </v-row>
+      </v-row>
+    </div>
   </v-container>
 </template>
 
 <script>
-import {searchByAuthor} from "@/api/search";
+import {searchByAuthor, searchByAuthorWithPagination} from "@/api/search";
 import BookDetails from "@/components/search/BookDetails";
 
 export default {
@@ -46,7 +54,10 @@ export default {
     return {
       searchResults: [],
       searchTerm: this.$route.params.searchTerm,
-      isLoading: true
+      isLoading: true,
+      page: 1,
+      firstBookIndex: 1,
+      lastBookIndex: 10
     }
   },
   async mounted() {
@@ -59,10 +70,9 @@ export default {
     },
     getNumberOfResults() {
       const numberOfResults = this.searchResults.length
-      if (numberOfResults > 1) {
-        return "Showing " + numberOfResults + " results for " + this.searchTerm
-      } else if (numberOfResults === 1) {
-        return "Showing " + numberOfResults + " result for " + this.searchTerm
+      const lastResultIndex = this.firstBookIndex + numberOfResults - 1
+      if (numberOfResults >= 1) {
+        return "Showing results " + this.firstBookIndex + " to " + lastResultIndex
       }
       return "There are no results for " + this.searchTerm
     },
@@ -75,6 +85,13 @@ export default {
         authorList === "" ? authorList = authors[i] : authorList = authorList + ", " + authors[i]
       }
       return authorList
+    },
+    async nextPage() {
+      this.firstBookIndex = this.page * 10 - 9
+      this.lastBookIndex = this.page * 10
+      this.isLoading = true
+      this.searchResults = await searchByAuthorWithPagination(this.searchTerm, this.firstBookIndex)
+      this.isLoading = false
     }
   }
 }

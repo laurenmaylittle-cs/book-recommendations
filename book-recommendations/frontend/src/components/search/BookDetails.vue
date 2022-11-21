@@ -41,6 +41,8 @@ export default {
     getTruncatedAuthor() {
       if (this.author === "") {
         return this.formatDate()
+      } else if (this.title.length > 30) {
+        return `${this.truncateText(this.author, 30)} - ${this.formatDate()}`
       }
       return `${this.truncateText(this.author, 50)} - ${this.formatDate()}`
     }
