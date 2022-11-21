@@ -58,10 +58,11 @@ public class BookSearchService {
                 1
         );
 
-        //TODO is there a better way to handle an invalid ISBN?
+        // TODO is there a better way to handle an invalid ISBN?
         if (!httpResponseToBook.extractFromHttpResponse(httpResponse).isEmpty() && httpResponseToBook.extractFromHttpResponse(httpResponse).size() == 1) {
             return httpResponseToBook.extractFromHttpResponse(httpResponse).get(0);
         } else {
             throw new IllegalArgumentException("Invalid ISBN");
         }
-    }}
+    }
+}

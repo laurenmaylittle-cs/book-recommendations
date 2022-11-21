@@ -55,7 +55,6 @@ export default {
       this.bookData = await getBookInfo('9780753827666');
     }
   }
-
 }
 </script>
 

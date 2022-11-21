@@ -3,15 +3,21 @@ package com.bestreads.bookrecommendations.book;
 import com.bestreads.bookrecommendations.googlebooks.GoogleBooksService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.net.URLEncoder;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BookSearchServiceTest {
@@ -80,4 +86,41 @@ class BookSearchServiceTest {
         var encodedSearchTerm = URLEncoder.encode(searchTerm, StandardCharsets.UTF_8);
         verify(googleBooksService).searchVolumeByAuthor(encodedSearchTerm, startIndex, maxResults);
     }
+
+    @Test
+    void viewIndividualBook_withISBN() {
+        var isbn = "9780753827666";
+        var startIndex = 0;
+        var maxResults = 1;
+        List<String> author = List.of("Test author");
+        ArrayList<String> genres = new ArrayList<>();
+        genres.add("Test genre");
+
+        ArgumentCaptor<HttpResponse> httpResponseArgumentCaptor = ArgumentCaptor.forClass(HttpResponse.class);
+        HttpResponse<String> httpResponse = mock(HttpResponse.class);
+        when(googleBooksService.getVolumeByIsbn(isbn, startIndex, maxResults)).thenReturn(httpResponse);
+        when(httpResponseToBook.extractFromHttpResponse(httpResponse))
+                .thenReturn(List.of(
+                        new Book("Test book",
+                                author,
+                                "Test publisher",
+                                "2022-11-21",
+                                "",
+                                0,
+                                genres,
+                                new ImageLinks("smallThumbnail", "thumbnail"),
+                                "",
+                                0,
+                                0
+                        )));
+
+
+        bookSearchService.viewIndividualBook(isbn);
+
+        verify(httpResponseToBook, atLeast(1)).extractFromHttpResponse(httpResponseArgumentCaptor.capture());
+        assertEquals(httpResponse, httpResponseArgumentCaptor.getValue());
+    }
+
+
+
 }
