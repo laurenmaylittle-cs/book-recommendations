@@ -11,13 +11,13 @@
       v-if="author"
     >
       <v-icon>mdi-account-edit</v-icon>
-      {{ author }}
+      {{ formatAuthor(author) }}
     </h2>
     <h3
       v-if="genre"
     >
       <v-icon>mdi-filter</v-icon>
-      {{ genre }}
+      {{ formatGenre(genre) }}
     </h3>
     <br>
     <p
@@ -38,6 +38,18 @@ export default {
     author: {type: String},
     genre: {type: String},
     description: {type: String}
+  },
+  methods: {
+    formatAuthor(author) {
+      if (author !== '') {
+        return author.toString();
+      }
+    },
+    formatGenre(genre) {
+      if (genre !== '') {
+        return genre.toString();
+      }
+    }
   }
 }
 </script>
