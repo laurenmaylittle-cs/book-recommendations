@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import {searchByAuthor} from "@/api/search";
+import {searchByAuthor, searchByTitle} from "@/api/search";
 import BookDetails from "@/components/search/BookDetails";
 
 export default {
@@ -50,12 +50,15 @@ export default {
     }
   },
   async mounted() {
-    await this.searchByAuthor(this.searchTerm)
+    await this.searchByTitle(this.searchTerm)
     this.isLoading = false
   },
   methods: {
     async searchByAuthor(author) {
       this.searchResults = await searchByAuthor(author)
+    },
+    async searchByTitle(title) {
+      this.searchResults = await searchByTitle(title)
     },
     getNumberOfResults() {
       const numberOfResults = this.searchResults.length
