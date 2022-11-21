@@ -3,8 +3,8 @@
   <v-img
     class="ma-12 pa-3 rounded"
     :lazy-src="thumbnail"
-    max-height="300px"
-    max-width="200px"
+    max-height="300"
+    max-width="200"
     :src="thumbnail"
   />
 </template>

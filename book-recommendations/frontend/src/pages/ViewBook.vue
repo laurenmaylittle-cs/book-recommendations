@@ -1,5 +1,16 @@
 <template>
   <v-container>
+    <v-row
+      v-if="isLoading"
+      class="justify-center"
+    >
+      <v-progress-circular
+        :size="70"
+        :width="7"
+        color="primary"
+        indeterminate
+      />
+    </v-row>
     <v-row align="center">
       <v-col>
         <view-book-thumbnail :thumbnail="bookData.imageLinks.thumbnail" />
@@ -8,8 +19,8 @@
         <!-- TODO BES-70 show all authors and genres depending on the data returned from the API -->
         <view-book-details
           :title="bookData.title"
-          :author="bookData.authors"
-          :genre="bookData.categories"
+          :author="bookData.authors.toString()"
+          :genre="bookData.categories.toString()"
           :description="bookData.description"
         />
       </v-col>
@@ -30,16 +41,18 @@ export default {
   },
 
   data: () => ({
-    bookData: ''
+    bookData: '',
+    isLoading: true
   }),
 
   async mounted () {
     await this.getBookData()
+    this.isLoading = false;
   },
 
   methods: {
     async getBookData () {
-      this.bookData = await getBookInfo('9781905294930');
+      this.bookData = await getBookInfo('9780753827666');
     }
   }
 
