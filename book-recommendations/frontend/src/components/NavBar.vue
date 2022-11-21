@@ -1,59 +1,41 @@
 <template>
   <v-app-bar
     app
-    color="primary"
+    color="#46648c"
     dark
   >
     <div class="d-flex align-center">
-      <v-img
-        alt="Vuetify Logo"
-        class="shrink mr-2"
-        contain
-        src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-        transition="scale-transition"
-        width="40"
-      />
-
-      <v-img
-        alt="Vuetify Name"
-        class="shrink mt-1 hidden-sm-and-down"
-        contain
-        min-width="100"
-        src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-        width="100"
-      />
+      <v-hover v-slot="{ hover }">
+        <v-btn
+          href="/home"
+          text
+          :style="{ ...getHoverEffect(hover) }"
+        >
+          <v-icon>mdi-book-open-page-variant</v-icon>
+          <span class="mr-2">{{ serviceName }}</span>
+        </v-btn>
+      </v-hover>
     </div>
 
     <v-spacer />
-
-    <div v-if="!$auth.loading">
-      <router-link v-if="$auth.isAuthenticated" to="/profile"
-        >Profile</router-link
-      >
-      <!-- show login when not authenticated -->
-      <button v-if="!$auth.isAuthenticated" @click="login">Log in</button>
-      <!-- show logout when authenticated -->
-      <button v-if="$auth.isAuthenticated" @click="logout">Log out</button>
-    </div>
   </v-app-bar>
 </template>
 
 <script>
-  export default {
-    name: 'NavBar',
-    methods: {
-      // Log the user in
-      login() {
-        this.$auth.loginWithRedirect();
-      },
-      // Log the user out
-      logout() {
-        this.$auth.logout({
-          returnTo: window.location.origin
-        });
-      }
+export default {
+  name: 'NavBar',
+  props: {
+    serviceName: {
+      type: String,
+      default: ""
+    }
+  },
+  methods: {
+    getHoverEffect(hover) {
+      return {'background-color': hover ? 'white' : '#46648c', 'color': hover ? '#46648c' : 'white'}
     }
   }
+}
 </script>
 
 <style scoped>
