@@ -18,6 +18,15 @@
     </div>
 
     <v-spacer />
+    <router-link
+      v-if="$auth.isAuthenticated"
+      to="/profile"
+      class="mr-2"
+      style="color: white; text-decoration: none"
+    >
+      Profile
+    </router-link
+    >
     <div v-if="!$auth.loading">
       <!-- show login when not authenticated -->
       <button v-if="!$auth.isAuthenticated" @click="login">Log in</button>
