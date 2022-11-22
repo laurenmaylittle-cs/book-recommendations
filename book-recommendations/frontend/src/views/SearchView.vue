@@ -46,11 +46,16 @@ export default {
     return {
       searchResults: [],
       searchTerm: this.$route.params.searchTerm,
+      searchType: this.$route.params.searchType,
       isLoading: true
     }
   },
   async mounted() {
-    await this.searchByTitle(this.searchTerm)
+    if (this.searchType === "title") {
+      await this.searchByTitle(this.searchTerm)
+    } else {
+      await this.searchByAuthor(this.searchTerm)
+    }
     this.isLoading = false
   },
   methods: {

@@ -7,6 +7,11 @@
       type="String"
       @keyup.enter="loadSearch(queryTerm)"
     />
+    <v-switch
+      v-model="titleFlag"
+      :label="`${titleFlag === true?'Title':'Author'}`"
+      class="ml-3"
+    ></v-switch>
     <v-btn
       text
       :style="{ 'background-color': '#46648c', 'color': 'white' }"
@@ -28,10 +33,11 @@ export default {
   },
   data: () => ({
     queryTerm: "",
+    titleFlag: true,
   }),
   methods: {
     loadSearch() {
-      this.$router.push({name: 'search', params: {searchTerm: this.queryTerm}}).catch(() => {
+      this.$router.push({name: 'search', params: {searchType: this.titleFlag?"title":"author" , searchTerm: this.queryTerm}}).catch(() => {
       })
       window.location.reload()
     }
