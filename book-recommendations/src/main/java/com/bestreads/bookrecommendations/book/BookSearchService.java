@@ -51,18 +51,17 @@ public class BookSearchService {
         return httpResponseToBook.extractFromHttpResponse(httpResponse);
     }
 
-    public Book viewIndividualBook(String isbn) {
+    public Book getBookByIsbn(String isbn) {
         HttpResponse<String> httpResponse = googleBooksService.getVolumeByIsbn(
                 SearchTermUtils.encodeURLTerm(isbn),
-                0,
                 1
         );
 
-        // TODO is there a better way to handle an invalid ISBN?
+        //TODO BES-75: is there a better way to handle an invalid ISBN?
         if (!httpResponseToBook.extractFromHttpResponse(httpResponse).isEmpty() && httpResponseToBook.extractFromHttpResponse(httpResponse).size() == 1) {
             return httpResponseToBook.extractFromHttpResponse(httpResponse).get(0);
         } else {
-            throw new IllegalArgumentException("Invalid ISBN");
+            throw new IllegalArgumentException(isbn + " is an invalid ISBN.");
         }
     }
 }
