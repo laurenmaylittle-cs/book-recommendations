@@ -64,7 +64,7 @@ export default {
       } else if (numberOfResults === 1) {
         return "Showing " + numberOfResults + " result for " + this.searchTerm
       }
-      return "There are no results for " + this.searchTerm
+      return "No results found for " + this.searchTerm
     },
     checkForMultipleAuthors(authors) {
       if (authors === undefined || authors === null) {
