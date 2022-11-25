@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import SearchView from "@/views/SearchView";
+import HomePage from "@/pages/HomePage";
 
 Vue.use(VueRouter)
 
@@ -23,6 +24,11 @@ const routes = [
     path: '/search/:searchType/:searchTerm',
     name: 'search',
     component: SearchView
+  },
+  {
+    path: '/home',
+    name: 'homePage',
+    component: HomePage
   }
 ]
 

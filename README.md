@@ -10,6 +10,7 @@ Press Ctrl+Alt+S to open the IDE settings and select Editor | Code Style. and se
 | Key  | Value |
 | ------------- | ------------- |
 | google_books_api_key  | (see confluence)  |
+| nytimes_api_key  | (see confluence)  |
 
 
 ## How to set up the database?
