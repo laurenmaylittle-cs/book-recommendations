@@ -1,4 +1,5 @@
 <template>
+<!--  TODO BES-36 this is just a placeholder (proper implementation is missing) to test functionality of AuthGuard-->
   <div>
     <div>
       <img :src="$auth.user.picture" />

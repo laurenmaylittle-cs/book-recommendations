@@ -1,5 +1,14 @@
 import {getInstance} from './index';
 
+/**
+ * JS class that verifies a user is authenticated before hitting an endpoint.
+ * If the user is authenticated, access is granted.
+ * If unauthenticated, the user will be redirected to the main Auth0 login page and when logged in the user will be
+ * redirected to the page where access was requested.
+ * Should be used with the beforeEnter directive within a router when defining a view.
+ * https://github.com/auth0/auth0-vue/blob/main/tutorial/vue2-login.md#secure-the-profile-page
+ */
+
 export const authGuard = (to, from, next) => {
   const authService = getInstance();
 

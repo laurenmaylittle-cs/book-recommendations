@@ -1,6 +1,11 @@
 import Vue from 'vue';
 import {createAuth0Client} from "@auth0/auth0-spa-js";
 
+/**
+ * This is a wrapper class for our Auth0 SDK implementation. It can be reused within our app to access authentication related info.
+ * https://github.com/auth0/auth0-vue/blob/main/tutorial/vue2-login.md#create-an-authentication-wrapper
+ */
+
 /** Define a default action to perform after authentication */
 const DEFAULT_REDIRECT_CALLBACK = () =>
   window.history.replaceState({}, document.title, window.location.pathname);

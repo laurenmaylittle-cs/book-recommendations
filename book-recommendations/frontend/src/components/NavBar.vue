@@ -18,19 +18,23 @@
     </div>
 
     <v-spacer />
+
+<!--    TODO BES-36 do proper implementation of profile link, just placeholder to demo AuthGuard page authentication-->
     <router-link
       v-if="$auth.isAuthenticated"
       to="/profile"
-      class="mr-2"
+      class="mr-6"
       style="color: white; text-decoration: none"
     >
       Profile
-    </router-link
-    >
+    </router-link>
     <div v-if="!$auth.loading">
       <!-- show login when not authenticated -->
       <button v-if="!$auth.isAuthenticated" @click="login">Log in</button>
       <!-- show logout when authenticated -->
+      <h4 v-if="$auth.isAuthenticated">
+        Hi {{$auth.user.name}}
+      </h4>
       <button v-if="$auth.isAuthenticated" @click="logout">Log out</button>
     </div>
   </v-app-bar>
