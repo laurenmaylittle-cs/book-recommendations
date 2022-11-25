@@ -16,7 +16,7 @@
         </v-btn>
       </v-hover>
     </div>
-
+    <search-bar :search-term="searchTerm" />
     <v-spacer />
 
 <!--    TODO BES-36 do proper implementation of profile link, just placeholder to demo AuthGuard page authentication-->
@@ -41,12 +41,20 @@
 </template>
 
 <script>
+import SearchBar from '@/components/search/SearchBar'
+
 export default {
   name: 'NavBar',
+  components: {SearchBar},
   props: {
     serviceName: {
       type: String,
       default: ""
+    }
+  },
+  data() {
+    return {
+      searchTerm: 'Search'
     }
   },
   methods: {
@@ -67,4 +75,11 @@ export default {
 </script>
 
 <style scoped>
+/deep/ .v-text-field {
+  width: 300px;
+}
+
+/deep/ .v-input__control {
+  margin-top: 25px;
+}
 </style>

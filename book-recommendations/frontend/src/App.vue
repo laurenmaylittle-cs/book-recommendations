@@ -1,8 +1,10 @@
 <template>
   <v-app>
     <nav-bar :service-name="serviceName" />
-    <v-main>
-      <router-view />
+    <v-main :style="style">
+      <v-container fluid>
+        <router-view />
+      </v-container>
     </v-main>
     <footer-bar :service-name="serviceName" />
   </v-app>
@@ -17,9 +19,14 @@ import {getServiceName} from "@/api/branding";
 export default {
   name: 'App',
   components: {FooterBar, NavBar},
-  data: () => ({
-    serviceName: ''
-  }),
+  data() {
+    return {
+      serviceName: '',
+      style: {
+        backgroundColor: '#E4E4E4'
+      }
+    }
+  },
   mounted() {
     this.getServiceName()
   },
