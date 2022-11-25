@@ -37,6 +37,14 @@
       </h4>
       <button v-if="$auth.isAuthenticated" @click="logout">Log out</button>
     </div>
+    <div v-if="!$auth.loading">
+      <img
+        v-if="$auth.isAuthenticated"
+        :src="$auth.user.picture"
+        class="ml-3 mt-1"
+        style="border-radius: 50%; max-width:50px;"
+      />
+    </div>
   </v-app-bar>
 </template>
 
