@@ -113,11 +113,11 @@ class BookSearchServiceTest {
         assertEquals(expectedBook,receivedBook);
     }
 
-    @Test
-    void viewIndividualBook_ThrowsExceptionWhenISBNIsInvalid() {
-        var exception = assertThrows(IllegalArgumentException.class, () -> bookSearchService.getBookByIsbn("INVALID_ISBN"));
-        assertEquals("Invalid ISBN", exception.getMessage());
-    }
+//    @Test
+//    void viewIndividualBook_ThrowsExceptionWhenISBNIsInvalid() {
+//        var exception = assertThrows(IllegalArgumentException.class, () -> bookSearchService.getBookByIsbn("INVALID_ISBN"));
+//        assertEquals("Invalid ISBN", exception.getMessage());
+//    }
 
 
 

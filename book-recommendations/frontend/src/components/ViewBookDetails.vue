@@ -6,7 +6,6 @@
       <v-icon>mdi-book-open-page-variant</v-icon>
       {{ title }}
     </h1>
-    <!-- TODO BES-70 ensure this works with multiple authors/genres -->
     <h2
       v-if="author"
     >
