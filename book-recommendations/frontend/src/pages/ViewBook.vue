@@ -51,7 +51,7 @@ export default {
 
   methods: {
     async getBookData () {
-      this.bookData = await getBookInfo('9780753827666');
+      this.bookData = await getBookInfo('9781302482541');
     }
   }
 

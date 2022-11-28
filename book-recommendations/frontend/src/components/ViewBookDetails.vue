@@ -11,13 +11,13 @@
       v-if="author"
     >
       <v-icon>mdi-account-edit</v-icon>
-      {{ formatAuthor(author) }}
+      {{ concatenateAuthor(author) }}
     </h2>
     <h3
       v-if="genre"
     >
       <v-icon>mdi-filter</v-icon>
-      {{ formatGenre(genre) }}
+      {{ concatenateGenre(genre) }}
     </h3>
     <br>
     <p
@@ -40,14 +40,38 @@ export default {
     description: {type: String}
   },
   methods: {
-    formatAuthor(author) {
+    concatenateAuthor(author) {
       if (author !== '') {
-        return author.toString();
+        if (author.length === 1){
+          return author.toString();
+        } else {
+          let authors = '';
+          for (let i = 0; i < author.length; i++) {
+            if (i !== author.length - 1) {
+              authors += author[i] + ', ';
+            } else {
+              authors += author[i]
+            }
+          }
+          return authors;
+        }
       }
     },
-    formatGenre(genre) {
+    concatenateGenre(genre) {
       if (genre !== '') {
-        return genre.toString();
+        if (genre.length === 1){
+          return genre.toString();
+        } else {
+          let genres = '';
+          for (let i = 0; i < genre.length; i++) {
+            if (i !== genre.length - 1) {
+              genres += genre[i] + ', ';
+            } else {
+              genres += genre[i]
+            }
+          }
+          return genres;
+        }
       }
     }
   }
