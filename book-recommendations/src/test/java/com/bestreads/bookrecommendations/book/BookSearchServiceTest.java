@@ -119,6 +119,4 @@ class BookSearchServiceTest {
         assertEquals("INVALID_ISBN is an invalid ISBN.", exception.getMessage());
     }
 
-
-
 }
