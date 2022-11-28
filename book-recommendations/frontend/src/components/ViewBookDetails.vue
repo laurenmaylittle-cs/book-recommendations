@@ -35,8 +35,8 @@ export default {
   name: 'ViewBookDetails',
   props: {
     title: {type: String},
-    author: {type: String},
-    genre: {type: String},
+    author: {type: Array},
+    genre: {type: Array},
     description: {type: String}
   },
   methods: {
