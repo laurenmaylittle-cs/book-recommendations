@@ -21,11 +21,11 @@ public class BookSearchController {
 
   @GetMapping("/author")
   public List<Book> searchByAuthor(@Param("author") String author) {
-    return bookSearchService.searchByAuthor(author, 10);
+    return bookSearchService.searchByAuthor(author, 40);
   }
 
   @GetMapping("/title")
   public List<Book> searchByTitle(@Param("title") String title) {
-    return bookSearchService.searchByTitle(title, 10);
+    return bookSearchService.searchByTitle(title, 40);
   }
 }
