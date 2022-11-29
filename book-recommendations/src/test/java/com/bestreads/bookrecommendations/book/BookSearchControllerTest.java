@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
@@ -54,7 +55,7 @@ class BookSearchControllerTest {
   @Test
   @WithMockUser
   void searchByAuthor() throws Exception {
-    Mockito.when(bookSearchService.searchByAuthor("author1", 10))
+    Mockito.when(bookSearchService.searchByAuthor("author1", any()))
         .thenReturn(bookList);
     mockMvc.perform(get("/api/search/author?author=author1"))
         .andExpect(content().json(bookJson));
@@ -63,7 +64,7 @@ class BookSearchControllerTest {
   @Test
   @WithMockUser
   void searchByTitle() throws Exception {
-    Mockito.when(bookSearchService.searchByTitle("FerRam", 10))
+    Mockito.when(bookSearchService.searchByTitle("FerRam", any()))
             .thenReturn(bookList);
     mockMvc.perform(get("/api/search/title?title=FerRam"))
             .andExpect(content().json(bookJson));
