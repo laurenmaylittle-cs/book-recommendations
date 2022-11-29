@@ -1,5 +1,15 @@
 <template>
   <div class="div_center d-flex align-center">
+    <v-select
+      class="ml-3"
+      style="width: 90px"
+      v-model="selectedQueryFilter"
+      :items="queryFilters"
+      item-text="displayText"
+      item-value="value"
+      return-object
+      single-line
+    ></v-select>
     <v-text-field
       v-model="queryTerm"
       label="Search"
@@ -7,11 +17,6 @@
       type="String"
       @keyup.enter="loadSearch(queryTerm)"
     />
-    <v-switch
-      v-model="titleFlag"
-      :label="`${titleFlag === true?'Title':'Author'}`"
-      class="ml-3"
-    ></v-switch>
     <v-btn
       text
       :style="{ 'background-color': '#46648c', 'color': 'white' }"
@@ -33,11 +38,15 @@ export default {
   },
   data: () => ({
     queryTerm: "",
-    titleFlag: true,
+    selectedQueryFilter: { displayText: 'Title', value: 'title'},
+    queryFilters: [
+      {displayText: 'Title', value: 'title'},
+      {displayText: 'Author', value: 'author'}
+    ],
   }),
   methods: {
     loadSearch() {
-      this.$router.push({name: 'search', params: {searchType: this.titleFlag?"title":"author" , searchTerm: this.queryTerm}}).catch(() => {
+      this.$router.push({name: 'search', params: {searchType: this.selectedQueryFilter.value , searchTerm: this.queryTerm}}).catch(() => {
       })
       window.location.reload()
     }
