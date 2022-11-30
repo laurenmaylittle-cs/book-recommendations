@@ -1,10 +1,12 @@
 <template>
-  <p> {{ testData }} </p>
+  <div>
+
+  </div>
 </template>
 
 <script>
 
-import { getTestData } from '@/api/test'
+import {getTestData} from '@/api/test'
 
 export default {
   name: 'HomeView',

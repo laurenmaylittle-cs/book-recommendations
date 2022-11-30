@@ -2,7 +2,10 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ViewBook from "@/pages/ViewBook";
-
+import ProfileView from '../views/ProfileView.vue';
+import {authGuard} from '@/auth/authGuard';
+import SearchView from "@/views/SearchView";
+import HomePage from "@/pages/HomePage";
 
 Vue.use(VueRouter)
 
@@ -24,6 +27,22 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+  },
+  {
+    path: '/home',
+    name: 'homePage',
+    component: HomePage
+  },
+  {
+    path: '/search/:searchTerm',
+    name: 'search',
+    component: SearchView
+  },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: ProfileView,
+    beforeEnter: authGuard
   }
 ]
 
