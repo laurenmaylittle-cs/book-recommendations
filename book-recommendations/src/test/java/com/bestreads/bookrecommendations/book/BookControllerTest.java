@@ -72,6 +72,6 @@ class BookControllerTest {
     void getBookInfo() throws Exception {
         String ISBN = "9780297859406";
         Mockito.when(bookSearchService.getBookByIsbn(ISBN)).thenReturn(book);
-        mockMvc.perform(get("/api/book").param("isbn", ISBN)).andExpect(content().json(bookJson));
+        mockMvc.perform(get("/api/public/book").param("isbn", ISBN)).andExpect(content().json(bookJson));
     }
 }
