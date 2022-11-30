@@ -24,7 +24,7 @@
 import {titleCase} from "title-case";
 
 export default {
-  name: "BookCarouselItem",
+  name: "BookItem",
   props: {
     bookImageLink: {
       type: String,
@@ -42,7 +42,7 @@ export default {
       return titleCase(title.toLowerCase());
     },
     getHoverEffect(hover) {
-      return hover ? "blue-grey lighten-4" : "white";
+      return hover ? "blue-grey lighten-4" : "transparent";
     },
   }
 }

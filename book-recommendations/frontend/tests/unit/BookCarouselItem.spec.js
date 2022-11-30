@@ -1,8 +1,8 @@
 import {shallowMount} from "@vue/test-utils";
-import BookCarouselItem from "@/components/home/BookCarouselItem";
+import BookItem from "@/components/home/BookItem";
 
 function createComponentWrapper({...props} = {}) {
-  return shallowMount(BookCarouselItem, {
+  return shallowMount(BookItem, {
     propsData: {
       bookImageLink: "https://google/com/image.jpg",
       bookTitle: "THE LORD OF THE RINGS",
@@ -15,7 +15,8 @@ describe("BookCarouselItem component methods", () => {
   it("getUpdatedTitle", () => {
     const wrapper = createComponentWrapper();
 
-    expect(wrapper.vm.getUpdatedTitle("THE LORD OF THE RINGS")).toBe("The Lord of the Rings");
+    expect(wrapper.vm.getUpdatedTitle("THE LORD OF THE RINGS")).toBe(
+      "The Lord of the Rings");
   });
 
   describe("getHoverEffect", () => {
