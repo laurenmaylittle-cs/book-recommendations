@@ -6,18 +6,17 @@
       <v-icon>mdi-book-open-page-variant</v-icon>
       {{ title }}
     </h1>
-    <!-- TODO BES-70 ensure this works with multiple authors/genres -->
     <h2
       v-if="author"
     >
       <v-icon>mdi-account-edit</v-icon>
-      {{ concatenateAuthor(author) }}
+      {{ concatDetails(author) }}
     </h2>
     <h3
       v-if="genre"
     >
       <v-icon>mdi-filter</v-icon>
-      {{ concatenateGenre(genre) }}
+      {{ concatDetails(genre) }}
     </h3>
     <br>
     <p
@@ -40,37 +39,20 @@ export default {
     description: {type: String}
   },
   methods: {
-    concatenateAuthor(author) {
-      if (author !== '') {
-        if (author.length === 1){
-          return author.toString();
+    concatDetails(details) {
+      if (details !== '') {
+        if (details.length === 1){
+          return details.toString();
         } else {
-          let authors = '';
-          for (let i = 0; i < author.length; i++) {
-            if (i !== author.length - 1) {
-              authors += author[i] + ', ';
+          let info = '';
+          for (let i = 0; i < details.length; i++) {
+            if (i !== details.length - 1) {
+              info += details[i] + ', ';
             } else {
-              authors += author[i]
+              info += details[i]
             }
           }
-          return authors;
-        }
-      }
-    },
-    concatenateGenre(genre) {
-      if (genre !== '') {
-        if (genre.length === 1){
-          return genre.toString();
-        } else {
-          let genres = '';
-          for (let i = 0; i < genre.length; i++) {
-            if (i !== genre.length - 1) {
-              genres += genre[i] + ', ';
-            } else {
-              genres += genre[i]
-            }
-          }
-          return genres;
+          return info;
         }
       }
     }
