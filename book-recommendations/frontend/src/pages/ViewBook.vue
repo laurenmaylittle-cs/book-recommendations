@@ -39,17 +39,14 @@ export default {
     ViewBookThumbnail,
     ViewBookDetails
   },
-
   data: () => ({
     bookData: '',
     isLoading: true
   }),
-
   async mounted () {
     await this.getBookData()
     this.isLoading = false;
   },
-
   methods: {
     async getBookData () {
       this.bookData = await getBookInfo('9780753827666');

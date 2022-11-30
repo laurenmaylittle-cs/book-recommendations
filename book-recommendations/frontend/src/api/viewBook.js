@@ -1,5 +1,8 @@
-export async function getBookInfo (isbn) {
-  return await fetch('api/book?isbn='+ isbn).then((response) => response.json())
+import axios from "axios";
+
+export async function getBookInfo(isbn) {
+  return await axios('/api/public/book?isbn=' + isbn)
+    .then(response => {
+      return response.data;
+    });
 }
-
-
