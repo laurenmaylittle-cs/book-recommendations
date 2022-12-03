@@ -27,7 +27,7 @@ function createComponentWrapper({breakpoint, ...props} = {}) {
 describe("BookCategoryCarousel", () => {
 
   describe(
-    "renders the current number of books on carousel based on screen size",
+    "renders the different number of books on carousel based on screen size",
     () => {
 
       it("renders 5 for xl", () => {
