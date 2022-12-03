@@ -13,11 +13,11 @@
     >
       <template v-for="(_, index) in books">
         <v-carousel-item
-          v-if="(index + 1) % getNumberOfBooks === 1 || getNumberOfBooks === 1"
+          v-if="(index + 1) % numberOfBooksToDisplay === 1 || numberOfBooksToDisplay === 1"
           :key="index"
         >
           <v-row>
-            <template v-for="(n, i) in getNumberOfBooks">
+            <template v-for="(n, i) in numberOfBooksToDisplay">
               <book-item
                 v-if="(+index + i) < books.length"
                 :key="i"
@@ -49,7 +49,7 @@ export default {
     }
   },
   computed: {
-    getNumberOfBooks() {
+    numberOfBooksToDisplay() {
       if (this.$vuetify.breakpoint.xl) {
         return 5;
       }
