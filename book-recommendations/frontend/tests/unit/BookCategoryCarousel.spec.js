@@ -1,6 +1,8 @@
 import Vuetify from "vuetify";
-import {shallowMount} from "@vue/test-utils";
+import {mount} from "@vue/test-utils";
 import BookCategoryCarousel from "@/components/home/BookCategoryCarousel";
+import BookItem from "@/components/home/BookItem";
+import books from "./data/Books";
 
 function createComponentWrapper({breakpoint, ...props} = {}) {
   let vuetify = new Vuetify();
@@ -12,18 +14,10 @@ function createComponentWrapper({breakpoint, ...props} = {}) {
 
   vuetify.framework.breakpoint = breakPointMock;
 
-  return shallowMount(BookCategoryCarousel, {
+  return mount(BookCategoryCarousel, {
     vuetify,
     propsData: {
-      books: [
-        {
-          id: 1,
-          title: "THE LORD OF THE RINGS",
-          imageLinks: {
-            thumbnail: "https://google/com/image.jpg"
-          },
-        }
-      ],
+      books,
       bestSellerCategory: "Best Seller",
       ...props,
     },
@@ -31,43 +25,45 @@ function createComponentWrapper({breakpoint, ...props} = {}) {
 }
 
 describe("BookCategoryCarousel", () => {
-  describe("computed properties", () => {
-    describe("getNumberOfBooks", () => {
-      it("returns 5 when the screen size is xl", () => {
+
+  describe(
+    "renders the current number of books on carousel based on screen size",
+    () => {
+
+      it("renders 5 for xl", () => {
         const wrapper = createComponentWrapper({
           breakpoint: {
-            xl: true
-          }
+            xl: true,
+          },
         });
 
-        expect(wrapper.vm.getNumberOfBooks).toBe(5);
+        expect(wrapper.findAllComponents(BookItem).length).toBe(5);
       });
 
-      it("returns 4 when the screen size is lg", () => {
+      it("renders 4 for lg", () => {
         const wrapper = createComponentWrapper({
           breakpoint: {
-            lg: true
-          }
+            lg: true,
+          },
         });
 
-        expect(wrapper.vm.getNumberOfBooks).toBe(4);
+        expect(wrapper.findAllComponents(BookItem).length).toBe(4);
       });
 
-      it("returns 3 when the screen size is md", () => {
+      it("renders 3 for md", () => {
         const wrapper = createComponentWrapper({
           breakpoint: {
-            md: true
-          }
+            md: true,
+          },
         });
 
-        expect(wrapper.vm.getNumberOfBooks).toBe(3);
+        expect(wrapper.findAllComponents(BookItem).length).toBe(3);
       });
 
-      it("returns 2 by default", () => {
+      it("renders 2 by default", () => {
         const wrapper = createComponentWrapper();
 
-        expect(wrapper.vm.getNumberOfBooks).toBe(2);
+        expect(wrapper.findAllComponents(BookItem).length).toBe(2);
       });
     });
-  });
-})
+});
