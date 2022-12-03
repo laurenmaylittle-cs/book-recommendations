@@ -1,4 +1,3 @@
-//books array with 5 books
 const books = [
   {
     id: 1,
