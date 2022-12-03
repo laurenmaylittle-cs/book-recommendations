@@ -26,10 +26,10 @@ describe("BookCarouselItem component methods", () => {
       expect(wrapper.vm.getHoverEffect(true)).toBe("blue-grey lighten-4");
     });
 
-    it("white when false", () => {
+    it("transparent when false", () => {
       const wrapper = createComponentWrapper();
 
-      expect(wrapper.vm.getHoverEffect(false)).toBe("white");
+      expect(wrapper.vm.getHoverEffect(false)).toBe("transparent");
     });
   });
 });
