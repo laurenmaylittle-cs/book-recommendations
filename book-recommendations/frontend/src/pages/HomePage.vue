@@ -16,11 +16,23 @@
         <v-select
           v-if="!isLoading"
           v-model="selectedCategories"
-          filled
           :items="bestSellerCategories"
           label="Filter by category"
           multiple
-        />
+          chips
+          deletable-chips
+          clearable
+        >
+          <template #selection="{ item }">
+            <v-chip
+              :color="getChipColor(item)"
+              close
+              @click:close="removeChip(item)"
+            >
+              {{ item.text }}
+            </v-chip>
+          </template>
+        </v-select>
       </v-col>
     </v-row>
     <book-category
@@ -43,6 +55,26 @@ export default {
     categories: [],
     isLoading: true,
     selectedCategories: [],
+    chipColors: [
+      "red lighten-4",
+      "pink lighten-4",
+      "purple lighten-4",
+      "deep-purple lighten-4",
+      "indigo lighten-4",
+      "blue lighten-4",
+      "light-blue lighten-4",
+      "cyan lighten-4",
+      "teal lighten-4",
+      "green lighten-4",
+      "light-green lighten-4",
+      "lime lighten-4",
+      "yellow lighten-4",
+      "amber lighten-4",
+      "orange lighten-4",
+      "deep-orange lighten-4",
+      "brown lighten-4",
+      "grey lighten-4",
+    ]
   }),
   computed: {
     bestSellerCategories() {
@@ -64,6 +96,18 @@ export default {
     this.categories = await getBestSellers();
     this.categories.sort((a, b) => a.list_name.localeCompare(b.list_name));
     this.isLoading = false;
+  },
+  methods: {
+    removeChip(item) {
+      const index = this.selectedCategories.indexOf(item.value);
+      if (index >= 0) {
+        this.selectedCategories.splice(index, 1);
+      }
+    },
+    getChipColor(item) {
+      const index = this.selectedCategories.indexOf(item.value);
+      return this.chipColors[index];
+    }
   }
 }
 </script>
