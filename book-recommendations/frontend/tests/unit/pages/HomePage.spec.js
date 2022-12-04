@@ -62,7 +62,7 @@ describe('HomePage', () => {
         async () => {
           const wrapper = await createComponentWrapper();
 
-          expect(wrapper.vm.categories).toStrictEqual(bestSellers);
+          expect(wrapper.vm.filteredCategories).toStrictEqual(bestSellers);
         });
 
       it("returns selected categories when selectedCategories is not empty",
