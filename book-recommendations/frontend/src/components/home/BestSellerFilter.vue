@@ -6,9 +6,6 @@
         :items="items"
         label="Filter by category"
         multiple
-        chips
-        deletable-chips
-        clearable
         @change="onChange"
       >
         <template #selection="{ item }">
