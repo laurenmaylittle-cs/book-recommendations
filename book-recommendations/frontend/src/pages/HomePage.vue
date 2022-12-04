@@ -14,6 +14,7 @@
     <v-row>
       <v-col cols="12">
         <v-select
+          v-if="!isLoading"
           v-model="selectedCategories"
           filled
           :items="bestSellerCategories"
