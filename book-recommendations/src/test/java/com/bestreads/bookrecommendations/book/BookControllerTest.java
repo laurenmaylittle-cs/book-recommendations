@@ -3,8 +3,8 @@ package com.bestreads.bookrecommendations.book;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
-import java.util.ArrayList;
 import java.util.List;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -50,8 +50,6 @@ class BookControllerTest {
 
     @BeforeAll
     static void setUp() {
-        ArrayList<String> genres = new ArrayList<>();
-        genres.add("Fiction");
         book = new Book(
                 "Gone Girl",
                 List.of("Gillian Flynn"),
@@ -59,7 +57,7 @@ class BookControllerTest {
                 "2012-05-24",
                 "Test description",
                 320,
-                genres,
+                List.of("Fiction"),
                 new ImageLinks("http://books.google.com/books/content?id=hxL2qWMAgv8C&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api", "http://books.google.com/books/content?id=hxL2qWMAgv8C&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"),
                 "en",
                 3,
