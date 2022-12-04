@@ -40,20 +40,10 @@ export default {
   },
   methods: {
     concatDetails(details) {
-      if (details !== '') {
-        if (details.length === 1){
-          return details.toString();
-        } else {
-          let info = '';
-          for (let i = 0; i < details.length; i++) {
-            if (i !== details.length - 1) {
-              info += details[i] + ', ';
-            } else {
-              info += details[i]
-            }
-          }
-          return info;
-        }
+      if (details != null && details.length > 1) {
+        return details.join(', ');
+      } else {
+        return  details.toString();
       }
     }
   }
