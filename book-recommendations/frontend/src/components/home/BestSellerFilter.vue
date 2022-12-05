@@ -6,6 +6,7 @@
         :items="items"
         label="Filter by category"
         multiple
+        clearable
         @change="onChange"
       >
         <template #selection="{ item }">
