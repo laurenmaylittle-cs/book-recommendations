@@ -1,7 +1,7 @@
 import {shallowMount} from "@vue/test-utils";
 import BookItem from "@/components/home/BookItem";
 
-function createComponentWrapper({...props} = {}) {
+function createComponentWrapper({props} = {}) {
   return shallowMount(BookItem, {
     propsData: {
       bookImageLink: "https://google/com/image.jpg",

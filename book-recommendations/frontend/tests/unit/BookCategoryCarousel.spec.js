@@ -4,7 +4,7 @@ import BookCategoryCarousel from "@/components/home/BookCategoryCarousel";
 import BookItem from "@/components/home/BookItem";
 import books from "./data/Books";
 
-function createComponentWrapper({breakpoint, ...props} = {}) {
+function createComponentWrapper({breakpoint, props} = {}) {
   let vuetify = new Vuetify();
   let breakPointMock = {
     init: jest.fn(),

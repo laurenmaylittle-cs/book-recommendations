@@ -4,7 +4,7 @@ import HomePage from "@/pages/HomePage";
 
 jest.mock('@/api/home-page-api-calls');
 
-function createComponentWrapper({...props} = {}) {
+function createComponentWrapper({props} = {}) {
   return shallowMount(HomePage, {
     propsData: {
       ...props,
