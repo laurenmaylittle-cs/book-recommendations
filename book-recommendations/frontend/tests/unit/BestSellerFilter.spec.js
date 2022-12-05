@@ -37,10 +37,10 @@ describe("BestSellerFilter", () => {
 
       //first we need to make sure we select something from the dropdown (this selects the first item)
       wrapper.find("v-select-stub").vm.$emit("input", [1]);
-      expect(wrapper.vm.selectedCategories).toEqual([1]) //this is an array of ids
+      expect(wrapper.vm.selectedCategories).toStrictEqual([1]) //this is an array of ids
 
       wrapper.vm.removeChip(item); //each item has a text and value property
-      expect(wrapper.vm.selectedCategories).toEqual([]);
+      expect(wrapper.vm.selectedCategories).toStrictEqual([]);
 
     });
 
@@ -56,8 +56,8 @@ describe("BestSellerFilter", () => {
       }
 
       wrapper.find("v-select-stub").vm.$emit("input", [1, 2]);
-      expect(wrapper.vm.getChipColor(itemOne)).toBe("red lighten-4");
-      expect(wrapper.vm.getChipColor(itemTwo)).toBe("pink lighten-4");
+      expect(wrapper.vm.getChipColor(itemOne)).toStrictEqual("red lighten-4");
+      expect(wrapper.vm.getChipColor(itemTwo)).toStrictEqual("pink lighten-4");
     });
 
     it("onChange - emits selected categories", () => {
@@ -70,14 +70,14 @@ describe("BestSellerFilter", () => {
       wrapper.find("v-select-stub").vm.$emit("change");
 
       //asserts that this component emited an event with the selected category ideas
-      expect(wrapper.emitted().change[0]).toEqual([[1, 2]]);
+      expect(wrapper.emitted().change[0]).toStrictEqual([[1, 2]]);
     });
   });
 
   describe("computed properties", () => {
     it("items - correctly maps best seller prop to items for v-select", () => {
       const wrapper = createComponentWrapper();
-      expect(wrapper.vm.items).toEqual([
+      expect(wrapper.vm.items).toStrictEqual([
         {
           text: "Hardcover Fiction",
           value: 1
