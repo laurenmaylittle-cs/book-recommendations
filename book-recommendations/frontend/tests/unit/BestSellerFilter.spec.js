@@ -2,7 +2,7 @@ import {shallowMount} from "@vue/test-utils";
 import BestSellerFilter from "@/components/home/BestSellerFilter";
 import books from "./data/Books";
 
-function createComponentWrapper({...props} = {}) {
+function createComponentWrapper({props} = {}) {
   const bestSellers = [
     {
       list_id: 1,
