@@ -10,6 +10,7 @@
         <v-img
           class="rounded"
           max-width="200"
+          max-height="300"
           :src="bookImageLink"
         />
         <div class="flex-wrap text-body-2 mt-1">
