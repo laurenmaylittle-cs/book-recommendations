@@ -12,6 +12,7 @@
       />
     </v-row>
     <best-seller-filter
+      v-if="!isLoading"
       :best-seller-categories="categories"
       @change="updateBestSellerList"
     />
