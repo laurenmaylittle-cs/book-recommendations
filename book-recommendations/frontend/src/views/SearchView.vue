@@ -32,6 +32,33 @@
         />
       </v-col>
     </v-row>
+    <v-row v-if="!isLoading">
+      <v-btn
+        v-if="isPreviousPage"
+        class="mx-2"
+        fab
+        dark
+        color="primary"
+        @click="previousPage"
+      >
+        <v-icon dark>
+          mdi-chevron-left
+        </v-icon>
+      </v-btn>
+      <v-spacer />
+      <v-btn
+        v-if="isNextPage"
+        class="mx-2"
+        fab
+        dark
+        color="primary"
+        @click="nextPage"
+      >
+        <v-icon dark>
+          mdi-chevron-right
+        </v-icon>
+      </v-btn>
+    </v-row>
   </v-container>
 </template>
 
@@ -45,22 +72,55 @@ export default {
   data: function () {
     return {
       searchResults: [],
+      nextSearchResults: [],
       searchTerm: this.$route.params.searchTerm,
-      isLoading: true
+      isLoading: true,
+      isNextPage: true,
+      isPreviousPage: false,
+      currentStartIndex: 0
     }
   },
   async mounted() {
-    await this.searchByAuthor(this.searchTerm)
+    await this.searchByAuthor(this.searchTerm, this.currentStartIndex)
+
+    if (this.searchResults.length < 40) {
+      this.isNextPage = false
+    }
     this.isLoading = false
   },
   methods: {
-    async searchByAuthor(author) {
-      this.searchResults = await searchByAuthor(author)
+    async searchByAuthor(author, startIndex) {
+      this.searchResults = await searchByAuthor(author, startIndex)
+    },
+    async previousPage() {
+      this.currentStartIndex = this.currentStartIndex - 40
+      await this.searchByAuthor(this.searchTerm, this.currentStartIndex)
+
+      if (this.currentStartIndex === 0) {
+        this.isPreviousPage = false
+      }
+      document.body.scrollIntoView()
+    },
+    async nextPage() {
+      this.currentStartIndex = this.currentStartIndex + 40
+
+      this.nextSearchResults = await searchByAuthor(this.searchTerm, this.currentStartIndex)
+      this.isPreviousPage = this.currentStartIndex > 0
+
+      if (this.nextSearchResults.length !== 40) {
+        this.isNextPage = false
+      } else {
+        this.isNextPage = true
+        this.searchResults = this.nextSearchResults
+      }
+
+      document.body.scrollIntoView()
     },
     getNumberOfResults() {
       const numberOfResults = this.searchResults.length
       if (numberOfResults > 1) {
-        return "Showing " + numberOfResults + " results for " + this.searchTerm
+        return "Showing " + this.currentStartIndex + " to " + (this.currentStartIndex
+          + numberOfResults) + " results for " + this.searchTerm
       } else if (numberOfResults === 1) {
         return "Showing " + numberOfResults + " result for " + this.searchTerm
       }
