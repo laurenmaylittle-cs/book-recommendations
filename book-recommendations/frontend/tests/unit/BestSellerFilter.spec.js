@@ -15,14 +15,12 @@ function createComponentWrapper({props} = {}) {
       books: books.slice(0, 3)
     }
   ];
-  const wrapper = shallowMount(BestSellerFilter, {
+  return shallowMount(BestSellerFilter, {
     propsData: {
       bestSellerCategories: bestSellers,
       ...props,
     },
   });
-
-  return wrapper;
 }
 
 describe("BestSellerFilter", () => {
@@ -56,8 +54,9 @@ describe("BestSellerFilter", () => {
       }
 
       wrapper.find("v-select-stub").vm.$emit("input", [1, 2]);
-      expect(wrapper.vm.getChipColor(itemOne)).toStrictEqual("red lighten-4");
-      expect(wrapper.vm.getChipColor(itemTwo)).toStrictEqual("pink lighten-4");
+      //regex to mach hsl color (h - number of digits between 1 and 3, s - number of digits between 1 and 3 followed by %, l - number of digits between 1 and 3 followed by %)
+      expect(wrapper.vm.getChipColor(itemOne)).toMatch(/^hsl\(\d{1,3},\s\d{1,3}%,\s\d{1,3}%\)$/);
+      expect(wrapper.vm.getChipColor(itemTwo)).toMatch(/^hsl\(\d{1,3},\s\d{1,3}%,\s\d{1,3}%\)$/);
     });
 
     it("onChange - emits selected categories", () => {
@@ -69,7 +68,7 @@ describe("BestSellerFilter", () => {
       //then emit the event
       wrapper.find("v-select-stub").vm.$emit("change");
 
-      //asserts that this component emited an event with the selected category ideas
+      //asserts that this component emitted an event with the selected category ideas
       expect(wrapper.emitted().change[0]).toStrictEqual([[1, 2]]);
     });
   });
@@ -87,6 +86,17 @@ describe("BestSellerFilter", () => {
           value: 2
         }
       ]);
+    });
+
+    it("chipColors - generates a color for each category", () => {
+      const wrapper = createComponentWrapper();
+      expect(wrapper.vm.chipColors).toStrictEqual(
+        expect.arrayContaining(
+          [
+            expect.stringMatching(/^hsl\(\d{1,3},\s\d{1,3}%,\s\d{1,3}%\)$/),
+            expect.stringMatching(/^hsl\(\d{1,3},\s\d{1,3}%,\s\d{1,3}%\)$/)
+          ]
+        ));
     });
   });
 });

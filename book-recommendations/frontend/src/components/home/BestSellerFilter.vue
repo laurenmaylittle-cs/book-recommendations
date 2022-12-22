@@ -33,28 +33,7 @@ export default {
     }
   },
   data: () => ({
-    selectedCategories: [],
-    chipColors: [
-      "red lighten-4",
-      "pink lighten-4",
-      "purple lighten-4",
-      "deep-purple lighten-4",
-      "indigo lighten-4",
-      "blue lighten-4",
-      "light-blue lighten-4",
-      "cyan lighten-4",
-      "teal lighten-4",
-      "green lighten-4",
-      "light-green lighten-4",
-      "lime lighten-4",
-      "yellow lighten-4",
-      "amber lighten-4",
-      "orange lighten-4",
-      "deep-orange lighten-4",
-      "brown lighten-4",
-      "grey lighten-4",
-      "blue-grey lighten-4",
-    ],
+    selectedCategories: []
   }),
   computed: {
     items() {
@@ -64,7 +43,21 @@ export default {
           value: category.list_id
         }
       }).sort((a, b) => a.text.localeCompare(b.text));
-    }
+    },
+    chipColors() {
+      //HSL - a model to define colors, but with hue, saturation, and lightness
+      //pastel color - a color with low to medium saturation (low - medium intensity) and high lightness
+      const colors = [];
+      for (let i = 0; i < this.bestSellerCategories.length; i++) {
+        const hue = Math.floor(Math.random() * 360);
+        const saturation = Math.floor(Math.random() * 40) + 30; // between 30 and 70 (low - medium)
+        const lightness = Math.floor(Math.random() * 20) + 80; // between 80 and 100 (high)
+
+        const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+        colors.includes(color) ? i-- : colors.push(color);
+      }
+      return colors;
+    },
   },
   methods: {
     removeChip(item) {
@@ -79,7 +72,7 @@ export default {
     },
     onChange() {
       this.$emit("change", this.selectedCategories);
-    }
+    },
   }
 }
 </script>
