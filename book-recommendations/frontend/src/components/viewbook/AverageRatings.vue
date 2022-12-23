@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <h3 v-if="rating">
-      {{ heading }}
+      Average rating
       <v-rating
         v-model="bookRating"
         background-color="orange lighten-3"
@@ -17,8 +17,7 @@
 export default {
   name: "AverageRatings",
   props: {
-    rating: {type: Number, required: true},
-    heading: {type: String, required: true}
+    rating: {type: Number, required: true}
   },
   data: () => ({
     bookRating: '',

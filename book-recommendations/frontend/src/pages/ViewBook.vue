@@ -38,10 +38,7 @@
           {{ bookData.categories }}
         </h3>
         <br>
-        <average-ratings
-          :rating="bookData.averageRating"
-          heading="Average rating"
-        />
+        <average-ratings :rating="bookData.averageRating" />
         <user-ratings :title="bookData.title" />
       </v-col>
       <v-col class="pb-0 mb-0 mt-2">
@@ -67,7 +64,7 @@
 <script>
 import ViewBookThumbnail from "@/components/viewbook/ViewBookThumbnail";
 import ViewBookDetails from "@/components/viewbook/ViewBookDetails";
-import {getBookInfo} from "@/api/view-book";
+import {getBookInfo} from "@/api/viewBook";
 import AverageRatings from "@/components/viewbook/AverageRatings";
 import UserRatings from "@/components/viewbook/UserRatings";
 
