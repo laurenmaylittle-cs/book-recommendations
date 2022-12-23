@@ -35,4 +35,10 @@ public class BookController {
       @Param("rating") Integer rating) {
     ratingsService.saveUsersRating(isbn, email, rating);
   }
+
+  @PostMapping("private/update-user-rating")
+  public void updateUserRating(@Param("isbn") String isbn, @Param("email") String email,
+      @Param("rating") Integer rating) {
+    ratingsService.updateUsersRating(isbn, email, rating);
+  }
 }
