@@ -17,7 +17,7 @@
 export default {
   name: "AverageRatings",
   props: {
-    rating: {type: Number, required: true}
+    rating: {type: String, required: true}
   },
   data: () => ({
     bookRating: '',
