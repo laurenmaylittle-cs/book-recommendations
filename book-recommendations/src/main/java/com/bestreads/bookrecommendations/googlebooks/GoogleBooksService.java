@@ -19,25 +19,24 @@ import org.springframework.stereotype.Service;
 @Service
 public class GoogleBooksService {
 
-  private static final Logger LOGGER = Logger.getLogger(GoogleBooksService.class);
+    private static final Logger LOGGER = Logger.getLogger(GoogleBooksService.class);
 
-  @Value("${googlebooks.api.uri}")
-  private String googleBooksApiUri;
+    @Value("${googlebooks.api.uri}")
+    private String googleBooksApiUri;
 
-  @Value("${googlebooks.api.key}")
-  private String apiKey;
+    @Value("${google_books.api.key}")
+    private String apiKey;
 
-  public HttpResponse<String> searchVolumeByTitle(String searchTerm, int startIndex,
-      int maxResults) {
-    var uri = "%s/volumes?q=%s&startIndex=%s&maxResults=%s&key=%s".formatted(
-        googleBooksApiUri,
-        searchTerm,
-        startIndex,
-        maxResults,
-        apiKey
-    );
-    return sendHttpRequest(getGetHttpRequest(uri));
-  }
+    public HttpResponse<String> searchVolumeByTitle(String searchTerm, int startIndex, int maxResults) {
+        var uri = "%s/volumes?q=%s&startIndex=%s&maxResults=%s&key=%s".formatted(
+                googleBooksApiUri,
+                searchTerm,
+                startIndex,
+                maxResults,
+                apiKey
+        );
+        return sendHttpRequest(getGetHttpRequest(uri));
+    }
 
   public HttpResponse<String> searchVolumeByAuthor(String searchTerm, int startIndex,
       int maxResults) {
@@ -51,10 +50,21 @@ public class GoogleBooksService {
     return sendHttpRequest(getGetHttpRequest(uri));
   }
 
-    public HttpResponse<String> getVolumeByIsbn(String isbn, int maxResults) {
-        var uri = "%s/volumes/?q=ISBN:%s&maxResults=%s&key=%s".formatted(
+    public HttpResponse<String> getVolumeById(String id, int maxResults) {
+        var uri = "%s/volumes/%s?maxResults=%d&key=%s".formatted(
+                googleBooksApiUri,
+                id,
+                maxResults,
+                apiKey
+        );
+        return sendHttpRequest(getGetHttpRequest(uri));
+    }
+
+    public HttpResponse<String> getVolumeByIsbn(String isbn, int startIndex, int maxResults) {
+        var uri = "%s/volumes/?q=ISBN:%s&startIndex=%s&maxResults=%s&key=%s".formatted(
                 googleBooksApiUri,
                 isbn,
+                startIndex,
                 maxResults,
                 apiKey
         );
@@ -72,15 +82,14 @@ public class GoogleBooksService {
         }
     }
 
-  private HttpResponse<String> sendHttpRequest(HttpRequest httpRequest) {
-    HttpResponse<String> response = null;
-    try {
-      response = HttpClient.newHttpClient()
-          .send(httpRequest, HttpResponse.BodyHandlers.ofString());
-    } catch (IOException | InterruptedException e) {
-      LOGGER.log(Level.ALL,
-          "Cannot make request to Google API with HttpRequest: %s".formatted(httpRequest));
+    private HttpResponse<String> sendHttpRequest(HttpRequest httpRequest) {
+        HttpResponse<String> response = null;
+        try {
+            response = HttpClient.newHttpClient()
+                    .send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            LOGGER.log(Level.ALL, "Cannot make request to Google API with HttpRequest: %s".formatted(httpRequest));
+        }
+        return response;
     }
-    return response;
-  }
 }
