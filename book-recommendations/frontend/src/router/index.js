@@ -18,8 +18,7 @@ const routes = [
   {
     path: '/book',
     name: 'book',
-    component: ViewBook,
-    props: true
+    component: ViewBook
   },
   {
     path: '/default-about-vue',
