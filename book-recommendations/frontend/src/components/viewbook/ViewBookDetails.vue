@@ -42,7 +42,6 @@ export default {
   },
   methods: {
     truncateDescription() {
-      console.log(this.originalDescription)
       return `${this.truncateText(this.originalDescription, 400)}`
     },
     truncateText(text, maxCharacterCount) {

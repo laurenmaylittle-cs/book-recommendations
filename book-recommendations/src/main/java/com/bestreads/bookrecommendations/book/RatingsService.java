@@ -38,6 +38,19 @@ class RatingsService {
     if (userRatingFromDB.isEmpty()) {
       ratingsRepository.save(rating);
     }
+  }
 
+  void updateUsersRating(String isbn, String email, int userRating) {
+    var userRatingFromDB = ratingsRepository.findAllByIsbnAndEmail(isbn, email);
+
+    //check for valid rating, email, isbn??
+
+    if (!userRatingFromDB.isEmpty()) {
+      var rating = userRatingFromDB.get(0);
+      rating.setRating(userRating);
+      ratingsRepository.save(rating);
+    }
+
+    throw new IllegalStateException("");
   }
 }
