@@ -19,7 +19,7 @@
       align="center"
       class="pb-0 pt-0"
     >
-      <v-col class="ml-10">
+      <v-col class="ml-10 pt-12">
         <!-- TODO BES-70 show all authors and genres depending on the data returned from the API -->
         <h1
           v-if="bookData.title"
@@ -38,25 +38,8 @@
           {{ bookData.categories }}
         </h3>
         <br>
-        <h3 v-if="bookData.averageRating">
-          Average rating
-          <v-rating
-            v-model="bookData.averageRating"
-            background-color="orange lighten-3"
-            color="orange"
-            large
-            readonly
-          />
-        </h3>
-        <h3>
-          Your rating
-          <v-rating
-            v-model="rating"
-            background-color="orange lighten-3"
-            color="orange"
-            large
-          />
-        </h3>
+        <average-ratings :rating="bookData.averageRating" />
+        <user-ratings :title="bookData.title" />
       </v-col>
       <v-col class="pb-0 mb-0 mt-2">
         <view-book-thumbnail :thumbnail="bookData?.imageLinks?.thumbnail" />
@@ -79,13 +62,17 @@
 </template>
 
 <script>
-import ViewBookThumbnail from "@/components/ViewBookThumbnail";
-import ViewBookDetails from "@/components/ViewBookDetails";
+import ViewBookThumbnail from "@/components/viewbook/ViewBookThumbnail";
+import ViewBookDetails from "@/components/viewbook/ViewBookDetails";
 import {getBookInfo} from "@/api/viewBook";
+import AverageRatings from "@/components/viewbook/AverageRatings";
+import UserRatings from "@/components/viewbook/UserRatings";
 
 export default {
   name: 'ViewBook',
   components: {
+    UserRatings,
+    AverageRatings,
     ViewBookThumbnail,
     ViewBookDetails
   },
