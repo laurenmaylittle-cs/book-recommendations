@@ -8,7 +8,7 @@
         {{ description }}
       </p>
       <v-layout justify-center>
-        <v-card-actions class="mb-5">
+        <v-card-actions>
           <v-btn
             v-if="isShortDescription"
             @click="viewWholeDescription"
