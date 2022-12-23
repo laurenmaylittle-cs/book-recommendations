@@ -109,7 +109,7 @@
 </template>
 
 <script>
-import {getUserRating, saveUserRating, updateUserRating} from "@/api/viewBook";
+import {getUserRating, saveUserRating, updateUserRating} from "@/api/view-book";
 
 export default {
   name: "UserRatings",
