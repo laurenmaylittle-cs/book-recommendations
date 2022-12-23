@@ -7,10 +7,37 @@ export async function getBookInfo(isbn) {
   });
 }
 
-export async function getUserRating(email, isbn) {
-  return await axios(
-    '/api/private/user-rating?isbn=' + isbn + '&email=' + email)
+export async function getUserRating(email, isbn, token) {
+  return await axios({
+    method: 'GET',
+    url: '/api/private/user-rating?isbn=' + isbn + '&email=' + email,
+    headers: {
+      authorization: `Bearer ${token}`,
+    }
+  })
   .then(response => {
     return response.data
+  })
+}
+
+export async function saveUserRating(email, isbn, rating, token) {
+  return await axios({
+    method: 'POST',
+    url: '/api/private/user-rating?isbn=' + isbn + '&email=' + email
+      + '&rating=' + rating,
+    headers: {
+      authorization: `Bearer ${token}`,
+    }
+  })
+}
+
+export async function updateUserRating(email, isbn, rating, token) {
+  return await axios({
+    method: 'POST',
+    url: '/api/private/update-user-rating?isbn=' + isbn + '&email=' + email
+      + '&rating=' + rating,
+    headers: {
+      authorization: `Bearer ${token}`,
+    }
   })
 }
