@@ -45,7 +45,7 @@
         <user-ratings :title="bookData.title" />
       </v-col>
       <v-col class="pb-0 mb-0 mt-2">
-        <view-book-thumbnail :thumbnail="bookData?.imageLinks?.thumbnail" />
+        <view-book-thumbnail :thumbnail="bookData.imageLinks.thumbnail" />
       </v-col>
     </v-row>
     <v-row
