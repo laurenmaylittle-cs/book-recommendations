@@ -114,7 +114,7 @@ import {getUserRating, saveUserRating, updateUserRating} from "@/api/view-book";
 export default {
   name: "UserRatings",
   props: {
-    title: {type: String, required: true}
+    isbn: {type: String, required: true}
   },
   data: () => ({
     bookRating: '',
@@ -146,20 +146,20 @@ export default {
     async getRatingsData() {
       const token = await this.$auth.getTokenSilently(
         {audience: 'https://localhost:5001/api'});
-      this.bookRating = await getUserRating(this.$auth.user.email, '9780753827666', token)
+      this.bookRating = await getUserRating(this.$auth.user.email, this.isbn, token)
     },
     async postUserRating() {
       const token = await this.$auth.getTokenSilently(
         {audience: 'https://localhost:5001/api'});
       this.hasRating = true
-      await saveUserRating(this.$auth.user.email, '9780753827666', this.bookRating, token)
+      await saveUserRating(this.$auth.user.email, this.isbn, this.bookRating, token)
     },
     async updateUserRating() {
       const token = await this.$auth.getTokenSilently(
         {audience: 'https://localhost:5001/api'});
       this.hasRating = true
       this.updateDialog = false
-      await updateUserRating(this.$auth.user.email, '9780753827666', this.bookRating, token)
+      await updateUserRating(this.$auth.user.email, this.isbn, this.bookRating, token)
     }
   }
 }

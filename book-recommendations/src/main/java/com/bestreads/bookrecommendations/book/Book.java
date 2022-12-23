@@ -2,7 +2,8 @@ package com.bestreads.bookrecommendations.book;
 
 import java.util.List;
 
-public record Book(String title,
+public record Book(String id,
+                   String title,
                    List<String> authors,
                    String publisher,
                    String publishedDate,
@@ -20,7 +21,9 @@ public record Book(String title,
       String description,
       ImageLinks imageLinks) {
 
-    this(title, authors, publisher, "Unknown", description, 0, List.of(), imageLinks, "Unknown", 0,
+    this(null, title, authors, publisher, "Unknown", description, 0, List.of(), imageLinks,
+        "Unknown",
+        0,
         0);
   }
 }

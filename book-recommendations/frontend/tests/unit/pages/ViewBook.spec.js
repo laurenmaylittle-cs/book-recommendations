@@ -4,7 +4,7 @@ import {getBookInfo} from "@/api/view-book";
 
 jest.mock('@/api/view-book');
 
-function createComponentWrapper({...props} = {}) {
+function createComponentWrapper({props} = {}) {
   return shallowMount(ViewBook, {
     propsData: {
       ...props,
@@ -16,6 +16,7 @@ it("Gets the book info", async () => {
 
   const bookInfo =
     {
+      "id": "5cu7sER89nwC",
       "title": "Gone Girl",
       "authors": [
         "Gillian Flynn"
@@ -36,10 +37,17 @@ it("Gets the book info", async () => {
       "ratingsCount": 963
     };
 
-  getBookInfo('9780753827666').mockImplementation(
-    () => Promise.resolve(bookInfo));
+  getBookInfo.mockImplementation((isbn) => {
+    if (isbn === '9780753827666') {
+      return Promise.resolve(bookInfo); // when we call getBookInfo with isbn 9780753827666, return bookInfo
+    } else {
+      return Promise.resolve([]); // otherwise return an empty array
+    }
+
+  });
 
   const wrapper = await createComponentWrapper();
+  await wrapper.vm.$nextTick();
 
   expect(wrapper.vm.isLoading).toBe(false);
   expect(wrapper.vm.bookData).toStrictEqual(bookInfo);

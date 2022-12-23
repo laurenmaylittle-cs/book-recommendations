@@ -32,17 +32,15 @@
         >
           By {{ concatDetails(bookData.authors) }}
         </h2>
-        <h3
-          v-if="bookData.categories"
-        >
-          {{ concatDetails(bookData.categories) }}
-        </h3>
-        <br>
         <average-ratings
+          :id="bookData.id"
           :rating="bookData.averageRating"
           heading="Average rating"
+          :ratings-count="bookData.ratingsCount"
         />
-        <user-ratings :title="bookData.title" />
+        <user-ratings
+          isbn="9780753827666"
+        />
       </v-col>
       <v-col class="pb-0 mb-0 mt-2">
         <view-book-thumbnail :thumbnail="bookData.imageLinks.thumbnail" />
@@ -53,31 +51,31 @@
       align="left"
       class="pt-0 ma-0"
     >
-      <v-col
-        class="pl-0 mt-0"
-      >
-        <view-book-details
-          :original-description="bookData.description"
-        />
-      </v-col>
+      <about-book
+        :category="concatDetails(bookData.categories)"
+        :published-date="bookData.publishedDate"
+        :original-description="bookData.description"
+        :pages="bookData.pageCount"
+        :publisher="bookData.publisher"
+      />
     </v-row>
   </v-container>
 </template>
 
 <script>
 import ViewBookThumbnail from "@/components/viewbook/ViewBookThumbnail";
-import ViewBookDetails from "@/components/viewbook/ViewBookDetails";
 import {getBookInfo} from "@/api/view-book";
 import AverageRatings from "@/components/viewbook/AverageRatings";
 import UserRatings from "@/components/viewbook/UserRatings";
+import AboutBook from "@/components/viewbook/AboutBook";
 
 export default {
   name: 'ViewBook',
   components: {
+    AboutBook,
     UserRatings,
     AverageRatings,
-    ViewBookThumbnail,
-    ViewBookDetails
+    ViewBookThumbnail
   },
   data: () => ({
     bookData: '',

@@ -61,6 +61,7 @@ class BookControllerTest {
   @BeforeAll
   static void setUp() {
     book = new Book(
+        "id",
         "Gone Girl",
         List.of("Gillian Flynn"),
         "Hachette UK",

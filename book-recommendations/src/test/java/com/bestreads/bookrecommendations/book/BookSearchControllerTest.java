@@ -45,7 +45,7 @@ class BookSearchControllerTest {
 
   @BeforeAll
   static void setUp() {
-    Book book = new Book("title", List.of("author1"), "publisher", "2020",
+    Book book = new Book("id", "title", List.of("author1"), "publisher", "2020",
         "description", 200, null, null, "english", 5, 10);
     bookList = List.of(book);
   }
