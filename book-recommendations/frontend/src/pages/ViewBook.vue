@@ -30,12 +30,12 @@
         <h2
           v-if="bookData.authors"
         >
-          {{ bookData.authors }}
+          By {{ concatDetails(bookData.authors) }}
         </h2>
         <h3
           v-if="bookData.categories"
         >
-          {{ bookData.categories }}
+          {{ concatDetails(bookData.categories) }}
         </h3>
         <br>
         <average-ratings
@@ -90,6 +90,13 @@ export default {
   methods: {
     async getBookData() {
       this.bookData = await getBookInfo('9780753827666');
+    },
+    concatDetails(details) {
+      if (details != null && details.length > 1) {
+        return details.join(', ');
+      } else {
+        return details.toString();
+      }
     }
   }
 }
