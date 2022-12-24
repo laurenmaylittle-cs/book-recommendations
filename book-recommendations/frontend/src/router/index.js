@@ -5,6 +5,7 @@ import ProfileView from '../views/ProfileView.vue';
 import {authGuard} from '@/auth/authGuard';
 import SearchView from "@/views/SearchView";
 import HomePage from "@/pages/HomePage";
+import FindFriendsView from "@/pages/FindFriendsView";
 
 Vue.use(VueRouter)
 
@@ -36,6 +37,12 @@ const routes = [
     path: '/profile',
     name: 'profile',
     component: ProfileView,
+    beforeEnter: authGuard
+  },
+  {
+    path: '/find-friends',
+    name: 'find-friends',
+    component: FindFriendsView,
     beforeEnter: authGuard
   }
 ]
