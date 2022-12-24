@@ -27,10 +27,10 @@
     </v-row>
     <v-row class="pl-5 pb-3">
       <h4 class="pr-5">
-        5 Followers
+        {{ followerFollowingDetails.totalFollowers }} Followers
       </h4>
       <h4 class="pl-5">
-        10 Following
+        {{ followerFollowingDetails.totalFollowing }} Following
       </h4>
     </v-row>
     <v-row>
@@ -50,14 +50,22 @@
 
 <script>
 
+import {getFollowersAndFollowing} from "@/api/profile";
+
 export default {
   name: 'ProfileView',
   data() {
     return {
       style: {
         backgroundColor: '#E4E4E4'
-      }
+      },
+      followerFollowingDetails: ''
     }
+  },
+  async mounted() {
+    const token = await this.$auth.getTokenSilently(
+      {audience: 'https://localhost:5001/api'});
+    this.followerFollowingDetails = await getFollowersAndFollowing(this.$auth.user.email, token)
   }
 }
 </script>
