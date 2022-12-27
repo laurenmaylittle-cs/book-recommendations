@@ -1,5 +1,6 @@
 <template>
   <v-row
+    v-if="user.email !== $auth.user.email"
     class="pa-3"
   >
     <v-col cols="10">
@@ -15,6 +16,7 @@
             >
               <img
                 :src="user.picture"
+                alt="Profile picture"
               >
             </v-avatar>
             <v-avatar
