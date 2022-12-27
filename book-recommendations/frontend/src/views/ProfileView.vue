@@ -10,6 +10,7 @@
           <img
             :src="$auth.user.picture"
             alt="Profile picture"
+            referrerpolicy="no-referrer"
           >
         </v-avatar>
       </v-col>

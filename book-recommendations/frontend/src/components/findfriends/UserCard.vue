@@ -17,6 +17,7 @@
               <img
                 :src="user.picture"
                 alt="Profile picture"
+                referrerpolicy="no-referrer"
               >
             </v-avatar>
             <v-avatar

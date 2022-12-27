@@ -49,6 +49,7 @@
         <img
           v-if="$auth.isAuthenticated"
           alt="Profile Picture"
+          referrerpolicy="no-referrer"
           :src="$auth.user.picture"
           class="ml-3 mt-1"
           style="border-radius: 50%; max-width:50px;"
