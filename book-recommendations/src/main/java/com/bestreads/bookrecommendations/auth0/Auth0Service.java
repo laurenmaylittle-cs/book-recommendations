@@ -1,6 +1,7 @@
 package com.bestreads.bookrecommendations.auth0;
 
 import com.bestreads.bookrecommendations.users.User;
+import com.bestreads.bookrecommendations.users.UsersService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -15,6 +16,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Collections;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +25,16 @@ public class Auth0Service {
 
   private String apiKey;
 
-  @Value("${auth0.api-uri}")
-  private String auth0ApiUri;
+  private final String auth0ApiUri;
+
+  private final UsersService usersService;
+
+  @Autowired
+  public Auth0Service(UsersService usersService,
+      @Value("${auth0.api-uri}") String auth0ApiUri) {
+    this.usersService = usersService;
+    this.auth0ApiUri = auth0ApiUri;
+  }
 
   public List<User> searchUsersByEmail(String email) {
     String uri = "%s/users?q=email:*%s*".formatted(auth0ApiUri, email);
@@ -63,7 +73,8 @@ public class Auth0Service {
             user.email(),
             user.email_verified(),
             user.name(),
-            user.picture()
+            user.picture(),
+            usersService.getAllFollowers(user.email())
         )).toList();
   }
 

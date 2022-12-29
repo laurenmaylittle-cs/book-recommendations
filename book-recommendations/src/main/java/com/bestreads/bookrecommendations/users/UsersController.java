@@ -33,9 +33,15 @@ public class UsersController {
     return usersService.getAllFollowersAndFollowing(currentUser);
   }
 
-  @PostMapping
+  @PostMapping("follow")
   public void followUser(@Param("currentUser") String currentUser,
       @Param("userToFollow") String userToFollow) {
     usersService.followUser(currentUser, userToFollow);
+  }
+
+  @PostMapping("unfollow")
+  public void unfollowUser(@Param("currentUser") String currentUser,
+      @Param("userToUnfollow") String userToUnfollow) {
+    usersService.unfollowUser(currentUser, userToUnfollow);
   }
 }

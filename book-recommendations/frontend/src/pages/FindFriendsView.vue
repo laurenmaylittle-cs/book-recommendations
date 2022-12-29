@@ -36,18 +36,21 @@
       v-for="user in userList"
       v-else-if="hasSearched"
       :key="user.email"
-      class="pa-3"
     >
       <v-col cols="10">
-        <v-card v-if="user.email !== $auth.user.email">
+        <v-card
+          v-if="user.email !== $auth.user.email"
+          class="ml-5 mt-2 mb-2"
+          height="150px"
+        >
           <v-row>
             <v-col
               cols="2"
-              class="ml-10 mt-5 mb-5 mr-6"
             >
               <v-avatar
                 v-if="user.picture !== null"
                 size="100px"
+                class="ml-3 mt-5 mb-5 mr-3"
               >
                 <img
                   :src="user.picture"
@@ -57,7 +60,7 @@
                 v-else
                 color="indigo"
                 size="100px"
-                class="ml-10 mt-5 mb-5 mr-3"
+                class="ml-3 mt-5 mb-5 mr-3"
               >
                 <v-icon dark>
                   mdi-account-circle
@@ -74,6 +77,13 @@
             </v-col>
             <v-col class="pt-15">
               <v-btn
+                v-if="isAFollower(user.followers)"
+                @click.native="unfollowUser(user.email)"
+              >
+                Following
+              </v-btn>
+              <v-btn
+                v-else
                 color="primary"
                 @click.native="followUser(user.email)"
               >
@@ -88,7 +98,7 @@
 </template>
 
 <script>
-import {followUser, getUsersSearch} from "@/api/find-friends";
+import {followUser, getUsersSearch, unfollowUser} from "@/api/find-friends";
 
 export default {
   name: "FindFriendsView",
@@ -96,7 +106,8 @@ export default {
     searchParam: '',
     userList: [],
     isLoading: false,
-    hasSearched: false
+    hasSearched: false,
+    isAFollowerOfUser: false
   }),
   methods: {
     async loadSearch() {
@@ -105,11 +116,29 @@ export default {
       let token = await this.$auth.getTokenSilently({audience: 'https://localhost:5001/api'})
       this.userList = await getUsersSearch(this.searchParam, token)
       this.isLoading = false;
+      this.isAFollowerOfUser = false
     },
     async followUser(userToFollow) {
       const token = await this.$auth.getTokenSilently(
         {audience: 'https://localhost:5001/api'});
       await followUser(this.$auth.user.email, userToFollow, token)
+      this.isAFollowerOfUser = true
+    },
+    async unfollowUser(userToUnfollow) {
+      const token = await this.$auth.getTokenSilently(
+        {audience: 'https://localhost:5001/api'});
+      await unfollowUser(this.$auth.user.email, userToUnfollow, token)
+      this.isAFollowerOfUser = false
+      this.isAFollower(null)
+    },
+    isAFollower(listOfFollowers) {
+      listOfFollowers.forEach(follower => this.checkIfUserIsAFollower(follower.followerEmail))
+      return this.isAFollowerOfUser
+    },
+    checkIfUserIsAFollower(followerEmail) {
+      if (this.$auth.user.email === followerEmail) {
+        this.isAFollowerOfUser = true;
+      }
     }
   }
 }
