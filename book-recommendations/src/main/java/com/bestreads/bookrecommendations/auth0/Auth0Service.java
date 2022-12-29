@@ -22,9 +22,11 @@ import org.springframework.stereotype.Service;
 public class Auth0Service {
 
   private String apiKey;
+  private final String auth0ApiUri;
 
-  @Value("${auth0.api-uri}")
-  private String auth0ApiUri;
+  public Auth0Service(@Value("${auth0.api-uri}") String auth0ApiUri) {
+    this.auth0ApiUri = auth0ApiUri;
+  }
 
   public List<User> searchUsersByEmail(String email) {
     String uri = "%s/users?q=email:*%s*".formatted(auth0ApiUri, email);
