@@ -32,6 +32,7 @@
         <followers-following
           :title="formatTitle()"
           :total="followerFollowingDetails.totalFollowers"
+          :list-of-users="followerFollowingDetails.allFollowers"
         />
       </v-col>
       <v-col
@@ -41,6 +42,7 @@
         <followers-following
           title="Following"
           :total="followerFollowingDetails.totalFollowing"
+          :list-of-users="followerFollowingDetails.allFollowing"
         />
       </v-col>
     </v-row>
@@ -80,6 +82,7 @@ export default {
     const token = await this.$auth.getTokenSilently(
       {audience: 'https://localhost:5001/api'});
     this.followerFollowingDetails = await getFollowersAndFollowing(this.$auth.user.email, token)
+    this.getListOfFollowerEmails(followerFollowingDetails.allFollowers)
   },
   methods: {
     formatTitle() {

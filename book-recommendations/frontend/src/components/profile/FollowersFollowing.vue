@@ -17,7 +17,24 @@
     <v-card>
       <v-card-title>{{ title }}</v-card-title>
       <v-divider />
-      <v-card-text style="height: 300px;" />
+      <v-card-text style="height: 300px;">
+        <div v-if="title === 'Followers' || title === 'Follower'">
+          <p
+            v-for="user in listOfUsers"
+            :key="user.id"
+          >
+            {{ user.followerEmail }}
+          </p>
+        </div>
+        <div v-else-if="title === 'Following'">
+          <p
+            v-for="user in listOfUsers"
+            :key="user.id"
+          >
+            {{ user.followingEmail }}
+          </p>
+        </div>
+      </v-card-text>
       <v-divider />
       <v-card-actions>
         <v-btn
@@ -38,11 +55,15 @@ export default {
   props: {
     title: {
       type: String,
-      default: ""
+      required: true
     },
     total: {
       type: Number,
-      default: 0
+      required: true
+    },
+    listOfUsers: {
+      type: Array,
+      required: true
     }
   },
   data() {
