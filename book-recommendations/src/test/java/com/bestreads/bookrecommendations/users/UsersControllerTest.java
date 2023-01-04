@@ -26,7 +26,7 @@ class UsersControllerTest {
   @WithMockUser
   void searchUsers() throws Exception {
 
-    when(auth0Service.searchUsersByEmail("lml22@kent.ac.uk")).thenReturn(
+    when(auth0Service.searchUsersByName("lauren")).thenReturn(
         List.of(
             new User(
                 "lml22@kent.ac.uk",
@@ -48,10 +48,8 @@ class UsersControllerTest {
           """;
 
     mockMvc.perform(get("/api/private/users")
-            .param("email", "lml22@kent.ac.uk"))
+            .param("name", "lauren"))
         .andExpect(content().json(expectedJson));
 
-//    mockMvc.perform(get("/api/private/users")
-//        .param("email", "lml22@kent.ac.uk")).andReturn().getResponse().getContentAsString()
   }
 }

@@ -6,7 +6,7 @@
           <div class="div_center d-flex align-center pl-4">
             <v-text-field
               v-model="searchParam"
-              label="Search by email"
+              label="Search by user's name"
               clearable
               type="String"
               @keyup.enter="loadSearch(searchParam)"

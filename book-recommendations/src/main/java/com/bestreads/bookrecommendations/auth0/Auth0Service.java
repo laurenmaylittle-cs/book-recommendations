@@ -28,8 +28,8 @@ public class Auth0Service {
     this.auth0ApiUri = auth0ApiUri;
   }
 
-  public List<User> searchUsersByEmail(String email) {
-    String uri = "%s/users?q=email:*%s*".formatted(auth0ApiUri, email);
+  public List<User> searchUsersByName(String name) {
+    String uri = "%s/users?q=name:*%s*".formatted(auth0ApiUri, name);
 
     apiKey = getAuthToken();
 

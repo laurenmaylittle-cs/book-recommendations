@@ -20,7 +20,7 @@ public class UsersController {
   }
 
   @GetMapping
-  public List<User> searchUsers(@Param("email") String email) {
-    return auth0Service.searchUsersByEmail(email);
+  public List<User> searchUsers(@Param("name") String name) {
+    return auth0Service.searchUsersByName(name);
   }
 }

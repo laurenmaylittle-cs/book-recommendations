@@ -1,7 +1,7 @@
 import axios from "axios";
 
-export async function getUsersSearch(email, token) {
-  return axios.get("/api/private/users?email=" + email, {
+export async function getUsersSearch(name, token) {
+  return axios.get("/api/private/users?name=" + name, {
     headers: {
       authorization: `Bearer ${token}`,
     }
