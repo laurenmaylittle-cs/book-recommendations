@@ -36,6 +36,12 @@ const routes = [
     name: 'profile',
     component: ProfileView,
     beforeEnter: authGuard
+  },
+  {
+    path: '/bookshelf',
+    name: 'bookshelf',
+    component: () => import(/* webpackChunkName: "bookshelf" */ '../pages/BookshelfPage.vue'),
+    beforeEnter: authGuard
   }
 ]
 

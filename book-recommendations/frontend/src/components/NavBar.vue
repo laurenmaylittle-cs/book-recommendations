@@ -16,10 +16,20 @@
         </v-btn>
       </v-hover>
     </div>
-    <search-bar :search-term="searchTerm" />
-    <v-spacer />
+    <search-bar :search-term="searchTerm"/>
+    <v-spacer/>
 
-<!--    TODO BES-36 do proper implementation of profile link, just placeholder to demo AuthGuard page authentication-->
+    <router-link to="/bookshelf">
+      <v-btn
+        text
+        color="white"
+      >
+        <v-icon>mdi-link</v-icon>
+        <span class="mr-2">My collections</span>
+      </v-btn>
+    </router-link>
+
+    <!--    TODO BES-36 do proper implementation of profile link, just placeholder to demo AuthGuard page authentication-->
     <router-link
       v-if="$auth.isAuthenticated"
       to="/profile"
@@ -30,12 +40,22 @@
     </router-link>
     <div v-if="!$auth.loading">
       <!-- show login when not authenticated -->
-      <button v-if="!$auth.isAuthenticated" @click="login">Log in</button>
+      <button
+        v-if="!$auth.isAuthenticated"
+        @click="login"
+      >
+        Log in
+      </button>
       <!-- show logout when authenticated -->
       <h4 v-if="$auth.isAuthenticated">
-        Hi {{$auth.user.name}}
+        Hi {{ $auth.user.name }}
       </h4>
-      <button v-if="$auth.isAuthenticated" @click="logout">Log out</button>
+      <button
+        v-if="$auth.isAuthenticated"
+        @click="logout"
+      >
+        Log out
+      </button>
     </div>
     <div v-if="!$auth.loading">
       <img
@@ -43,7 +63,7 @@
         :src="$auth.user.picture"
         class="ml-3 mt-1"
         style="border-radius: 50%; max-width:50px;"
-      />
+      >
     </div>
   </v-app-bar>
 </template>

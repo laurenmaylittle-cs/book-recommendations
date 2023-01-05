@@ -1,23 +1,41 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
+import com.bestreads.bookrecommendations.bookshelf.json.CollectionJson;
 import com.bestreads.bookrecommendations.bookshelf.model.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Set;
 
 @Service
 class CollectionsService {
 
-    private final CollectionsRepository collectionsRepository;
+  private final CollectionsRepository collectionsRepository;
 
-    @Autowired
-    CollectionsService(CollectionsRepository collectionsRepository) {
-        this.collectionsRepository = collectionsRepository;
-    }
+  @Autowired
+  CollectionsService(CollectionsRepository collectionsRepository) {
+    this.collectionsRepository = collectionsRepository;
+  }
 
-    Set<Collection> getCollections(String userId) {
-        return collectionsRepository.findByUserId(userId);
-    }
+  Set<CollectionJson> getCollections(String userId) {
+    return collectionsRepository.findByUserId(userId)
+        .stream().map(x -> new CollectionJson(x.getId(), x.getName()))
+        .collect(Collectors.toSet());
+  }
+
+  public Collection getCollectionById(Long collectionId) {
+    return collectionsRepository.findById(collectionId).orElseThrow(
+        () -> new EntityNotFoundException(
+            "Collection with ID:%d not found".formatted(collectionId)));
+  }
+
+
+  public Collection createNewCollection(String userId, String name) {
+    var collection = new Collection();
+    collection.setName(name);
+    collection.setUserId(userId);
+    return collectionsRepository.save(collection);
+  }
 
 }

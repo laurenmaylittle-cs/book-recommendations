@@ -1,12 +1,10 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
 import com.bestreads.bookrecommendations.bookshelf.model.Collection;
-import org.springframework.data.repository.CrudRepository;
-
 import java.util.Set;
+import org.springframework.data.repository.CrudRepository;
 
 public interface CollectionsRepository extends CrudRepository<Collection, Long> {
 
-    Set<Collection> findByUserId(String userId);
-
+  Set<Collection> findByUserId(String userId);
 }
