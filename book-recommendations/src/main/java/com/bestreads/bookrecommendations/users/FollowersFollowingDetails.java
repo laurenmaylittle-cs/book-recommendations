@@ -3,8 +3,8 @@ package com.bestreads.bookrecommendations.users;
 import java.util.List;
 
 record FollowersFollowingDetails(Integer totalFollowers,
-                                 List<FollowersFollowing> allFollowers,
+                                 List<User> allFollowers,
                                  Integer totalFollowing,
-                                 List<FollowersFollowing> allFollowing) {
+                                 List<User> allFollowing) {
 
 }

@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-interface FollowersFollowingRepository extends CrudRepository<FollowersFollowing, Integer> {
+public interface FollowersFollowingRepository extends CrudRepository<FollowersFollowing, Integer> {
 
   // This returns all people that the user follows
   List<FollowersFollowing> findAllByFollowerEmail(String follower);
