@@ -51,26 +51,26 @@ public class GoogleBooksService {
     return sendHttpRequest(getGetHttpRequest(uri));
   }
 
-    public HttpResponse<String> getVolumeByIsbn(String isbn, int maxResults) {
-        var uri = "%s/volumes/?q=ISBN:%s&maxResults=%s&key=%s".formatted(
-                googleBooksApiUri,
-                isbn,
-                maxResults,
-                apiKey
-        );
-        return sendHttpRequest(getGetHttpRequest(uri));
-    }
+  public HttpResponse<String> getVolumeByIsbn(String isbn, int maxResults) {
+    var uri = "%s/volumes/?q=isbn:%s&maxResults=%s&key=%s".formatted(
+        googleBooksApiUri,
+        isbn,
+        maxResults,
+        apiKey
+    );
+    return sendHttpRequest(getGetHttpRequest(uri));
+  }
 
-    private HttpRequest getGetHttpRequest(String uri) {
-        try {
-            return HttpRequest.newBuilder()
-                    .uri(new URI(uri))
-                    .GET()
-                    .build();
-        } catch (URISyntaxException e) {
-            throw new IllegalStateException("Error creating URI: %s".formatted(uri));
-        }
+  private HttpRequest getGetHttpRequest(String uri) {
+    try {
+      return HttpRequest.newBuilder()
+          .uri(new URI(uri))
+          .GET()
+          .build();
+    } catch (URISyntaxException e) {
+      throw new IllegalStateException("Error creating URI: %s".formatted(uri));
     }
+  }
 
   private HttpResponse<String> sendHttpRequest(HttpRequest httpRequest) {
     HttpResponse<String> response = null;

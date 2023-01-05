@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import ViewBook from "@/pages/ViewBook";
+import ViewBookPage from "@/pages/ViewBookPage.vue";
 import ProfileView from '../views/ProfileView.vue';
 import {authGuard} from '@/auth/authGuard';
 import SearchView from "@/views/SearchView";
@@ -18,7 +18,7 @@ const routes = [
   {
     path: '/book',
     name: 'book',
-    component: ViewBook
+    component: ViewBookPage
   },
   {
     path: '/default-about-vue',

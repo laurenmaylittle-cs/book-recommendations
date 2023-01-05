@@ -12,8 +12,8 @@
       />
     </v-row>
     <v-row align="center">
-      <v-col>
-        <view-book-thumbnail :thumbnail="bookData?.imageLinks?.thumbnail" />
+      <v-col cols="3">
+        <view-book-thumbnail :thumbnail="bookData.imageLinks.thumbnail"/>
       </v-col>
       <v-col>
         <!-- TODO BES-70 show all authors and genres depending on the data returned from the API -->
@@ -43,12 +43,12 @@ export default {
     bookData: '',
     isLoading: true
   }),
-  async mounted () {
+  async mounted() {
     await this.getBookData()
     this.isLoading = false;
   },
   methods: {
-    async getBookData () {
+    async getBookData() {
       this.bookData = await getBookInfo('9780753827666');
     }
   }
