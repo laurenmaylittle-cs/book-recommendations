@@ -1,6 +1,9 @@
 <template>
   <v-container>
-    <create-collection-modal @collection-created="getNewCollection"/>
+    <create-collection-modal
+      ref="createModal"
+      @collection-created="getNewCollection"
+    />
     <v-row class="mt-3">
       <collection-item
         v-for="(collection, index) in collections"
@@ -57,7 +60,10 @@ export default {
         },
       });
       this.collections.push(newCollection.data);
-
+      this.$refs.createModal.resetState();
+    },
+    getHoverEffect(hover) {
+      return hover ? "blue-grey lighten-4" : "transparent";
     },
   },
 }

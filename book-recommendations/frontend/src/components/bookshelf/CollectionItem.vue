@@ -1,17 +1,19 @@
 <template>
   <v-col cols="2">
-    <v-card
-      :color="collectionColor"
-      height="150"
-      width="200"
-      max-height="200"
-    >
-      <v-card-text
-        class="d-flex flex-column align-center justify-center fill-height text-h6 font-weight-bold"
+    <v-hover v-slot="{ hover }">
+      <v-card
+        :color="getHoverEffect(hover)"
+        height="150"
+        width="200"
+        max-height="200"
       >
-        {{ collectionName }}
-      </v-card-text>
-    </v-card>
+        <v-card-text
+          class="d-flex flex-column align-center justify-center fill-height text-h6 font-weight-bold"
+        >
+          {{ collectionName }}
+        </v-card-text>
+      </v-card>
+    </v-hover>
   </v-col>
 </template>
 
@@ -27,7 +29,12 @@ export default {
       type: String,
       default: "#26c6da",
     },
-  }
+  },
+  methods: {
+    getHoverEffect(hover) {
+      return hover ? "transparent" : this.collectionColor;
+    },
+  },
 }
 </script>
 

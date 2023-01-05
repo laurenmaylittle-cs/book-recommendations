@@ -13,34 +13,48 @@
       <v-dialog
         v-model="dialog"
         max-width="290"
+        @click:outside="resetState"
       >
         <v-card>
-          <!--a form to create a new collection-->
-          <v-card-title>
-            <span class="headline">New collection</span>
-          </v-card-title>
+          <v-toolbar
+            color="primary"
+          >
+            <v-btn
+              icon
+              dark
+              @click="resetState"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-toolbar>
           <v-card-text>
-            <v-container>
-              <v-row>
-                <v-col>
-                  <v-text-field
-                    v-model="collectionName"
-                    label="Collection name"
-                    required
+            <v-form ref="form">
+              <v-container>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      v-model="collectionName"
+                      label="Collection name"
+                      :rules="[rules.required]"
+                    />
+                  </v-col>
+                </v-row>
+              </v-container>
+              <v-card-actions>
+                <v-btn
+                  color="primary"
+                  text
+                  @click="createCollection"
+                >
+                  Create
+                  <v-progress-circular
+                    v-if="collectionUpdateInProgress"
+                    indeterminate
+                    color="primary"
                   />
-                </v-col>
-              </v-row>
-            </v-container>
-            <v-card-actions>
-              <v-spacer/>
-              <v-btn
-                color="green darken-1"
-                text
-                @click="createCollection"
-              >
-                Create
-              </v-btn>
-            </v-card-actions>
+                </v-btn>
+              </v-card-actions>
+            </v-form>
           </v-card-text>
         </v-card>
       </v-dialog>
@@ -56,10 +70,18 @@ export default {
   name: "CreateCollectionModal",
   data: () => ({
     dialog: false,
-    collectionName: ""
+    collectionName: "",
+    collectionUpdateInProgress: false,
+    rules: {
+      required: value => !!value || 'Required.',
+    },
   }),
   methods: {
     async createCollection() {
+      if (!this.$refs.form.validate()) {
+        return;
+      }
+      this.collectionUpdateInProgress = true;
       const url = "/api/private/bookshelf/collections";
       const params = new URLSearchParams({name: this.collectionName});
       const config = {
@@ -70,7 +92,11 @@ export default {
       const createResult = await axios.post(url, params, config);
 
       this.$emit("collection-created", createResult.headers.location);
+    },
+    resetState() {
+      this.collectionName = "";
       this.dialog = false;
+      this.collectionUpdateInProgress = false;
     },
   }
 }
