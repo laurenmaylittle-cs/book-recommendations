@@ -2,7 +2,8 @@
   <v-container>
     <v-row>
       <v-btn
-        color="#26c6da"
+        class="mt-3"
+        color="primary"
         @click="dialog = true"
       >
         <v-icon>mdi-plus</v-icon>
@@ -18,6 +19,7 @@
         <v-card>
           <v-toolbar
             color="primary"
+            rounded
           >
             <v-btn
               icon
@@ -103,5 +105,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

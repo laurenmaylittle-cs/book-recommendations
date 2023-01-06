@@ -24,8 +24,8 @@
         text
         color="white"
       >
-        <v-icon>mdi-link</v-icon>
-        <span class="mr-2">My collections</span>
+        <v-icon>mdi-bookshelf</v-icon>
+        <span class="mr-2">Book shelf</span>
       </v-btn>
     </router-link>
 

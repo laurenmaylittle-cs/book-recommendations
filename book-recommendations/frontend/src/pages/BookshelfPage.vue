@@ -1,17 +1,38 @@
 <template>
   <v-container>
-    <create-collection-modal
-      ref="createModal"
-      @collection-created="getNewCollection"
-    />
-    <v-row class="mt-3">
-      <collection-item
-        v-for="(collection, index) in collections"
-        :key="collection.id"
-        :collection-name="collection.name"
-        :collection-color="collectionColors[index]"
-      />
-    </v-row>
+    <v-sheet color="background">
+      <v-tabs
+        background-color="transparent"
+        color="background"
+        vertical
+      >
+        <v-tab>Collections</v-tab>
+        <v-tab>Wishlist</v-tab>
+        <v-tab-item>
+          <v-sheet color="background">
+            <create-collection-modal
+              ref="createModal"
+              @collection-created="getNewCollection"
+            />
+            <v-row class="mt-3">
+              <collection-item
+                v-for="(collection, index) in collections"
+                :key="collection.id"
+                :collection-name="collection.name"
+                :collection-color="collectionColors[index]"
+              />
+            </v-row>
+          </v-sheet>
+        </v-tab-item>
+        <v-tab-item>
+          <v-sheet color="background">
+            <p>
+              Wishlist
+            </p>
+          </v-sheet>
+        </v-tab-item>
+      </v-tabs>
+    </v-sheet>
   </v-container>
 </template>
 
@@ -36,6 +57,8 @@ export default {
 
         const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
         colors.includes(color) ? i-- : colors.push(color);
+
+        //move this to a method to prevent it from re-calculating on every new collection
       }
       return colors;
     },
@@ -62,13 +85,12 @@ export default {
       this.collections.push(newCollection.data);
       this.$refs.createModal.resetState();
     },
-    getHoverEffect(hover) {
-      return hover ? "blue-grey lighten-4" : "transparent";
-    },
   },
 }
 </script>
 
 <style scoped>
-
+.background {
+  background-color: #E4E4E4 !important;
+}
 </style>
