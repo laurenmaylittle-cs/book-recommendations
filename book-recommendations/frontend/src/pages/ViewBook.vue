@@ -27,11 +27,37 @@
         >
           {{ bookData.title }}
         </h1>
-        <h2
+        <div
           v-if="bookData.authors"
         >
-          By {{ concatDetails(bookData.authors) }}
-        </h2>
+          <div
+            v-for="(author, index) in bookData.authors"
+            :key="index"
+          >
+            <h2 v-if="index === 0 && bookData.authors.length === 0">
+              By
+              <router-link :to="{ name: 'search', params: {searchTerm: author}}">
+                {{ author }}
+              </router-link>
+            </h2>
+            <h2 v-else-if="index === 0">
+              By
+              <router-link :to="{ name: 'search', params: {searchTerm: author}}">
+                {{ author }},
+              </router-link>
+            </h2>
+            <h2 v-else-if="index === bookData.authors.length -1">
+              <router-link :to="{ name: 'search', params: {searchTerm: author}}">
+                {{ author }}
+              </router-link>
+            </h2>
+            <h2 v-else>
+              <router-link :to="{ name: 'search', params: {searchTerm: author}}">
+                {{ author }},
+              </router-link>
+            </h2>
+          </div>
+        </div>
         <average-ratings
           :id="bookData.id"
           :rating="bookData.averageRating"
@@ -87,7 +113,7 @@ export default {
   },
   methods: {
     async getBookData() {
-      this.bookData = await getBookInfo('9780753827666');
+      this.bookData = await getBookInfo('9780060853969');
     },
     concatDetails(details) {
       if (details != null && details.length > 1) {
