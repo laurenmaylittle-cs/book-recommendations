@@ -113,7 +113,7 @@ export default {
   },
   methods: {
     async getBookData() {
-      this.bookData = await getBookInfo('9780060853969');
+      this.bookData = await getBookInfo('9780753827666');
     },
     concatDetails(details) {
       if (details != null && details.length > 1) {
