@@ -18,22 +18,24 @@
       <v-card-title>{{ title }}</v-card-title>
       <v-divider />
       <v-card-text style="height: 300px;">
-        <div v-if="title === 'Followers' || title === 'Follower'">
-          <p
-            v-for="user in listOfUsers"
-            :key="user.email"
+        <v-row
+          v-for="user in listOfUsers"
+          :key="user.email"
+        >
+          <v-avatar
+            size="50px"
+            class="mt-5"
           >
+            <img
+              :src="user.picture"
+              alt="Profile picture"
+              referrerpolicy="no-referrer"
+            >
+          </v-avatar>
+          <h3 class="ma-5 pt-2">
             {{ user.name }}
-          </p>
-        </div>
-        <div v-else-if="title === 'Following'">
-          <p
-            v-for="user in listOfUsers"
-            :key="user.email"
-          >
-            {{ user.name }}
-          </p>
-        </div>
+          </h3>
+        </v-row>
       </v-card-text>
       <v-divider />
       <v-card-actions>
