@@ -9,7 +9,10 @@
         <v-tab>Collections</v-tab>
         <v-tab>Wishlist</v-tab>
         <v-tab-item>
-          <v-sheet color="background">
+          <v-sheet
+            color="background"
+            min-height="200"
+          >
             <create-collection-modal
               ref="createModal"
               @collection-created="getNewCollection"
@@ -25,7 +28,10 @@
           </v-sheet>
         </v-tab-item>
         <v-tab-item>
-          <v-sheet color="background">
+          <v-sheet
+            min-height="200"
+            color="background"
+          >
             <p>
               Wishlist
             </p>
