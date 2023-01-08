@@ -46,7 +46,7 @@ export default {
   },
   methods: {
     getHoverEffect(hover) {
-      return hover ? "transparent" : this.collectionColor;
+      return hover ? "white" : this.collectionColor;
     },
   }
 }
