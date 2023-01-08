@@ -1,5 +1,16 @@
 <template>
   <v-container>
+    <v-row
+      v-if="isLoading"
+      class="justify-center"
+    >
+      <v-progress-circular
+        :size="70"
+        :width="7"
+        color="purple"
+        indeterminate
+      />
+    </v-row>
     <v-sheet color="background">
       <v-tabs
         background-color="transparent"
@@ -22,7 +33,7 @@
                 v-for="(collection, index) in collections"
                 :key="collection.id"
                 :collection-name="collection.name"
-                :collection-color="collectionColors[index]"
+                :collection-color="colors[index]"
               />
             </v-row>
           </v-sheet>
@@ -52,22 +63,16 @@ export default {
   components: {CollectionItem, CreateCollectionModal},
   data: () => ({
     collections: [],
+    colors: [],
+    isLoading: true,
   }),
-  computed: {
-    collectionColors() {
-      const colors = [];
-      for (let i = 0; i < this.collections.length; i++) {
-        const hue = Math.floor(Math.random() * 360);
-        const saturation = Math.floor(Math.random() * 40) + 30;
-        const lightness = Math.floor(Math.random() * 20) + 80;
-
-        const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-        colors.includes(color) ? i-- : colors.push(color);
-
-        //move this to a method to prevent it from re-calculating on every new collection
-      }
-      return colors;
-    },
+  watch: {
+    collections: {
+      handler() {
+        this._computeCollectionColors();
+      },
+      deep: true
+    }
   },
   mounted() {
     this.getCollections();
@@ -80,6 +85,8 @@ export default {
         },
       });
       this.collections = result.data;
+      this._computeCollectionColors();
+      this.isLoading = false;
     },
     async getNewCollection(url) {
       const resourcePath = new URL(url).pathname;
@@ -89,9 +96,20 @@ export default {
         },
       });
       this.collections.push(newCollection.data);
+      this._computeCollectionColors();
       this.$refs.createModal.resetState();
     },
-  },
+    _computeCollectionColors() {
+      for (let i = this.colors.length; i < this.collections.length; i++) {
+        const hue = Math.floor(Math.random() * 360);
+        const saturation = Math.floor(Math.random() * 20 + 50);
+        const lightness = Math.floor(Math.random() * 20) + 80;
+
+        const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+        this.colors.includes(color) ? i-- : this.colors.push(color);
+      }
+    },
+  }
 }
 </script>
 

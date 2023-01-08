@@ -99,6 +99,7 @@ export default {
       this.collectionName = "";
       this.dialog = false;
       this.collectionUpdateInProgress = false;
+      this.$refs.form.reset();
     },
   }
 }
