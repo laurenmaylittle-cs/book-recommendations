@@ -34,7 +34,7 @@
             v-for="(author, index) in bookData.authors"
             :key="index"
           >
-            <h2 v-if="index === 0 && bookData.authors.length === 0">
+            <h2 v-if="index === 0 && bookData.authors.length === 1">
               By
               <router-link :to="{ name: 'search', params: {searchTerm: author}}">
                 {{ author }}
