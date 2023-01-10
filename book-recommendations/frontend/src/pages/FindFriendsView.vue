@@ -34,10 +34,16 @@
     </v-row>
     <user-card
       v-for="user in userList"
-      v-else-if="hasSearched"
+      v-else-if="hasSearched && userList.length > 0"
       :key="user.email"
       :user="user"
     />
+    <div
+      v-else-if="hasSearched"
+      class="pa-5"
+    >
+      No results found
+    </div>
   </v-container>
 </template>
 
