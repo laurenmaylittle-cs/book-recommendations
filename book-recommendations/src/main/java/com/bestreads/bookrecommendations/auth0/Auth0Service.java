@@ -1,6 +1,6 @@
 package com.bestreads.bookrecommendations.auth0;
 
-import com.bestreads.bookrecommendations.users.FollowersFollowingRepository;
+import com.bestreads.bookrecommendations.users.FollowersFollowingService;
 import com.bestreads.bookrecommendations.users.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -27,13 +27,13 @@ public class Auth0Service {
 
   private final String auth0ApiUri;
 
-  private final FollowersFollowingRepository followersFollowingRepository;
+  private final FollowersFollowingService followersFollowingService;
 
   @Autowired
   public Auth0Service(@Value("${auth0.api-uri}") String auth0ApiUri,
-      FollowersFollowingRepository followersFollowingRepository) {
-    this.followersFollowingRepository = followersFollowingRepository;
+      FollowersFollowingService followersFollowingService) {
     this.auth0ApiUri = auth0ApiUri;
+    this.followersFollowingService = followersFollowingService;
   }
 
   public List<User> searchUsersByEmail(String email) {
@@ -83,7 +83,7 @@ public class Auth0Service {
   }
 
   private List<User> extractFromHttpResponse(HttpResponse<String> httpResponse,
-      boolean includeFollowing) {
+      boolean includeFollowers) {
     if (!checkHttpStatusResponse200Ok(httpResponse)) {
       return Collections.emptyList(); //TODO BES-55 retry calling the API before returning empty list
     }
@@ -105,7 +105,7 @@ public class Auth0Service {
             user.email_verified(),
             user.name(),
             user.picture(),
-            includeFollowing ? followersFollowingRepository.findAllByFollowingEmail(user.email())
+            includeFollowers ? followersFollowingService.getFollowers(user.email())
                 : null
         )).toList();
   }

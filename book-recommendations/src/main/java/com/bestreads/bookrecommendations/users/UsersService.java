@@ -11,7 +11,7 @@ class UsersService {
   private final Auth0Service auth0Service;
 
   @Autowired
-  public UsersService(FollowersFollowingRepository followersFollowingRepository,
+  UsersService(FollowersFollowingRepository followersFollowingRepository,
       Auth0Service auth0Service) {
     this.followersFollowingRepository = followersFollowingRepository;
     this.auth0Service = auth0Service;
