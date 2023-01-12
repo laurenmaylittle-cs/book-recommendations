@@ -30,7 +30,6 @@ class CollectionsService {
             "Collection with ID:%d not found".formatted(collectionId)));
   }
 
-
   public Collection createNewCollection(String userId, String name) {
     var collection = new Collection();
     collection.setName(name);

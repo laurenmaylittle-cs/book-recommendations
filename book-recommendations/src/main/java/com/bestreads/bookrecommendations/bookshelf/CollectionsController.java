@@ -7,6 +7,7 @@ import java.net.URISyntaxException;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,14 +29,20 @@ public class CollectionsController {
   }
 
   @GetMapping
-  public Set<CollectionJson> getCollections(JwtAuthenticationToken authenticationToken) {
+  public ResponseEntity<Set<CollectionJson>> getCollections(
+      JwtAuthenticationToken authenticationToken) {
     var userId = AuthHelper.getUserId(authenticationToken);
-    return collectionsService.getCollections(userId);
+
+    if (userId.isPresent()) {
+      return ResponseEntity.ok(collectionsService.getCollections(userId.get()));
+    } else {
+      return ResponseEntity.badRequest().build();
+    }
+
   }
 
   @GetMapping("/{Id}")
-  public CollectionJson getCollectionById(JwtAuthenticationToken authenticationToken,
-      @PathVariable Long Id) {
+  public CollectionJson getCollectionById(@PathVariable Long Id) {
     var collection = collectionsService.getCollectionById(Id);
     return new CollectionJson(collection.getId(), collection.getName());
   }
@@ -46,10 +53,13 @@ public class CollectionsController {
       throws URISyntaxException {
 
     var userId = AuthHelper.getUserId(authenticationToken);
-    var createdCollection = collectionsService.createNewCollection(userId, name);
 
+    if (userId.isEmpty()) {
+      return new ResponseEntity<>("User id not found in token", HttpStatus.BAD_REQUEST);
+    }
+
+    var createdCollection = collectionsService.createNewCollection(userId.get(), name);
     var location = new URI(httpServletRequest.getRequestURL() + "/" + createdCollection.getId());
-
     return ResponseEntity.created(location).build();
   }
 }
