@@ -1,20 +1,19 @@
 package com.bestreads.bookrecommendations.book;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+
 import com.bestreads.bookrecommendations.googlebooks.GoogleBooksService;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.verify;
-
 @ExtendWith(MockitoExtension.class)
-class BookSearchServiceTest {
+class BookDaoSearchServiceTest {
 
     @Mock
     private GoogleBooksService googleBooksService;
@@ -50,14 +49,16 @@ class BookSearchServiceTest {
     void searchByTitle_withMaxResultsOverload_assertException() {
         var searchTerm = "Dan Ashworth";
         var maxResults = 41;
-        assertThrows(IllegalArgumentException.class, () -> bookSearchService.searchByTitle(searchTerm, maxResults));
+        assertThrows(IllegalArgumentException.class,
+            () -> bookSearchService.searchByTitle(searchTerm, maxResults));
     }
 
     @Test
     void searchByTitle_withMaxResultsNegative_assertException() {
         var searchTerm = "Dan Ashworth";
         var maxResults = -1;
-        assertThrows(IllegalArgumentException.class, () -> bookSearchService.searchByTitle(searchTerm, maxResults));
+        assertThrows(IllegalArgumentException.class,
+            () -> bookSearchService.searchByTitle(searchTerm, maxResults));
     }
 
     @Test

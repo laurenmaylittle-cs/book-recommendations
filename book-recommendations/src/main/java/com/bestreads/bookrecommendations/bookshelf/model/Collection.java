@@ -1,60 +1,63 @@
 package com.bestreads.bookrecommendations.bookshelf.model;
 
-import javax.persistence.*;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import org.hibernate.Hibernate;
 
 @Entity
-@Table(name = "collection")
 public class Collection {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+  @Column(nullable = false)
+  private String name;
 
-    @Column(name = "user_id")
-    private String userId;
+  private String userId;
 
-    @ManyToMany
-    @JoinTable(name = "books_collection",
-            joinColumns = @JoinColumn(name = "collection_id"),
-            inverseJoinColumns = @JoinColumn(name = "books_id"))
-    private Set<Book> books = new LinkedHashSet<>();
+  public String getUserId() {
+    return userId;
+  }
 
-    public Set<Book> getBooks() {
-        return books;
+  public void setUserId(String userId) {
+    this.userId = userId;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    public void setBooks(Set<Book> books) {
-        this.books = books;
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
     }
+    Collection that = (Collection) o;
+    return id != null && Objects.equals(id, that.id);
+  }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }
