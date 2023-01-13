@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.bestreads.bookrecommendations.bookshelf.json.CollectionJson;
-import com.bestreads.bookrecommendations.bookshelf.model.Collection;
+import com.bestreads.bookrecommendations.bookshelf.model.CollectionDAO;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +70,7 @@ class CollectionsControllerTest {
 
   @Test
   void getCollectionById() throws Exception {
-    var collection = new Collection();
+    var collection = new CollectionDAO();
     collection.setId(10L);
     collection.setName("Summer Reading");
 
@@ -93,7 +93,7 @@ class CollectionsControllerTest {
   void createCollection() throws Exception {
     var baseURL = "http://localhost";
 
-    var collection = new Collection();
+    var collection = new CollectionDAO();
     collection.setId(10L);
     collection.setName("Summer Reading");
 

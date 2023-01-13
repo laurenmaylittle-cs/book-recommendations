@@ -6,7 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.bestreads.bookrecommendations.bookshelf.json.CollectionJson;
-import com.bestreads.bookrecommendations.bookshelf.model.Collection;
+import com.bestreads.bookrecommendations.bookshelf.model.CollectionDAO;
 import java.util.Optional;
 import java.util.Set;
 import javax.persistence.EntityNotFoundException;
@@ -29,26 +29,26 @@ class CollectionsServiceTest {
 
 
   private final String userId = "USER_ID1234";
-  private Collection collectionOne;
-  private Collection collectionTwo;
+  private CollectionDAO collectionDAOOne;
+  private CollectionDAO collectionDAOTwo;
 
   @BeforeEach
   void setUp() {
-    collectionOne = new Collection();
-    collectionOne.setId(1L);
-    collectionOne.setName("Collection One");
-    collectionOne.setUserId(userId);
+    collectionDAOOne = new CollectionDAO();
+    collectionDAOOne.setId(1L);
+    collectionDAOOne.setName("Collection One");
+    collectionDAOOne.setUserId(userId);
 
-    collectionTwo = new Collection();
-    collectionTwo.setId(2L);
-    collectionTwo.setName("Collection Two");
-    collectionTwo.setUserId(userId);
+    collectionDAOTwo = new CollectionDAO();
+    collectionDAOTwo.setId(2L);
+    collectionDAOTwo.setName("Collection Two");
+    collectionDAOTwo.setUserId(userId);
   }
 
   @Test
   void getCollections() {
     when(collectionsRepository.findByUserId(userId)).thenReturn(
-        Set.of(collectionOne, collectionTwo));
+        Set.of(collectionDAOOne, collectionDAOTwo));
 
     assertEquals(
         Set.of(new CollectionJson(1L, "Collection One"), new CollectionJson(2L, "Collection Two")),
@@ -57,9 +57,9 @@ class CollectionsServiceTest {
 
   @Test
   void getCollectionById_whenValidIdProvided() {
-    when(collectionsRepository.findById(1L)).thenReturn(Optional.of(collectionOne));
+    when(collectionsRepository.findById(1L)).thenReturn(Optional.of(collectionDAOOne));
 
-    assertEquals(collectionOne, collectionsService.getCollectionById(1L));
+    assertEquals(collectionDAOOne, collectionsService.getCollectionById(1L));
   }
 
   @Test
@@ -72,7 +72,8 @@ class CollectionsServiceTest {
 
   @Test
   void createNewCollection() {
-    ArgumentCaptor<Collection> collectionArgumentCaptor = ArgumentCaptor.forClass(Collection.class);
+    ArgumentCaptor<CollectionDAO> collectionArgumentCaptor = ArgumentCaptor.forClass(
+        CollectionDAO.class);
 
     collectionsService.createNewCollection(userId, "Collection Spring");
     verify(collectionsRepository).save(collectionArgumentCaptor.capture());

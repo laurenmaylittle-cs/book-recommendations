@@ -1,15 +1,22 @@
 package com.bestreads.bookrecommendations.bookshelf.model;
 
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import org.hibernate.Hibernate;
 
 @Entity
-public class Collection {
+@Table(name = "collection")
+public class CollectionDAO {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +26,24 @@ public class Collection {
   private String name;
 
   private String userId;
+
+  @ManyToMany()
+  @JoinTable(name = "books_collection",
+      joinColumns = @JoinColumn(name = "collection_id", referencedColumnName = "id"),
+      inverseJoinColumns = @JoinColumn(name = "isbn", referencedColumnName = "isbn"))
+  private Set<BookDAO> bookDAOS = new LinkedHashSet<>();
+
+  public Set<BookDAO> getBookDAOS() {
+    return bookDAOS;
+  }
+
+  public Set<BookDAO> getBookDaos() {
+    return bookDAOS;
+  }
+
+  public void setBookDaos(Set<BookDAO> bookDAOS) {
+    this.bookDAOS = bookDAOS;
+  }
 
   public String getUserId() {
     return userId;
@@ -52,7 +77,7 @@ public class Collection {
     if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
       return false;
     }
-    Collection that = (Collection) o;
+    CollectionDAO that = (CollectionDAO) o;
     return id != null && Objects.equals(id, that.id);
   }
 

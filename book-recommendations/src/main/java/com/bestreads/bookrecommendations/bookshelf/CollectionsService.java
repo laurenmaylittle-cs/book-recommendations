@@ -1,7 +1,7 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
 import com.bestreads.bookrecommendations.bookshelf.json.CollectionJson;
-import com.bestreads.bookrecommendations.bookshelf.model.Collection;
+import com.bestreads.bookrecommendations.bookshelf.model.CollectionDAO;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
@@ -24,14 +24,14 @@ class CollectionsService {
         .collect(Collectors.toSet());
   }
 
-  public Collection getCollectionById(Long collectionId) {
+  public CollectionDAO getCollectionById(Long collectionId) {
     return collectionsRepository.findById(collectionId).orElseThrow(
         () -> new EntityNotFoundException(
             "Collection with ID:%d not found".formatted(collectionId)));
   }
 
-  public Collection createNewCollection(String userId, String name) {
-    var collection = new Collection();
+  public CollectionDAO createNewCollection(String userId, String name) {
+    var collection = new CollectionDAO();
     collection.setName(name);
     collection.setUserId(userId);
     return collectionsRepository.save(collection);
