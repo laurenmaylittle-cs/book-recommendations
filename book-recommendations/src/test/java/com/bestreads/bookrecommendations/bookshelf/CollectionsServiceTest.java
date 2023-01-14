@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import com.bestreads.bookrecommendations.bookshelf.json.CollectionJson;
 import com.bestreads.bookrecommendations.bookshelf.model.CollectionDAO;
+import com.bestreads.bookrecommendations.bookshelf.model.CollectionProjection;
 import java.util.Optional;
 import java.util.Set;
 import javax.persistence.EntityNotFoundException;
@@ -29,26 +30,41 @@ class CollectionsServiceTest {
 
 
   private final String userId = "USER_ID1234";
-  private CollectionDAO collectionDAOOne;
-  private CollectionDAO collectionDAOTwo;
+  private CollectionProjection collectionProjectionOne;
+  private CollectionProjection collectionProjectionTwo;
 
   @BeforeEach
   void setUp() {
-    collectionDAOOne = new CollectionDAO();
-    collectionDAOOne.setId(1L);
-    collectionDAOOne.setName("Collection One");
-    collectionDAOOne.setUserId(userId);
+    collectionProjectionOne = new CollectionProjection() {
+      @Override
+      public Long getId() {
+        return 1L;
+      }
 
-    collectionDAOTwo = new CollectionDAO();
-    collectionDAOTwo.setId(2L);
-    collectionDAOTwo.setName("Collection Two");
-    collectionDAOTwo.setUserId(userId);
+      @Override
+      public String getName() {
+        return "Collection One";
+      }
+    };
+
+    collectionProjectionTwo = new CollectionProjection() {
+      @Override
+      public Long getId() {
+        return 2L;
+      }
+
+      @Override
+      public String getName() {
+        return "Collection Two";
+      }
+    };
+
   }
 
   @Test
   void getCollections() {
-    when(collectionsRepository.findByUserId(userId)).thenReturn(
-        Set.of(collectionDAOOne, collectionDAOTwo));
+    when(collectionsRepository.findByUserId(userId)).thenReturn(Set.of(collectionProjectionOne,
+        collectionProjectionTwo));
 
     assertEquals(
         Set.of(new CollectionJson(1L, "Collection One"), new CollectionJson(2L, "Collection Two")),
@@ -57,9 +73,14 @@ class CollectionsServiceTest {
 
   @Test
   void getCollectionById_whenValidIdProvided() {
-    when(collectionsRepository.findById(1L)).thenReturn(Optional.of(collectionDAOOne));
+    var collectionDAO = new CollectionDAO();
+    collectionDAO.setId(1L);
+    collectionDAO.setName("Collection One");
+    collectionDAO.setUserId(userId);
 
-    assertEquals(collectionDAOOne, collectionsService.getCollectionById(1L));
+    when(collectionsRepository.findById(1L)).thenReturn(Optional.of(collectionDAO));
+
+    assertEquals(collectionDAO, collectionsService.getCollectionById(1L));
   }
 
   @Test

@@ -12,7 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import org.hibernate.Hibernate;
 
 @Entity
 @Table(name = "collection")
@@ -27,7 +26,7 @@ public class CollectionDAO {
 
   private String userId;
 
-  @ManyToMany()
+  @ManyToMany
   @JoinTable(name = "books_collection",
       joinColumns = @JoinColumn(name = "collection_id", referencedColumnName = "id"),
       inverseJoinColumns = @JoinColumn(name = "isbn", referencedColumnName = "isbn"))
@@ -74,15 +73,16 @@ public class CollectionDAO {
     if (this == o) {
       return true;
     }
-    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+    if (o == null || getClass() != o.getClass()) {
       return false;
     }
     CollectionDAO that = (CollectionDAO) o;
-    return id != null && Objects.equals(id, that.id);
+    return id.equals(that.id) && name.equals(that.name) && userId.equals(that.userId)
+        && Objects.equals(bookDAOS, that.bookDAOS);
   }
 
   @Override
   public int hashCode() {
-    return getClass().hashCode();
+    return Objects.hash(id, name, userId, bookDAOS);
   }
 }

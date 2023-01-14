@@ -1,6 +1,7 @@
 package com.bestreads.bookrecommendations.bookshelf.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -65,4 +66,21 @@ public class BookDAO implements Serializable {
     this.id = id;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    BookDAO bookDAO = (BookDAO) o;
+    return id.equals(bookDAO.id) && title.equals(bookDAO.title) && author.equals(bookDAO.author)
+        && thumbnail.equals(bookDAO.thumbnail) && isbn.equals(bookDAO.isbn);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, title, author, thumbnail, isbn);
+  }
 }
