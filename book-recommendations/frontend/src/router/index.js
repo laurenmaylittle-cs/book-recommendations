@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 import ProfileView from '../views/ProfileView.vue';
 import {authGuard} from '@/auth/authGuard';
 import SearchView from "@/views/SearchView";
@@ -10,9 +9,9 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/default-home-vue',
-    name: 'home',
-    component: HomeView
+    path: '/',
+    name: 'Root',
+    component: HomePage,
   },
   {
     path: '/default-about-vue',
