@@ -66,7 +66,7 @@
 
 <script>
 
-import axios from "axios";
+import {createNewCollection} from "@/api/bookshelf-api-calls";
 
 export default {
   name: "CreateCollectionModal",
@@ -84,15 +84,8 @@ export default {
         return;
       }
       this.collectionUpdateInProgress = true;
-      const url = "/api/private/bookshelf/collections";
       const params = new URLSearchParams({name: this.collectionName});
-      const config = {
-        headers: {
-          Authorization: `Bearer ${await this.$auth.getTokenSilently()}`
-        }
-      };
-      const createResult = await axios.post(url, params, config);
-
+      const createResult = await createNewCollection(params, await this.$auth.getTokenSilently());
       this.$emit("collection-created", createResult.headers.location);
     },
     resetState() {

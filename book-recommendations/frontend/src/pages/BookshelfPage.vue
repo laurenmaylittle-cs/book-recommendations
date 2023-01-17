@@ -54,9 +54,9 @@
 </template>
 
 <script>
-import axios from "axios";
 import CreateCollectionModal from "@/components/bookshelf/CreateCollectionModal.vue";
 import CollectionItem from "@/components/bookshelf/CollectionItem.vue";
+import {getCollection, getCollectionsForUser} from "@/api/bookshelf-api-calls";
 
 export default {
   name: "CollectionsPage",
@@ -79,23 +79,15 @@ export default {
   },
   methods: {
     async getCollections() {
-      const result = await axios.get("/api/private/bookshelf/collections", {
-        headers: {
-          Authorization: `Bearer ${await this.$auth.getTokenSilently()}`,
-        },
-      });
-      this.collections = result.data;
+      this.collections = await getCollectionsForUser(await this.$auth.getTokenSilently());
       this._computeCollectionColors();
       this.isLoading = false;
     },
     async getNewCollection(url) {
-      const resourcePath = new URL(url).pathname;
-      const newCollection = await axios.get(resourcePath, {
-        headers: {
-          Authorization: `Bearer ${await this.$auth.getTokenSilently()}`,
-        },
-      });
-      this.collections.push(newCollection.data);
+      const pathForAccessingCollection = new URL(url).pathname;
+      const newCollection = await getCollection(pathForAccessingCollection,
+        await this.$auth.getTokenSilently());
+      this.collections.push(newCollection);
       this._computeCollectionColors();
       this.$refs.createModal.resetState();
     },
