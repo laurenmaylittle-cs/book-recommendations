@@ -13,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class BookDaoSearchServiceTest {
+class BookSearchServiceTest {
 
     @Mock
     private GoogleBooksService googleBooksService;

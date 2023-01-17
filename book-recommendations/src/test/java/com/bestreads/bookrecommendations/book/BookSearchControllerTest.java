@@ -15,7 +15,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(BookSearchController.class)
-class BookDaoSearchControllerTest {
+class BookSearchControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
