@@ -53,9 +53,9 @@ class BookDaoSearchControllerTest {
   @Test
   @WithMockUser
   void searchByAuthor() throws Exception {
-    Mockito.when(bookSearchService.searchByAuthor("author1", 10))
+    Mockito.when(bookSearchService.searchByAuthor("author1", 0, 40))
         .thenReturn(bookList);
-    mockMvc.perform(get("/api/search/author?author=author1"))
+    mockMvc.perform(get("/api/search/author?author=author1&startIndex=0"))
         .andExpect(content().json(bookJson));
   }
 }
