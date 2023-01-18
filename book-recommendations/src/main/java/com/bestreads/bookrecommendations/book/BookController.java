@@ -16,8 +16,8 @@ public class BookController {
         this.bookSearchService = bookSearchService;
     }
 
-    @GetMapping("/book")
+    @GetMapping("/public/book")
     public Book getBookInfo(@Param("isbn") String isbn) {
-        return bookSearchService.viewIndividualBook(isbn);
+        return bookSearchService.getBookByIsbn(isbn);
     }
 }

@@ -4,8 +4,11 @@ import com.bestreads.bookrecommendations.googlebooks.GoogleBooksService;
 import com.bestreads.bookrecommendations.utils.SearchTermUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.net.URLEncoder;
 import java.net.http.HttpResponse;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class BookSearchService {
@@ -51,17 +54,17 @@ public class BookSearchService {
         return httpResponseToBook.extractFromHttpResponse(httpResponse);
     }
 
-    public Book viewIndividualBook(String isbn) {
+    public Book getBookByIsbn(String isbn) {
         HttpResponse<String> httpResponse = googleBooksService.getVolumeByIsbn(
                 SearchTermUtils.encodeURLTerm(isbn),
-                0,
                 1
         );
 
-        //TODO is there a better way to handle an invalid ISBN?
+        //TODO BES-75: is there a better way to handle an invalid ISBN?
         if (!httpResponseToBook.extractFromHttpResponse(httpResponse).isEmpty() && httpResponseToBook.extractFromHttpResponse(httpResponse).size() == 1) {
             return httpResponseToBook.extractFromHttpResponse(httpResponse).get(0);
         } else {
-            throw new IllegalArgumentException("Invalid ISBN");
+            throw new IllegalArgumentException(isbn + " is an invalid ISBN.");
         }
-    }}
+    }
+}
