@@ -13,7 +13,7 @@
     </v-row>
     <v-row align="center">
       <v-col cols="3">
-        <view-book-thumbnail :thumbnail="bookData.imageLinks.thumbnail"/>
+        <view-book-thumbnail :thumbnail="bookData.imageLinks.thumbnail" />
       </v-col>
       <v-col>
         <view-book-details
@@ -47,8 +47,8 @@ export default {
     this.isLoading = false;
   },
   methods: {
-    async getBookData () {
-      this.bookData = await getBookInfo('9781302482541');
+    async getBookData() {
+      this.bookData = await getBookInfo('9780753827666');
     }
   }
 }
