@@ -10,13 +10,13 @@
       v-if="author"
     >
       <v-icon>mdi-account-edit</v-icon>
-      {{ author }}
+      {{ concatDetails(author) }}
     </h2>
     <h3
       v-if="genre"
     >
       <v-icon>mdi-filter</v-icon>
-      {{ genre }}
+      {{ concatDetails(genre) }}
     </h3>
     <br>
     <p
@@ -33,10 +33,19 @@
 export default {
   name: 'ViewBookDetails',
   props: {
-    title: {type: String, required: true},
-    author: {type: Array, required: true},
-    genre: {type: Array, required: true},
-    description: {type: String, required: true}
+    title: {type: String},
+    author: {type: Array},
+    genre: {type: Array},
+    description: {type: String}
+  },
+  methods: {
+    concatDetails(details) {
+      if (details != null && details.length > 1) {
+        return details.join(', ');
+      } else {
+        return  details.toString();
+      }
+    }
   }
 }
 </script>
