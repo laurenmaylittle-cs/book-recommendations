@@ -33,10 +33,10 @@
 export default {
   name: 'ViewBookDetails',
   props: {
-    title: {type: String},
-    author: {type: Array},
-    genre: {type: Array},
-    description: {type: String}
+    title: {type: String, required: true},
+    author: {type: Array, required: true},
+    genre: {type: Array, required: true},
+    description: {type: String, required: true}
   },
   methods: {
     concatDetails(details) {
