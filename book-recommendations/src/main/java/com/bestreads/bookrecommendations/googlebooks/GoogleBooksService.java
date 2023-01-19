@@ -24,7 +24,7 @@ public class GoogleBooksService {
   @Value("${googlebooks.api.uri}")
   private String googleBooksApiUri;
 
-  @Value("${google_books.api.key}")
+  @Value("${googlebooks.api.key}")
   private String apiKey;
 
   public HttpResponse<String> searchVolumeByTitle(String searchTerm, int startIndex,

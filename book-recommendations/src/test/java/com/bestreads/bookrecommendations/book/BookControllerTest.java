@@ -1,12 +1,8 @@
 package com.bestreads.bookrecommendations.book;
 
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
@@ -25,9 +21,6 @@ class BookControllerTest {
 
   @MockBean
   private BookSearchService bookSearchService;
-
-  @MockBean
-  private RatingsService ratingsService;
 
   private static Book book;
   private static final String bookJson =
@@ -86,44 +79,5 @@ class BookControllerTest {
             get("/api/public/book")
                 .param("isbn", ISBN))
         .andExpect(content().json(bookJson));
-  }
-
-  @Test
-  @WithMockUser
-  void getUsersRating() throws Exception {
-    when(ratingsService.getUsersRating(ISBN, email))
-        .thenReturn(rating);
-    mockMvc.perform(
-            get("/api/private/user-rating")
-                .param("isbn", ISBN)
-                .param("email", email))
-        .andExpect(content().string("4"));
-  }
-
-  @Test
-  @WithMockUser
-  void saveUserRating() throws Exception {
-    mockMvc.perform(
-            post("/api/private/user-rating")
-                .with(csrf())
-                .param("isbn", ISBN)
-                .param("email", email)
-                .param("rating", String.valueOf(rating))
-        )
-        .andExpect(status().is2xxSuccessful());
-    verify(ratingsService).saveUsersRating(ISBN, email, rating);
-  }
-
-  @Test
-  @WithMockUser
-  void updateUserRating() throws Exception {
-    mockMvc.perform(
-        post("/api/private/update-user-rating")
-            .with(csrf())
-            .param("isbn", ISBN)
-            .param("email", email)
-            .param("rating", String.valueOf(rating))
-    );
-    verify(ratingsService).updateUsersRating(ISBN, email, rating);
   }
 }

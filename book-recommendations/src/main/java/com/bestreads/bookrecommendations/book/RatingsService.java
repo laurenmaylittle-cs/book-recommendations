@@ -17,7 +17,6 @@ class RatingsService {
     var userRating = ratingsRepository.findAllByIsbnAndEmail(isbn, email);
 
     if (userRating.size() > 1) {
-      //throw custom exception
       throw new IllegalStateException("There should only be one rating for each user and isbn");
     } else if (userRating.isEmpty()) {
       return null;
@@ -33,8 +32,6 @@ class RatingsService {
     rating.setEmail(email);
     rating.setRating(userRating);
 
-    //check for valid rating, email, isbn??
-
     if (userRatingFromDB.isEmpty()) {
       ratingsRepository.save(rating);
     }
@@ -43,14 +40,15 @@ class RatingsService {
   void updateUsersRating(String isbn, String email, int userRating) {
     var userRatingFromDB = ratingsRepository.findAllByIsbnAndEmail(isbn, email);
 
-    //check for valid rating, email, isbn??
-
-    if (!userRatingFromDB.isEmpty()) {
-      var rating = userRatingFromDB.get(0);
-      rating.setRating(userRating);
-      ratingsRepository.save(rating);
+    if (userRatingFromDB.size() > 1) {
+      throw new IllegalStateException("There should only be one rating for each user and isbn");
+    } else if (userRatingFromDB.isEmpty()) {
+      throw new IllegalStateException(" ");
     }
 
-    throw new IllegalStateException("");
+    var rating = userRatingFromDB.get(0);
+    rating.setRating(userRating);
+    ratingsRepository.save(rating);
+
   }
 }

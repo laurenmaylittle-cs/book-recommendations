@@ -144,19 +144,16 @@ export default {
   },
   methods: {
     async getRatingsData() {
-      const token = await this.$auth.getTokenSilently(
-        {audience: 'https://localhost:5001/api'});
+      const token = await this.$auth.getTokenSilently();
       this.bookRating = await getUserRating(this.$auth.user.email, this.isbn, token)
     },
     async postUserRating() {
-      const token = await this.$auth.getTokenSilently(
-        {audience: 'https://localhost:5001/api'});
+      const token = await this.$auth.getTokenSilently();
       this.hasRating = true
       await saveUserRating(this.$auth.user.email, this.isbn, this.bookRating, token)
     },
     async updateUserRating() {
-      const token = await this.$auth.getTokenSilently(
-        {audience: 'https://localhost:5001/api'});
+      const token = await this.$auth.getTokenSilently();
       this.hasRating = true
       this.updateDialog = false
       await updateUserRating(this.$auth.user.email, this.isbn, this.bookRating, token)
