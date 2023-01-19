@@ -1,11 +1,11 @@
 import {shallowMount} from '@vue/test-utils';
-import ViewBook from "@/pages/ViewBook";
 import {getBookInfo} from "@/api/view-book";
+import ViewBookPage from "@/pages/ViewBookPage";
 
 jest.mock('@/api/view-book');
 
 function createComponentWrapper({props} = {}) {
-  return shallowMount(ViewBook, {
+  return shallowMount(ViewBookPage, {
     propsData: {
       ...props,
     }
