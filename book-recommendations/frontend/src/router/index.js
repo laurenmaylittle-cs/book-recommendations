@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import ViewBookPage from "@/pages/ViewBookPage.vue";
 import ProfileView from '../views/ProfileView.vue';
 import {authGuard} from '@/auth/authGuard';
 import SearchView from "@/views/SearchView";
@@ -12,6 +13,11 @@ const routes = [
     path: '/',
     name: 'Root',
     component: HomePage,
+  },
+  {
+    path: '/book',
+    name: 'book',
+    component: ViewBookPage
   },
   {
     path: '/default-about-vue',
