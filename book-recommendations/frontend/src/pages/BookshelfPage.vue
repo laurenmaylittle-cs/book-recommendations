@@ -74,8 +74,8 @@ export default {
       deep: true
     }
   },
-  mounted() {
-    this.getCollections();
+  async mounted() {
+    await this.getCollections();
   },
   methods: {
     async getCollections() {

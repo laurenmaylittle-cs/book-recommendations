@@ -2,6 +2,7 @@
   <v-container>
     <v-row>
       <v-btn
+        ref="createCollectionBtn"
         class="mt-3"
         color="primary"
         @click="dialog = true"
@@ -22,6 +23,7 @@
             rounded
           >
             <v-btn
+              ref="closeBtn"
               icon
               dark
               @click="resetState"
@@ -44,6 +46,7 @@
               </v-container>
               <v-card-actions>
                 <v-btn
+                  ref="saveCollectionBtn"
                   color="primary"
                   text
                   @click="createCollection"
