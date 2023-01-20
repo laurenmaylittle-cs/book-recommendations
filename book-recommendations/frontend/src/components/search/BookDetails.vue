@@ -2,7 +2,9 @@
   <div>
     <v-card>
       <v-card-actions class="justify-center mb-0 pt-6">
-        <a href="/">
+        <router-link
+          :to="{ name: 'book', params: {isbn:isbn}}"
+        >
           <!-- TODO BES-66 redirect to view book page-->
           <v-img
             class="rounded mb-0"
@@ -11,7 +13,7 @@
             width="128px"
             :src="thumbnail"
           />
-        </a>
+        </router-link>
       </v-card-actions>
       <v-card-text class="mt-0">
         <div class="text-subtitle-2 text--primary mt-0">
@@ -30,12 +32,25 @@
 export default {
   name: 'BookDetails',
   props: {
-    title: {type: String, default: 'Book title'},
-    author: {type: String, default: 'Author'},
-    publishedDate: {type: String, default: 'Published date'},
+    title: {
+      type: String,
+      default: 'Book title'
+    },
+    author: {
+      type: String,
+      default: 'Author'
+    },
+    publishedDate: {
+      type: String,
+      default: 'Published date'
+    },
     thumbnail: {
       type: String,
       default: 'https://storage.googleapis.com/du-prd/books/images/9781538719824.jpg'
+    },
+    isbn: {
+      type: String,
+      required: true
     }
   },
   computed: {
