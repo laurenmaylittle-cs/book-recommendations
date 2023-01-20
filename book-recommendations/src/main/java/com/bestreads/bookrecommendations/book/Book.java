@@ -13,17 +13,17 @@ public record Book(String id,
                    ImageLinks imageLinks,
                    String language,
                    int averageRating,
-                   int ratingsCount) {
+                   int ratingsCount,
+                   String isbn) {
 
   public Book(String title,
       List<String> authors,
       String publisher,
       String description,
-      ImageLinks imageLinks) {
+      ImageLinks imageLinks,
+      String isbn) {
 
     this(null, title, authors, publisher, "Unknown", description, 0, List.of(), imageLinks,
-        "Unknown",
-        0,
-        0);
+        "Unknown", 0, 0, isbn);
   }
 }

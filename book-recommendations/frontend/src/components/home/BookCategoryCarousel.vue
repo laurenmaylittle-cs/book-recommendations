@@ -23,6 +23,7 @@
                 :key="i"
                 :book-image-link="books[+index + i].imageLinks.thumbnail"
                 :book-title="books[+index + i].title"
+                :isbn="books[+index + i].isbn"
               />
             </template>
           </v-row>

@@ -50,7 +50,8 @@ public class GoogleBooksHttpResponseToBook implements HttpResponseToBook {
             getImageLinks(item),
             item.volumeInfo().language(),
             item.volumeInfo().averageRating(),
-            item.volumeInfo().ratingsCount()
+            item.volumeInfo().ratingsCount(),
+            getISBN(item)
         ))
         .toList();
   }
@@ -93,5 +94,26 @@ public class GoogleBooksHttpResponseToBook implements HttpResponseToBook {
     }
 
     return new ImageLinks(smallThumbnail, thumbnail);
+  }
+
+  private String getISBN(Item item) {
+    var industryIdentifiers = item.volumeInfo().industryIdentifiers();
+
+    if (industryIdentifiers.isEmpty()) {
+      throw new IllegalArgumentException("No valid ISBN for this book");
+    }
+
+    var isbn13 = industryIdentifiers.stream()
+        .filter(isbnIdentifier -> isbnIdentifier.type().equals("ISBN_13"))
+        .toList();
+
+    if (isbn13.isEmpty()) {
+      var isbn10 = industryIdentifiers.stream()
+          .filter(isbnIdentifier -> isbnIdentifier.type().equals("ISBN_10"))
+          .toList();
+      return isbn10.isEmpty() ? "" : isbn10.get(0).identifier();
+    }
+
+    return isbn13.get(0).identifier();
   }
 }
