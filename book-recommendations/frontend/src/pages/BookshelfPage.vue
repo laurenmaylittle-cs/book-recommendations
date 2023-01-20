@@ -57,6 +57,7 @@
 import CreateCollectionModal from "@/components/bookshelf/CreateCollectionModal.vue";
 import CollectionItem from "@/components/bookshelf/CollectionItem.vue";
 import {getCollection, getCollectionsForUser} from "@/api/bookshelf-api-calls";
+import {generatePastelColors} from "@/util/util";
 
 export default {
   name: "CollectionsPage",
@@ -92,14 +93,8 @@ export default {
       this.$refs.createModal.resetState();
     },
     _computeCollectionColors() {
-      for (let i = this.colors.length; i < this.collections.length; i++) {
-        const hue = Math.floor(Math.random() * 360);
-        const saturation = Math.floor(Math.random() * 20 + 50);
-        const lightness = Math.floor(Math.random() * 20) + 80;
-
-        const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-        this.colors.includes(color) ? i-- : this.colors.push(color);
-      }
+      generatePastelColors(this.colors, this.collections.length, {min: 50, max: 70},
+        {min: 80, max: 100})
     },
   }
 }
