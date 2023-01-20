@@ -1,7 +1,7 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
 import com.bestreads.bookrecommendations.bookshelf.json.CollectionJson;
-import com.bestreads.bookrecommendations.helper.AuthHelper;
+import com.bestreads.bookrecommendations.utils.AuthUtils;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Set;
@@ -31,7 +31,7 @@ public class CollectionsController {
   @GetMapping
   public ResponseEntity<Set<CollectionJson>> getCollections(
       JwtAuthenticationToken authenticationToken) {
-    var userId = AuthHelper.getUserId(authenticationToken);
+    var userId = AuthUtils.getUserId(authenticationToken);
 
     if (userId.isPresent()) {
       return ResponseEntity.ok(collectionsService.getCollections(userId.get()));
@@ -52,7 +52,7 @@ public class CollectionsController {
       @RequestParam String name, HttpServletRequest httpServletRequest)
       throws URISyntaxException {
 
-    var userId = AuthHelper.getUserId(authenticationToken);
+    var userId = AuthUtils.getUserId(authenticationToken);
 
     if (userId.isEmpty()) {
       return new ResponseEntity<>("User id not found in token", HttpStatus.BAD_REQUEST);

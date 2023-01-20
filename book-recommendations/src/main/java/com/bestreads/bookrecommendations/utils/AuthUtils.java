@@ -1,13 +1,17 @@
-package com.bestreads.bookrecommendations.helper;
+package com.bestreads.bookrecommendations.utils;
 
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
-public class AuthHelper {
+public class AuthUtils {
 
-  static final Logger logger = Logger.getLogger(AuthHelper.class.getName());
+  static final Logger logger = Logger.getLogger(AuthUtils.class.getName());
+
+  private AuthUtils() {
+    throw new UtilsClassInitialisationException(this.getClass());
+  }
 
   /**
    * SUB claim is the subject (user) of the token and is a standard claim defined in the JWT spec It
