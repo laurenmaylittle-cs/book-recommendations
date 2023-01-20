@@ -1,14 +1,11 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
-import com.bestreads.bookrecommendations.bookshelf.model.CollectionBookProjection;
-import com.bestreads.bookrecommendations.bookshelf.model.CollectionDAO;
-import com.bestreads.bookrecommendations.bookshelf.model.CollectionProjection;
 import java.util.List;
 import java.util.Set;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.repository.CrudRepository;
 
-public interface CollectionsRepository extends CrudRepository<CollectionDAO, Long> {
+interface CollectionsRepository extends CrudRepository<CollectionDAO, Long> {
 
   // issues just 1 query
   Set<CollectionProjection> findByUserId(String userId);

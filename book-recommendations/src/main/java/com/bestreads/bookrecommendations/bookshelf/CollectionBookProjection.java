@@ -1,11 +1,11 @@
-package com.bestreads.bookrecommendations.bookshelf.model;
+package com.bestreads.bookrecommendations.bookshelf;
 
 import java.util.Set;
 
 /**
  * See the comment left on CollectionProjection for why this exists
  */
-public interface CollectionBookProjection {
+interface CollectionBookProjection {
 
   Long getId();
 

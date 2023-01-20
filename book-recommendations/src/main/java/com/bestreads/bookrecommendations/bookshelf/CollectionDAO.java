@@ -1,4 +1,4 @@
-package com.bestreads.bookrecommendations.bookshelf.model;
+package com.bestreads.bookrecommendations.bookshelf;
 
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -15,7 +15,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "collection")
-public class CollectionDAO {
+class CollectionDAO {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

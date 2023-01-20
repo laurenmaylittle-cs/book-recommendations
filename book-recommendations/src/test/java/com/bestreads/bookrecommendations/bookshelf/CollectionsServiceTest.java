@@ -6,8 +6,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.bestreads.bookrecommendations.bookshelf.json.CollectionJson;
-import com.bestreads.bookrecommendations.bookshelf.model.CollectionDAO;
-import com.bestreads.bookrecommendations.bookshelf.model.CollectionProjection;
 import java.util.Optional;
 import java.util.Set;
 import javax.persistence.EntityNotFoundException;
