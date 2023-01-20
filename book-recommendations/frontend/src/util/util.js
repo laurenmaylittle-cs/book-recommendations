@@ -7,7 +7,7 @@
  * @param lightnessRange min and max values of lightness
  */
 export function generatePastelColors(colorsArray, itemsLength,
-  saturationRange = {min: 30, max: 70}, lightnessRange = {min: 20, max: 80}) {
+  saturationRange = {min: 30, max: 70}, lightnessRange = {min: 80, max: 100}) {
   for (let i = colorsArray.length; i < itemsLength; i++) {
     const hue = Math.floor(Math.random() * 360);
     const saturation = Math.floor(
