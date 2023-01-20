@@ -1,6 +1,5 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
-import com.bestreads.bookrecommendations.bookshelf.json.CollectionJson;
 import com.bestreads.bookrecommendations.utils.AuthUtils;
 import java.net.URI;
 import java.net.URISyntaxException;

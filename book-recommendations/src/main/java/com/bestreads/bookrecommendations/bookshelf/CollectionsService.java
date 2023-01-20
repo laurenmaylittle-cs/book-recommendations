@@ -1,6 +1,5 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
-import com.bestreads.bookrecommendations.bookshelf.json.CollectionJson;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;

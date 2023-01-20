@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.bestreads.bookrecommendations.bookshelf.json.CollectionJson;
 import java.util.Optional;
 import java.util.Set;
 import javax.persistence.EntityNotFoundException;

@@ -23,16 +23,13 @@ export async function createNewCollection(collectionNameURLSearchParam, token) {
     throw new Error(
       "collectionNameURLSearchParam must be a type of URLSearchParams");
   }
-
   const createResult = await axios.post("/api/private/bookshelf/collections",
     collectionNameURLSearchParam, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
-
   return createResult;
-
 }
 
 /**
