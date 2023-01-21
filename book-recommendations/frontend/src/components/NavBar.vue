@@ -17,7 +17,7 @@
       </v-hover>
     </div>
     <search-bar :search-term="searchTerm" />
-    <v-spacer/>
+    <v-spacer />
     <v-btn
       text
       color="white"
