@@ -98,13 +98,12 @@ public class GoogleBooksHttpResponseToBook implements HttpResponseToBook {
 
   private String getISBN(Item item) {
 
-    if (item.volumeInfo().industryIdentifiers() == null || item.volumeInfo().industryIdentifiers()
-        .isEmpty()) {
+    if (item.volumeInfo().industryIdentifiers() == null ||
+        item.volumeInfo().industryIdentifiers().isEmpty()) {
       return "";
     }
 
     var industryIdentifiers = item.volumeInfo().industryIdentifiers();
-
     var isbn13 = industryIdentifiers.stream()
         .filter(isbnIdentifier -> isbnIdentifier.type().equals("ISBN_13"))
         .toList();
