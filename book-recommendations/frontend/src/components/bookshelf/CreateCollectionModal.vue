@@ -18,19 +18,6 @@
         @click:outside="resetState"
       >
         <v-card>
-          <v-toolbar
-            color="primary"
-            rounded
-          >
-            <v-btn
-              ref="closeBtn"
-              icon
-              dark
-              @click="resetState"
-            >
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-          </v-toolbar>
           <v-card-text>
             <v-form ref="form">
               <v-container>
@@ -58,6 +45,14 @@
                     color="primary"
                   />
                 </v-btn>
+                <v-btn
+                  ref="closeBtn"
+                  color="secondary"
+                  text
+                  @click="resetState"
+                >
+                  Cancel
+                </v-btn>
               </v-card-actions>
             </v-form>
           </v-card-text>
@@ -69,7 +64,7 @@
 
 <script>
 
-import {createNewCollection} from "@/api/bookshelf-api-calls";
+import {createNewCollection} from "@/api/bookshelf";
 
 export default {
   name: "CreateCollectionModal",

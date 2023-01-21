@@ -1,8 +1,9 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
-import java.util.Set;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,16 +17,15 @@ class CollectionsService {
     this.collectionsRepository = collectionsRepository;
   }
 
-  Set<CollectionJson> getCollections(String userId) {
+  LinkedHashSet<CollectionJson> getCollections(String userId) {
     return collectionsRepository.findByUserId(userId)
         .stream().map(x -> new CollectionJson(x.getId(), x.getName()))
-        .collect(Collectors.toSet());
+        .sorted(Comparator.comparing(CollectionJson::name))
+        .collect(Collectors.toCollection(LinkedHashSet::new));
   }
 
-  CollectionDAO getCollectionById(Long collectionId) {
-    return collectionsRepository.findById(collectionId).orElseThrow(
-        () -> new EntityNotFoundException(
-            "Collection with ID:%d not found".formatted(collectionId)));
+  Optional<CollectionDAO> getCollectionById(Long collectionId) {
+    return collectionsRepository.findById(collectionId);
   }
 
   CollectionDAO createNewCollection(String userId, String name) {

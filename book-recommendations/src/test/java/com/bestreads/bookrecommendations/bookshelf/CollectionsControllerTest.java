@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,7 @@ class CollectionsControllerTest {
   @Test
   void getCollections() throws Exception {
     when(collectionsService.getCollections(userId)).thenReturn(
-        Set.of(new CollectionJson(1L, "Test Collection"))
+        new LinkedHashSet<>(Set.of(new CollectionJson(1L, "Test Collection")))
     );
 
     var expectedJson = """
@@ -73,7 +75,7 @@ class CollectionsControllerTest {
     collection.setName("Summer Reading");
 
     when(collectionsService.getCollectionById(10L)).thenReturn(
-        collection
+        Optional.of(collection)
     );
 
     mockMvc.perform(get("/api/private/bookshelf/collections/10")

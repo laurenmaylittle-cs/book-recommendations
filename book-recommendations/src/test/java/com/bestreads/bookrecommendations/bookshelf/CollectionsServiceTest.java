@@ -1,13 +1,11 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 import java.util.Set;
-import javax.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -77,15 +75,7 @@ class CollectionsServiceTest {
 
     when(collectionsRepository.findById(1L)).thenReturn(Optional.of(collectionDAO));
 
-    assertEquals(collectionDAO, collectionsService.getCollectionById(1L));
-  }
-
-  @Test
-  void getCollectionById_whenInvalidIdProvided() {
-    when(collectionsRepository.findById(400L)).thenReturn(Optional.empty());
-
-    assertThrows(EntityNotFoundException.class, () -> collectionsService.getCollectionById(400L),
-        "Collection with ID:400 not found");
+    assertEquals(Optional.of(collectionDAO), collectionsService.getCollectionById(1L));
   }
 
   @Test

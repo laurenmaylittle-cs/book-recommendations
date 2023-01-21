@@ -1,10 +1,10 @@
 import BookshelfPage from "@/pages/BookshelfPage.vue";
 import {mount} from "@vue/test-utils";
 import Vuetify from "vuetify";
-import {getCollection, getCollectionsForUser} from "@/api/bookshelf-api-calls";
+import {getCollection, getCollectionsForUser} from "@/api/bookshelf";
 import flushPromises from "flush-promises";
 
-jest.mock("@/api/bookshelf-api-calls");
+jest.mock("@/api/bookshelf");
 
 async function createComponentWrapper({props} = {}) {
   let vuetify = new Vuetify();
@@ -62,7 +62,7 @@ describe("BookshelfPage", () => {
       if (path === '/bookshelf/collections/1' && token === 'token-001') {
         return Promise.resolve({
           id: 2,
-          name: "new collection"
+          name: "a collection"
         });
       }
     });
@@ -85,14 +85,13 @@ describe("BookshelfPage", () => {
     //state after the user creates a new collection
     expect(wrapper.vm.collections).toStrictEqual([
       {
-        id: 1,
-        name: "test-collection"
-
+        id: 2,
+        name: "a collection"
       },
       {
-        id: 2,
-        name: "new collection"
-      }
+        id: 1,
+        name: "test-collection"
+      },
     ]);
     expect(wrapper.vm.colors).toHaveLength(2);
   });

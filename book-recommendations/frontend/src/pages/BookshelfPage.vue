@@ -1,16 +1,5 @@
 <template>
   <v-container>
-    <v-row
-      v-if="isLoading"
-      class="justify-center"
-    >
-      <v-progress-circular
-        :size="70"
-        :width="7"
-        color="purple"
-        indeterminate
-      />
-    </v-row>
     <v-sheet color="background">
       <v-tabs
         background-color="transparent"
@@ -28,6 +17,17 @@
               ref="createModal"
               @collection-created="getNewCollection"
             />
+            <v-row
+              v-if="isLoading"
+              class="justify-center"
+            >
+              <v-progress-circular
+                :size="70"
+                :width="7"
+                color="primary"
+                indeterminate
+              />
+            </v-row>
             <v-row class="mt-3">
               <collection-item
                 v-for="(collection, index) in collections"
@@ -56,7 +56,7 @@
 <script>
 import CreateCollectionModal from "@/components/bookshelf/CreateCollectionModal.vue";
 import CollectionItem from "@/components/bookshelf/CollectionItem.vue";
-import {getCollection, getCollectionsForUser} from "@/api/bookshelf-api-calls";
+import {getCollection, getCollectionsForUser} from "@/api/bookshelf";
 import {generatePastelColors} from "@/util/util";
 
 export default {
@@ -88,13 +88,18 @@ export default {
       const pathForAccessingCollection = new URL(url).pathname;
       const newCollection = await getCollection(pathForAccessingCollection,
         await this.$auth.getTokenSilently());
-      this.collections.push(newCollection);
+      const index = this.collections.findIndex(collection => collection.name > newCollection.name);
+      if (index === -1) {
+        this.collections.push(newCollection);
+      } else {
+        this.collections.splice(index, 0, newCollection);
+      }
       this._computeCollectionColors();
       this.$refs.createModal.resetState();
     },
     _computeCollectionColors() {
-      generatePastelColors(this.colors, this.collections.length, {min: 50, max: 70},
-        {min: 80, max: 100})
+      generatePastelColors(this.colors, this.collections.length, {min: 50, max: 60},
+        {min: 80, max: 88})
     },
   }
 }

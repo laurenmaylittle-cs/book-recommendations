@@ -1,9 +1,14 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
+import static org.springframework.http.ResponseEntity.badRequest;
+import static org.springframework.http.ResponseEntity.created;
+import static org.springframework.http.ResponseEntity.notFound;
+import static org.springframework.http.ResponseEntity.ok;
+
 import com.bestreads.bookrecommendations.utils.AuthUtils;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Set;
+import java.util.LinkedHashSet;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,22 +33,27 @@ public class CollectionsController {
   }
 
   @GetMapping
-  public ResponseEntity<Set<CollectionJson>> getCollections(
+  public ResponseEntity<LinkedHashSet<CollectionJson>> getCollections(
       JwtAuthenticationToken authenticationToken) {
     var userId = AuthUtils.getUserId(authenticationToken);
 
     if (userId.isPresent()) {
-      return ResponseEntity.ok(collectionsService.getCollections(userId.get()));
+      return ok(collectionsService.getCollections(userId.get()));
     } else {
-      return ResponseEntity.badRequest().build();
+      return badRequest().build();
     }
 
   }
 
   @GetMapping("/{Id}")
-  public CollectionJson getCollectionById(@PathVariable Long Id) {
+  public ResponseEntity<CollectionJson> getCollectionById(@PathVariable Long Id) {
     var collection = collectionsService.getCollectionById(Id);
-    return new CollectionJson(collection.getId(), collection.getName());
+    if (collection.isPresent()) {
+      return ok(
+          new CollectionJson(collection.get().getId(), collection.get().getName()));
+    } else {
+      return notFound().build();
+    }
   }
 
   @PostMapping
@@ -59,6 +69,6 @@ public class CollectionsController {
 
     var createdCollection = collectionsService.createNewCollection(userId.get(), name);
     var location = new URI(httpServletRequest.getRequestURL() + "/" + createdCollection.getId());
-    return ResponseEntity.created(location).build();
+    return created(location).build();
   }
 }

@@ -2,10 +2,10 @@ import CreateCollectionModal
   from "@/components/bookshelf/CreateCollectionModal";
 import Vuetify from "vuetify";
 import {mount} from "@vue/test-utils";
-import {createNewCollection} from "@/api/bookshelf-api-calls";
+import {createNewCollection} from "@/api/bookshelf";
 import flushPromises from "flush-promises";
 
-jest.mock("@/api/bookshelf-api-calls");
+jest.mock("@/api/bookshelf");
 
 async function createComponentWrapper({props} = {}) {
   let vuetify = new Vuetify();

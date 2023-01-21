@@ -18,17 +18,13 @@
     </div>
     <search-bar :search-term="searchTerm"/>
     <v-spacer/>
-
-    <router-link to="/bookshelf">
-      <v-btn
-        text
-        color="white"
-      >
-        <v-icon>mdi-bookshelf</v-icon>
-        <span class="mr-2">Book shelf</span>
-      </v-btn>
-    </router-link>
-
+    <v-btn
+      text
+      color="white"
+      href="/bookshelf"
+    >
+      <v-icon>mdi-bookshelf</v-icon>
+    </v-btn>
     <!--    TODO BES-36 do proper implementation of profile link, just placeholder to demo AuthGuard page authentication-->
     <router-link
       v-if="$auth.isAuthenticated"
