@@ -4,7 +4,7 @@
     <div>
       <img
         :src="$auth.user.picture"
-        alt=""
+        alt="User profile picture"
       >
       <h2>{{ $auth.user.name }}</h2>
       <p>{{ $auth.user.email }}</p>
