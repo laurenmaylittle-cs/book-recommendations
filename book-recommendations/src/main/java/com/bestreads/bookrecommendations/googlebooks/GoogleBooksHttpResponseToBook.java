@@ -97,11 +97,13 @@ public class GoogleBooksHttpResponseToBook implements HttpResponseToBook {
   }
 
   private String getISBN(Item item) {
-    var industryIdentifiers = item.volumeInfo().industryIdentifiers();
 
-    if (industryIdentifiers.isEmpty()) {
-      throw new IllegalArgumentException("No valid ISBN for this book");
+    if (item.volumeInfo().industryIdentifiers() == null || item.volumeInfo().industryIdentifiers()
+        .isEmpty()) {
+      return "";
     }
+
+    var industryIdentifiers = item.volumeInfo().industryIdentifiers();
 
     var isbn13 = industryIdentifiers.stream()
         .filter(isbnIdentifier -> isbnIdentifier.type().equals("ISBN_13"))
@@ -115,5 +117,12 @@ public class GoogleBooksHttpResponseToBook implements HttpResponseToBook {
     }
 
     return isbn13.get(0).identifier();
+  }
+
+  private String checkForOtherIdentifier(List<IndustryIdentifier> industryIdentifiers) {
+    var other = industryIdentifiers.stream()
+        .filter(isbnIdentifier -> isbnIdentifier.type().equals("OTHER"))
+        .toList();
+    return other.isEmpty() ? "" : other.get(0).identifier();
   }
 }
