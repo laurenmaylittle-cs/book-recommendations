@@ -33,7 +33,7 @@ const routes = [
     component: HomePage
   },
   {
-    path: '/search/:searchTerm',
+    path: '/search/:searchType/:searchTerm',
     name: 'search',
     component: SearchView
   },

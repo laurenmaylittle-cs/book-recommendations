@@ -4,11 +4,8 @@ import com.bestreads.bookrecommendations.googlebooks.GoogleBooksService;
 import com.bestreads.bookrecommendations.utils.SearchTermUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.net.URLEncoder;
 import java.net.http.HttpResponse;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class BookSearchService {
@@ -53,6 +50,25 @@ public class BookSearchService {
 
         return httpResponseToBook.extractFromHttpResponse(httpResponse);
     }
+
+    public List<Book> searchByIsbn(String searchTerm, int maxResults) {
+        return searchByIsbn(searchTerm, 0, maxResults);
+    }
+
+    public List<Book> searchByIsbn(String searchTerm, int startIndex, int maxResults) {
+        if (maxResults < 0 || maxResults > 40) {
+            throw new IllegalArgumentException("maxResults should be between 0 and 40");
+        }
+
+        HttpResponse<String> httpResponse = googleBooksService.searchVolumeByIsbn(
+                SearchTermUtils.encodeURLTerm(searchTerm),
+                startIndex,
+                maxResults
+        );
+
+        return httpResponseToBook.extractFromHttpResponse(httpResponse);
+    }
+
 
     public Book getBookByIsbn(String isbn) {
         HttpResponse<String> httpResponse = googleBooksService.getVolumeByIsbn(

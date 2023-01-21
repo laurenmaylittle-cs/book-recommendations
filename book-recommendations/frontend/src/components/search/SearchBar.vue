@@ -1,16 +1,26 @@
 <template>
   <div class="div_center d-flex align-center">
+    <v-select
+      v-model="selectedQueryFilter"
+      class="ml-3"
+      style="width: 90px"
+      :items="queryFilters"
+      item-text="displayText"
+      item-value="value"
+      return-object
+      single-line
+    />
     <v-text-field
-      v-model="searchParam"
-      label="Search by author"
+      v-model="queryTerm"
+      :label="getSearchTypeDescription"
       clearable
       type="String"
-      @keyup.enter="loadSearch(searchParam)"
+      @keyup.enter="loadSearch(queryTerm)"
     />
     <v-btn
       text
       :style="{ 'background-color': '#46648c', 'color': 'white' }"
-      @click.native="loadSearch(searchParam)"
+      @click.native="loadSearch(queryTerm)"
     >
       <v-icon>mdi-magnify</v-icon>
     </v-btn>
@@ -27,18 +37,29 @@ export default {
     }
   },
   data: () => ({
-    searchParam: ""
+    queryTerm: "",
+    selectedQueryFilter: { displayText: 'ISBN', value: 'isbn'},
+    queryFilters: [
+      {displayText: 'ISBN', value: 'isbn'},
+      {displayText: 'Author', value: 'author'},
+    ],
   }),
+
+  computed: {
+    getSearchTypeDescription() {
+      return `Search by ${this.selectedQueryFilter.displayText}`;
+    }
+  },
+
   methods: {
     loadSearch() {
-      this.$router.push({name: 'search', params: {searchTerm: this.searchParam}}).catch(() => {
+      this.$router.push({name: 'search', params: {searchType: this.selectedQueryFilter.value , searchTerm: this.queryTerm}}).catch(() => {
       })
       window.location.reload()
     }
   }
 }
 </script>
-
 <style scoped>
 .div_center {
   display: table;

@@ -5,3 +5,10 @@ export async function searchByAuthor(author, startIndex) {
     `/api/search/author?author=${author}&startIndex=${startIndex}`)
   .then(response => response.data)
 }
+
+export async function searchByIsbn(isbn) {
+  return axios.get(
+    `/api/search/isbn?isbn=${isbn}`)
+    .then(response => response.data)
+}
+

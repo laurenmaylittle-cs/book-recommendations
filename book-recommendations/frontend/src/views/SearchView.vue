@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import {searchByAuthor} from "@/api/search";
+import {searchByAuthor, searchByIsbn} from "@/api/search";
 import BookDetails from "@/components/search/BookDetails";
 
 export default {
@@ -76,6 +76,7 @@ export default {
       searchResults: [],
       nextSearchResults: [],
       searchTerm: this.$route.params.searchTerm,
+      searchType: this.$route.params.searchType,
       isLoading: true,
       nextPageAvailable: true,
       previousPageAvailable: false,
@@ -96,7 +97,11 @@ export default {
     },
   },
   async mounted() {
-    await this.searchByAuthor(this.searchTerm, this.currentStartIndex)
+    if (this.searchType === "isbn") {
+      await this.searchByIsbn(this.searchTerm)
+    } else {
+      await this.searchByAuthor(this.searchTerm, this.currentStartIndex)
+    }
 
     if (this.searchResults.length < this.numberOfItemsPerPage) {
       this.nextPageAvailable = false
@@ -106,6 +111,9 @@ export default {
   methods: {
     async searchByAuthor(author, startIndex) {
       this.searchResults = await searchByAuthor(author, startIndex)
+    },
+    async searchByIsbn(isbn) {
+      this.searchResults = await searchByIsbn(isbn)
     },
     async previousPage() {
       this.currentStartIndex = this.currentStartIndex - this.numberOfItemsPerPage
