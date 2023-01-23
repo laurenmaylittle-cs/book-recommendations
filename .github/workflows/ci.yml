@@ -74,7 +74,7 @@ jobs:
       - name: Build and push spring image
         uses: docker/build-push-action@v3
         with:
-            context: ./book-recommendations
+            context: "{{defaultContext}}:book-recommendations"
             push: true
             tags: augmart/book-recommendations-api
       - name: Build and push vue image
