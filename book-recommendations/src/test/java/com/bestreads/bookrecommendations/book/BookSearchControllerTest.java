@@ -1,5 +1,6 @@
 package com.bestreads.bookrecommendations.book;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
@@ -7,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -53,9 +53,19 @@ class BookSearchControllerTest {
   @Test
   @WithMockUser
   void searchByAuthor() throws Exception {
-    Mockito.when(bookSearchService.searchByAuthor("author1", 0, 40))
+    when(bookSearchService.searchByAuthor("author1", 0, 40))
         .thenReturn(bookList);
     mockMvc.perform(get("/api/search/author?author=author1&startIndex=0"))
         .andExpect(content().json(bookJson));
+  }
+
+  @Test
+  @WithMockUser
+  void searchByIsbn() throws Exception {
+    when(bookSearchService.searchByIsbn("0000000000000", 40))
+            .thenReturn(bookList);
+    mockMvc.perform(get("/api/search/isbn?isbn?isbn=0000000000000")
+                    .param("isbn", "0000000000000"))
+            .andExpect(content().json(bookJson));
   }
 }
