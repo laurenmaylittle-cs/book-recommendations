@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 class BestSellersService {
 
-  private final NyTimesService nyTimesService; //test
+  private final NyTimesService nyTimesService;
   private final NyTimesHttpResponseToBook nyTimesHttpResponseToBook;
 
   @Autowired
