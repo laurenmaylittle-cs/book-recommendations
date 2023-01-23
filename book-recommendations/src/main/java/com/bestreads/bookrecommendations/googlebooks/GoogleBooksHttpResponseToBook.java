@@ -112,7 +112,8 @@ public class GoogleBooksHttpResponseToBook implements HttpResponseToBook {
       var isbn10 = industryIdentifiers.stream()
           .filter(isbnIdentifier -> isbnIdentifier.type().equals("ISBN_10"))
           .toList();
-      return isbn10.isEmpty() ? "" : isbn10.get(0).identifier();
+      return isbn10.isEmpty() ?
+          checkForOtherIdentifier(industryIdentifiers) : isbn10.get(0).identifier();
     }
 
     return isbn13.get(0).identifier();
