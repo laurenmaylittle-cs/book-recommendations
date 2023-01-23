@@ -80,7 +80,7 @@ jobs:
       - name: Build and push vue image
         uses: docker/build-push-action@v3
         with:
-            context: "{{defaultContext}}:book-recommendations:frontend"
+            context: "{{defaultContext}}:frontend"
             push: true
             tags: augmart/book-recommendations-frontend
 
