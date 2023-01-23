@@ -2,6 +2,7 @@
   <v-col>
     <router-link
       :to="{ name: 'book', params: {isbn:isbn}}"
+      style="text-decoration: none"
     >
       <v-hover v-slot="{ hover }">
         <v-sheet
