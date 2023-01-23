@@ -27,8 +27,21 @@ class CustomBookDeserializer extends StdDeserializer<Book> {
         List.of(node.get("author").asText()),
         node.get("publisher").asText(),
         node.get("description").asText(),
-        new ImageLinks(node.get("book_image").asText(), node.get("book_image").asText())
+        new ImageLinks(node.get("book_image").asText(),
+            node.get("book_image").asText()),
+        getISBN(node)
     );
 
+  }
+
+  private String getISBN(JsonNode node) {
+    var isbn13 = node.get("primary_isbn13").asText();
+
+    if (isbn13.isBlank()) {
+      var isbn10 = node.get("primary_isbn10").asText();
+      return isbn10.isBlank() ? "" : isbn10;
+    }
+
+    return isbn13;
   }
 }

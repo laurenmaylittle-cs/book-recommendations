@@ -107,7 +107,8 @@ class BookSearchServiceTest {
         new ImageLinks("smallThumbnail", "largeThumbnail"),
         "en",
         0,
-        0
+        0,
+        "9780735211292"
     );
     when(httpResponseToBook.extractFromHttpResponse(httpResponse)).thenReturn(
         List.of(expectedBook));

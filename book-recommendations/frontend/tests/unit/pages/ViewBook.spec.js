@@ -6,10 +6,18 @@ import books from "../data/Books";
 jest.mock('@/api/view-book');
 
 function createComponentWrapper({props} = {}) {
+  const $route = {
+    params: {
+      isbn: '9780753827666'
+    }
+  };
   return shallowMount(ViewBookPage, {
     propsData: {
       ...props,
-    }
+    },
+    mocks: {
+      $route,
+    },
   });
 }
 
