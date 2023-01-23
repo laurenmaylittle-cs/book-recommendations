@@ -90,6 +90,43 @@ class BookSearchServiceTest {
   }
 
   @Test
+  void searchByIsbn_withMaxResults_verifyServiceCall() {
+    var searchTerm = "9781302931100";
+    var maxResults = 12;
+    bookSearchService.searchByIsbn(searchTerm, maxResults);
+
+    var encodedSearchTerm = URLEncoder.encode(searchTerm, StandardCharsets.UTF_8);
+    verify(googleBooksService).searchVolumeByIsbn(encodedSearchTerm, 0, maxResults);
+  }
+
+  @Test
+  void searchByIsbn_withStartIndex_verifyServiceCall() {
+    var searchTerm = "9780547928210";
+    var maxResults = 39;
+    var startIndex = 10;
+    bookSearchService.searchByIsbn(searchTerm, startIndex, maxResults);
+
+    var encodedSearchTerm = URLEncoder.encode(searchTerm, StandardCharsets.UTF_8);
+    verify(googleBooksService).searchVolumeByIsbn(encodedSearchTerm, startIndex, maxResults);
+  }
+
+  @Test
+  void searchByIsbn_withMaxResultsOverload_assertException() {
+    var searchTerm = "9781302945534";
+    var maxResults = 41;
+    assertThrows(IllegalArgumentException.class,
+            () -> bookSearchService.searchByIsbn(searchTerm, maxResults));
+  }
+
+  @Test
+  void searchByIsbn_withMaxResultsNegative_assertException() {
+    var searchTerm = "9781779501127";
+    var maxResults = -1;
+    assertThrows(IllegalArgumentException.class,
+            () -> bookSearchService.searchByIsbn(searchTerm, maxResults));
+  }
+
+  @Test
   void viewIndividualBook_withISBNReturnsABook() {
     HttpResponse<String> httpResponse = mock(HttpResponse.class);
     String ISBN = "9780297859406";
