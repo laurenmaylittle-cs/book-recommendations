@@ -94,7 +94,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Generate deployment package
-        run: cd book-recommendations && zip -r deploy.zip ./book-recommendations -x '*.git*'
+        run: cd book-recommendations && zip -r deploy.zip . -x '*.git*'
       - name: Get timestamp
         uses: gerred/actions/current-time@master
         id: current-time
