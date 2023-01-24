@@ -14,8 +14,10 @@ services:
 
   client:
     image: "augmart/book-recommendations-frontend"
+    depends_on:
+      - api
     hostname: client
     ports:
-      - "3000:3000"
+      - "80:80"
 
 
