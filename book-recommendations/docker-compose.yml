@@ -1,11 +1,21 @@
 version: "3.1"
 
 services:
-  db:
-    image: "postgres:14.5-alpine"
-    restart: always
-    ports:
-      - "5432:5432"
+  api:
+    image: "augmart/book-recommendations-api"
+    hostname: api
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=dev
+      - SPRING_PROFILES_ACTIVE=production
+      - DB_URL=$DB_URL
+      - DB_USERNAME=$DB_USERNAME
+      - DB_PASSWORD=$DB_PASSWORD
+      - GOOGLE_BOOKS_API_KEY=$GOOGLE_BOOKS_API_KEY
+      - NYTIMES_API_KEY=$NYTIMES_API_KEY
+
+  client:
+    image: "augmart/book-recommendations-frontend"
+    hostname: client
+    ports:
+      - "3000:3000"
+
+

@@ -77,13 +77,44 @@ jobs:
       - name: Build and push spring image
         uses: docker/build-push-action@v3
         with:
-            context: ./book-recommendations
-            push: true
-            tags: augmart/book-recommendations-api
+          context: ./book-recommendations
+          push: true
+          tags: augmart/book-recommendations-api
       - name: Build and push vue image
         uses: docker/build-push-action@v3
         with:
-            context: ./book-recommendations/frontend
-            push: true
-            tags: augmart/book-recommendations-frontend
+          context: ./book-recommendations/frontend
+          push: true
+          tags: augmart/book-recommendations-frontend
+
+  deploy-to-aws:
+    needs: [ publish-to-docker ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
+      - name: Get timestamp
+        uses: gerred/actions/current-time@master
+        id: current-time
+      - name: Run string replace
+        uses: frabert/replace-string-action@v2
+        id: format-time
+        with:
+          pattern: '[:\.]+'
+          string: "${{ steps.current-time.outputs.time }}"
+          replace-with: '-'
+          flags: 'g'
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+          application_name: book-recommendations-test
+          environment_name: Bookrecommendationstest-env-1
+          version-label: "best-reads-test-${{ steps.format-time.outputs.replaced }}"
+          region: eu-west-2
+
+
 
