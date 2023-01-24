@@ -115,6 +115,7 @@ jobs:
           environment_name: Bookrecommendationstest-env-1
           version_label: "best-reads-test-${{ steps.format-time.outputs.replaced }}"
           region: eu-west-2
+          deployment_package: deploy.zip
 
 
 
