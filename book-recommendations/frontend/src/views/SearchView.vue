@@ -98,7 +98,7 @@ export default {
   },
   async mounted() {
     if (this.searchType === "title") {
-      await this.searchByTitle(this.searchTerm)
+      await this.searchByTitle(this.searchTerm, this.currentStartIndex)
     } else {
       await this.searchByAuthor(this.searchTerm, this.currentStartIndex)
     }
@@ -112,12 +112,16 @@ export default {
     async searchByAuthor(author, startIndex) {
       this.searchResults = await searchByAuthor(author, startIndex)
     },
-    async searchByTitle(title) {
-      this.searchResults = await searchByTitle(title)
+    async searchByTitle(title, startIndex) {
+      this.searchResults = await searchByTitle(title, startIndex)
     },
     async previousPage() {
       this.currentStartIndex = this.currentStartIndex - this.numberOfItemsPerPage
-      await this.searchByAuthor(this.searchTerm, this.currentStartIndex)
+      if (this.searchType === "title") {
+        await this.searchByTitle(this.searchTerm, this.currentStartIndex)
+      } else {
+        await this.searchByAuthor(this.searchTerm, this.currentStartIndex)
+      }
 
       if (this.currentStartIndex === 0) {
         this.previousPageAvailable = false
@@ -127,7 +131,11 @@ export default {
     async nextPage() {
       this.currentStartIndex = this.currentStartIndex + this.numberOfItemsPerPage
 
-      this.nextSearchResults = await searchByAuthor(this.searchTerm, this.currentStartIndex)
+      if (this.searchType === "title") {
+        this.nextSearchResults = await this.searchByTitle(this.searchTerm, this.currentStartIndex)
+      } else {
+        this.nextSearchResults = await this.searchByAuthor(this.searchTerm, this.currentStartIndex)
+      }
       this.previousPageAvailable = this.currentStartIndex > 0
 
       if (this.nextSearchResults.length !== this.numberOfItemsPerPage) {

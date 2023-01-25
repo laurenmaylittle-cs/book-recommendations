@@ -6,8 +6,8 @@ export async function searchByAuthor(author, startIndex) {
   .then(response => response.data)
 }
 
-export async function searchByTitle(title) {
-  return await fetch(
-    '/api/search/title?title=' + title).then(
-    (response) => response.json())
+export async function searchByTitle(title, startIndex) {
+  return axios.get(
+    `/api/search/title?title=${title}&startIndex=${startIndex}`)
+    .then(response => response.data)
 }
