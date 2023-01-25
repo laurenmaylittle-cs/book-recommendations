@@ -16,7 +16,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Collections;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -24,20 +23,22 @@ import org.springframework.stereotype.Service;
 public class Auth0Service {
 
   private String apiKey;
-
   private final String auth0ApiUri;
-
+  private final String authClientId;
+  private final String authClientSecret;
   private final UsersService usersService;
 
-  @Autowired
-  public Auth0Service(UsersService usersService,
-      @Value("${auth0.api-uri}") String auth0ApiUri) {
-    this.usersService = usersService;
+  public Auth0Service(@Value("${auth0.api-uri}") String auth0ApiUri,
+      @Value("${auth0.client-id}") String authClientId,
+      @Value("${auth0.client-secret}") String authClientSecret, UsersService usersService) {
     this.auth0ApiUri = auth0ApiUri;
+    this.authClientId = authClientId;
+    this.authClientSecret = authClientSecret;
+    this.usersService = usersService;
   }
 
-  public List<User> searchUsersByEmail(String email) {
-    String uri = "%s/users?q=email:*%s*".formatted(auth0ApiUri, email);
+  public List<User> searchUsersByName(String name) {
+    String uri = "%s/users?q=name:*%s*".formatted(auth0ApiUri, name);
 
     apiKey = getAuthToken();
 
@@ -107,12 +108,12 @@ public class Auth0Service {
           .header("content-type", "application/json")
           .body("""
                   {
-                    "client_id":"P46MtoBbpfbtbm94Z8Yt8NlsMKoM3mnf",
-                    "client_secret":"QaFjvdKU8iTyIlVyuV72Oektfq_aQdVlN5ILWR_S3T6nguTtj1DdYaA6rXEiYEOU",
+                    "client_id":"%s",
+                    "client_secret":"%s",
                     "audience":"https://bestreads.eu.auth0.com/api/v2/",
                     "grant_type":"client_credentials"
                   }
-              """)
+              """.formatted(authClientId, authClientSecret))
           .asString()
           .getBody();
       var objectMapper = getObjectMapper();

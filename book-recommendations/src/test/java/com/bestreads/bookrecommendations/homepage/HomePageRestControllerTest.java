@@ -26,7 +26,7 @@ class HomePageRestControllerTest {
 
   @Test
   @WithMockUser
-  void getLIstOfBestSellers() throws Exception {
+  void getListOfBestSellers() throws Exception {
 
     when(bestSellersService.getBestSellers()).thenReturn(
         List.of(

@@ -6,7 +6,7 @@
           <div class="div_center d-flex align-center pl-4">
             <v-text-field
               v-model="searchParam"
-              label="Search by email"
+              label="Search by user's name"
               clearable
               type="String"
               @keyup.enter="loadSearch(searchParam)"
@@ -34,7 +34,7 @@
     </v-row>
     <v-row
       v-for="user in userList"
-      v-else-if="hasSearched"
+      v-else-if="hasSearched && userList.length > 0"
       :key="user.email"
     >
       <v-col cols="10">
@@ -114,7 +114,7 @@ export default {
     async loadSearch() {
       this.isLoading = true;
       this.hasSearched = true;
-      let token = await this.$auth.getTokenSilently();
+      let token = await this.$auth.getTokenSilently()
       this.userList = await getUsersSearch(this.searchParam, token)
       this.isLoading = false;
       this.isAFollowerOfUser = false
