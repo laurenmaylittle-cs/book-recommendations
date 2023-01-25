@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import ViewBookPage from "@/pages/ViewBookPage.vue";
+import ProfileView from '../views/ProfileView.vue';
+import {authGuard} from '@/auth/authGuard';
 import SearchView from "@/views/SearchView";
 import HomePage from "@/pages/HomePage";
 
@@ -8,9 +10,14 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/default-home-vue',
-    name: 'home',
-    component: HomeView
+    path: '/',
+    name: 'Root',
+    component: HomePage,
+  },
+  {
+    path: '/book',
+    name: 'book',
+    component: ViewBookPage
   },
   {
     path: '/default-about-vue',
@@ -29,6 +36,17 @@ const routes = [
     path: '/home',
     name: 'homePage',
     component: HomePage
+  },
+  {
+    path: '/search/:searchTerm',
+    name: 'search',
+    component: SearchView
+  },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: ProfileView,
+    beforeEnter: authGuard
   }
 ]
 

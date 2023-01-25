@@ -1,7 +1,9 @@
-export async function searchByAuthor(author) {
-  return await fetch(
-    '/api/search/author?author=' + author).then(
-    (response) => response.json())
+import axios from "axios";
+
+export async function searchByAuthor(author, startIndex) {
+  return axios.get(
+    `/api/search/author?author=${author}&startIndex=${startIndex}`)
+  .then(response => response.data)
 }
 
 export async function searchByTitle(title) {

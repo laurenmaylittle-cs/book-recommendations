@@ -1,12 +1,11 @@
 package com.bestreads.bookrecommendations.book;
 
 import com.bestreads.bookrecommendations.googlebooks.GoogleBooksService;
+import com.bestreads.bookrecommendations.utils.SearchTermUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.net.URLEncoder;
 import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
@@ -31,7 +30,7 @@ public class BookSearchService {
         }
 
         HttpResponse<String> httpResponse = googleBooksService.searchVolumeByTitle(
-                encodeSearchTerm(searchTerm),
+                SearchTermUtils.encodeURLTerm(searchTerm),
                 startIndex,
                 maxResults
         );
@@ -45,7 +44,7 @@ public class BookSearchService {
 
     public List<Book> searchByAuthor(String searchTerm, int startIndex, int maxResults) {
         HttpResponse<String> httpResponse = googleBooksService.searchVolumeByAuthor(
-                encodeSearchTerm(searchTerm),
+                SearchTermUtils.encodeURLTerm(searchTerm),
                 startIndex,
                 maxResults
         );
@@ -53,7 +52,17 @@ public class BookSearchService {
         return httpResponseToBook.extractFromHttpResponse(httpResponse);
     }
 
-    private String encodeSearchTerm(String searchTerm) {
-        return URLEncoder.encode(searchTerm, StandardCharsets.UTF_8);
+    public Book getBookByIsbn(String isbn) {
+        HttpResponse<String> httpResponse = googleBooksService.getVolumeByIsbn(
+                SearchTermUtils.encodeURLTerm(isbn),
+                1
+        );
+
+        //TODO BES-75: is there a better way to handle an invalid ISBN?
+        if (!httpResponseToBook.extractFromHttpResponse(httpResponse).isEmpty() && httpResponseToBook.extractFromHttpResponse(httpResponse).size() == 1) {
+            return httpResponseToBook.extractFromHttpResponse(httpResponse).get(0);
+        } else {
+            throw new IllegalArgumentException(isbn + " is an invalid ISBN.");
+        }
     }
 }

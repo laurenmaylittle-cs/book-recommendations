@@ -10,6 +10,7 @@
         <v-img
           class="rounded"
           max-width="200"
+          max-height="300"
           :src="bookImageLink"
         />
         <div class="flex-wrap text-body-2 mt-1">
@@ -24,7 +25,7 @@
 import {titleCase} from "title-case";
 
 export default {
-  name: "BookCarouselItem",
+  name: "BookItem",
   props: {
     bookImageLink: {
       type: String,
@@ -42,7 +43,7 @@ export default {
       return titleCase(title.toLowerCase());
     },
     getHoverEffect(hover) {
-      return hover ? "blue-grey lighten-4" : "white";
+      return hover ? "blue-grey lighten-4" : "transparent";
     },
   }
 }
