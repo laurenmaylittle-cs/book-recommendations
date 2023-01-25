@@ -1,4 +1,4 @@
-package com.bestreads.bookrecommendations.book;
+package com.bestreads.bookrecommendations.rating;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -89,7 +89,7 @@ class RatingsServiceTest {
     when(ratingsRepository.findAllByIsbnAndEmail(ISBN, EMAIL))
         .thenReturn(List.of(rating));
 
-    ratingsService.updateUsersRating(ISBN, EMAIL, RATING);
+    ratingsService.saveUsersRating(ISBN, EMAIL, RATING);
     verify(ratingsRepository).save(ratingArgumentCaptor.capture());
 
     var userRating = ratingArgumentCaptor.getValue();
@@ -104,19 +104,9 @@ class RatingsServiceTest {
         .thenReturn(Collections.emptyList());
 
     var exception = assertThrows(IllegalStateException.class,
-        () -> ratingsService.updateUsersRating(ISBN, EMAIL, RATING));
+        () -> ratingsService.saveUsersRating(ISBN, EMAIL, RATING));
     assertEquals(" ",
         exception.getMessage());
   }
 
-  @Test
-  void updateUsersRating_MultipleRatingsExists() {
-    when(ratingsRepository.findAllByIsbnAndEmail(ISBN, EMAIL))
-        .thenReturn(List.of(rating, rating));
-
-    var exception = assertThrows(IllegalStateException.class,
-        () -> ratingsService.getUsersRating(ISBN, EMAIL));
-    assertEquals("There should only be one rating for each user and isbn",
-        exception.getMessage());
-  }
 }

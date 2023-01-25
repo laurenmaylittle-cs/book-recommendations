@@ -48,8 +48,6 @@ class BookControllerTest {
           """;
 
   String ISBN = "9780297859406";
-  String email = "lml22@kent.ac.uk";
-  Integer rating = 4;
 
   @BeforeAll
   static void setUp() {

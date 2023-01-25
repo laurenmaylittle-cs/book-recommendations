@@ -1,4 +1,4 @@
-package com.bestreads.bookrecommendations.book;
+package com.bestreads.bookrecommendations.rating;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -33,6 +33,6 @@ public class RatingsController {
   @PutMapping("private/update-user-rating")
   public void updateUserRating(@Param("isbn") String isbn, @Param("email") String email,
       @Param("rating") Integer rating) {
-    ratingsService.updateUsersRating(isbn, email, rating);
+    ratingsService.saveUsersRating(isbn, email, rating);
   }
 }

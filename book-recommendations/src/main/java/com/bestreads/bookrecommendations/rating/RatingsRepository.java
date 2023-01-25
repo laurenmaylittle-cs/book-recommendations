@@ -1,12 +1,12 @@
-package com.bestreads.bookrecommendations.book;
+package com.bestreads.bookrecommendations.rating;
 
-import java.util.List;
+import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 interface RatingsRepository extends CrudRepository<Rating, Integer> {
 
-  List<Rating> findAllByIsbnAndEmail(String isbn, String email);
+  Optional<Rating> findByIsbnAndEmail(String isbn, String email);
 
 }

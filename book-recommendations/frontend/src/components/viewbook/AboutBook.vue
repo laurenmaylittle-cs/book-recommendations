@@ -22,7 +22,7 @@
         </v-col>
         <v-col cols="3">
           <p v-if="publisher">
-            {{ publisherName }}
+            {{ publisher }}
           </p>
         </v-col>
       </v-row>
@@ -44,7 +44,7 @@
         </v-col>
         <v-col cols="3">
           <p v-if="pages">
-            {{ pageCount }}
+            {{ pages }}
           </p>
         </v-col>
       </v-row>
@@ -91,16 +91,12 @@ export default {
     categories: '',
     date: '',
     description: '',
-    isShortDescription: true,
-    pageCount: null,
-    publisherName: ''
+    isShortDescription: true
   }),
   mounted() {
     this.categories = this.category
     this.date = this.publishedDate
-    this.description = this.truncateDescription()
-    this.pageCount = this.pages
-    this.publisherName = this.publisher
+    this.description = `${this.truncateText(this.originalDescription, 400)}`
   },
   methods: {
     formatDate() {
@@ -120,11 +116,8 @@ export default {
       this.isShortDescription = false
     },
     minimiseDescription() {
-      this.description = this.truncateDescription()
+      this.description = `${this.truncateText(this.originalDescription, 400)}`
       this.isShortDescription = true
-    },
-    truncateDescription() {
-      return `${this.truncateText(this.originalDescription, 400)}`
     },
     truncateText(text, maxCharacterCount) {
       if (text.length > maxCharacterCount) {

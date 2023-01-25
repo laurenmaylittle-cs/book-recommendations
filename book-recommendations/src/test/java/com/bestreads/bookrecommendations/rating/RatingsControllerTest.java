@@ -1,4 +1,4 @@
-package com.bestreads.bookrecommendations.book;
+package com.bestreads.bookrecommendations.rating;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -26,7 +26,7 @@ class RatingsControllerTest {
   private RatingsService ratingsService;
 
   String ISBN = "9780297859406";
-  String email = "lml22@kent.ac.uk";
+  String email = "lml@kent.ac.uk";
   Integer rating = 4;
 
   @Test
@@ -65,6 +65,6 @@ class RatingsControllerTest {
             .param("email", email)
             .param("rating", String.valueOf(rating))
     );
-    verify(ratingsService).updateUsersRating(ISBN, email, rating);
+    verify(ratingsService).saveUsersRating(ISBN, email, rating);
   }
 }

@@ -16,8 +16,7 @@
     </v-row>
     <v-row
       v-if="!isLoading"
-      align="center"
-      class="pb-0 pt-0"
+      class="pb-0 pt-0 align-center"
     >
       <v-col class="ml-10 pt-12">
         <!-- TODO BES-70 show all authors and genres depending on the data returned from the API -->
@@ -74,15 +73,14 @@
     </v-row>
     <v-row
       v-if="!isLoading"
-      align="left"
-      class="pt-0 ma-0"
+      class="pt-0 ma-0 align-center"
     >
       <about-book
         :category="concatDetails(bookData.categories)"
         :published-date="bookData.publishedDate"
         :original-description="bookData.description"
         :pages="bookData.pageCount"
-        :publisher="bookData.publisher"
+        :publisher="bookData.publisher.toString()"
       />
     </v-row>
   </v-container>

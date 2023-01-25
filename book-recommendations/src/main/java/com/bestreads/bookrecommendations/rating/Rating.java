@@ -1,4 +1,4 @@
-package com.bestreads.bookrecommendations.book;
+package com.bestreads.bookrecommendations.rating;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "user_ratings", schema = "best_reads")
+@Table(name = "user_ratings")
 class Rating {
 
   @Id
