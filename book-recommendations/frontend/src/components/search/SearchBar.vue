@@ -12,7 +12,7 @@
     ></v-select>
     <v-text-field
       v-model="queryTerm"
-      label="Search"
+      :label="getSearchTypeDescription"
       clearable
       type="String"
       @keyup.enter="loadSearch(queryTerm)"
@@ -49,6 +49,11 @@ export default {
       this.$router.push({name: 'search', params: {searchType: this.selectedQueryFilter.value , searchTerm: this.queryTerm}}).catch(() => {
       })
       window.location.reload()
+    }
+  },
+  computed: {
+    getSearchTypeDescription() {
+      return `Search by ${this.selectedQueryFilter.displayText}`
     }
   }
 }
