@@ -2,12 +2,10 @@ package com.bestreads.bookrecommendations.rating;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,8 +39,8 @@ class RatingsServiceTest {
 
   @Test
   void getUsersRating() {
-    when(ratingsRepository.findAllByIsbnAndEmail(ISBN, EMAIL))
-        .thenReturn(List.of(rating));
+    when(ratingsRepository.findByIsbnAndEmail(ISBN, EMAIL))
+        .thenReturn(Optional.of(rating));
 
     var userRating = ratingsService.getUsersRating(ISBN, EMAIL);
     assertEquals(userRating, RATING);
@@ -50,29 +48,19 @@ class RatingsServiceTest {
 
   @Test
   void getUsersRating_NoRatingExists() {
-    when(ratingsRepository.findAllByIsbnAndEmail(ISBN, EMAIL))
-        .thenReturn(Collections.emptyList());
+    when(ratingsRepository.findByIsbnAndEmail(ISBN, EMAIL))
+        .thenReturn(Optional.empty());
 
     var userRating = ratingsService.getUsersRating(ISBN, EMAIL);
     assertNull(userRating);
   }
 
-  @Test
-  void getUsersRating_MultipleRatingsExist() {
-    when(ratingsRepository.findAllByIsbnAndEmail(ISBN, EMAIL))
-        .thenReturn(List.of(rating, rating));
-
-    var exception = assertThrows(IllegalStateException.class,
-        () -> ratingsService.getUsersRating(ISBN, EMAIL));
-    assertEquals("There should only be one rating for each user and isbn",
-        exception.getMessage());
-  }
 
   @Test
   void saveUsersRating() {
     ArgumentCaptor<Rating> ratingArgumentCaptor = ArgumentCaptor.forClass(Rating.class);
-    when(ratingsRepository.findAllByIsbnAndEmail(ISBN, EMAIL))
-        .thenReturn(Collections.emptyList());
+    when(ratingsRepository.findByIsbnAndEmail(ISBN, EMAIL))
+        .thenReturn(Optional.empty());
     ratingsService.saveUsersRating(ISBN, EMAIL, RATING);
 
     verify(ratingsRepository).save(ratingArgumentCaptor.capture());
@@ -86,8 +74,8 @@ class RatingsServiceTest {
   void updateUsersRating() {
     ArgumentCaptor<Rating> ratingArgumentCaptor = ArgumentCaptor.forClass(Rating.class);
 
-    when(ratingsRepository.findAllByIsbnAndEmail(ISBN, EMAIL))
-        .thenReturn(List.of(rating));
+    when(ratingsRepository.findByIsbnAndEmail(ISBN, EMAIL))
+        .thenReturn(Optional.of(rating));
 
     ratingsService.saveUsersRating(ISBN, EMAIL, RATING);
     verify(ratingsRepository).save(ratingArgumentCaptor.capture());
@@ -97,16 +85,4 @@ class RatingsServiceTest {
     assertEquals(userRating.getEmail(), EMAIL);
     assertEquals(userRating.getIsbn(), ISBN);
   }
-
-  @Test
-  void updateUsersRating_NoRatingExists() {
-    when(ratingsRepository.findAllByIsbnAndEmail(ISBN, EMAIL))
-        .thenReturn(Collections.emptyList());
-
-    var exception = assertThrows(IllegalStateException.class,
-        () -> ratingsService.saveUsersRating(ISBN, EMAIL, RATING));
-    assertEquals(" ",
-        exception.getMessage());
-  }
-
 }
