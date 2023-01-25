@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "followers_following", schema = "best_reads")
+@Table(name = "followers_following")
 class FollowersFollowing {
 
   @Id

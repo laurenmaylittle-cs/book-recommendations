@@ -79,8 +79,7 @@ export default {
     }
   },
   async mounted() {
-    const token = await this.$auth.getTokenSilently(
-      {audience: 'https://localhost:5001/api'});
+    const token = await this.$auth.getTokenSilently();
     this.followerFollowingDetails = await getFollowersAndFollowing(this.$auth.user.email, token)
     this.getListOfFollowerEmails(followerFollowingDetails.allFollowers)
   },

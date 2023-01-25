@@ -1,6 +1,5 @@
 package com.bestreads.bookrecommendations.auth0;
 
-import java.io.Serializable;
 import java.util.List;
 
 record Auth0Users(String created_at,
@@ -17,6 +16,6 @@ record Auth0Users(String created_at,
                   String user_id,
                   String last_login,
                   String last_ip,
-                  String logins_count) implements Serializable {
+                  String logins_count) {
 
 }

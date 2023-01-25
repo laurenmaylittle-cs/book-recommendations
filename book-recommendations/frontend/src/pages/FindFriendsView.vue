@@ -6,7 +6,7 @@
           <div class="div_center d-flex align-center pl-4">
             <v-text-field
               v-model="searchParam"
-              label="Search by email"
+              label="Search by user's name"
               clearable
               type="String"
               @keyup.enter="loadSearch(searchParam)"
@@ -34,7 +34,7 @@
     </v-row>
     <v-row
       v-for="user in userList"
-      v-else-if="hasSearched"
+      v-else-if="hasSearched && userList.length > 0"
       :key="user.email"
     >
       <v-col cols="10">
@@ -54,6 +54,7 @@
               >
                 <img
                   :src="user.picture"
+                  alt="Profile picture"
                 >
               </v-avatar>
               <v-avatar
@@ -77,7 +78,7 @@
             </v-col>
             <v-col class="pt-15">
               <v-btn
-                v-if="isAFollower(user.followers)"
+                v-if="isAFollowerOfUser"
                 @click.native="unfollowUser(user.email)"
               >
                 Following
@@ -113,32 +114,20 @@ export default {
     async loadSearch() {
       this.isLoading = true;
       this.hasSearched = true;
-      let token = await this.$auth.getTokenSilently({audience: 'https://localhost:5001/api'})
+      let token = await this.$auth.getTokenSilently()
       this.userList = await getUsersSearch(this.searchParam, token)
       this.isLoading = false;
       this.isAFollowerOfUser = false
     },
     async followUser(userToFollow) {
-      const token = await this.$auth.getTokenSilently(
-        {audience: 'https://localhost:5001/api'});
+      const token = await this.$auth.getTokenSilently();
       await followUser(this.$auth.user.email, userToFollow, token)
       this.isAFollowerOfUser = true
     },
     async unfollowUser(userToUnfollow) {
-      const token = await this.$auth.getTokenSilently(
-        {audience: 'https://localhost:5001/api'});
+      const token = await this.$auth.getTokenSilently();
       await unfollowUser(this.$auth.user.email, userToUnfollow, token)
       this.isAFollowerOfUser = false
-      this.isAFollower(null)
-    },
-    isAFollower(listOfFollowers) {
-      listOfFollowers.forEach(follower => this.checkIfUserIsAFollower(follower.followerEmail))
-      return this.isAFollowerOfUser
-    },
-    checkIfUserIsAFollower(followerEmail) {
-      if (this.$auth.user.email === followerEmail) {
-        this.isAFollowerOfUser = true;
-      }
     }
   }
 }

@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS best_reads.followers_following;
-CREATE TABLE best_reads.followers_following
+DROP TABLE IF EXISTS followers_following;
+CREATE TABLE followers_following
 (
     id              integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     following_email text,
