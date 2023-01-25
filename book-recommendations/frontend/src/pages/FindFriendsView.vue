@@ -39,7 +39,7 @@
       :user="user"
     />
     <div
-      v-else-if="hasSearched"
+      v-else-if="hasSearched && userList.length === 0"
       class="pa-5"
     >
       No results found
@@ -64,7 +64,7 @@ export default {
     async loadSearch() {
       this.isLoading = true;
       this.hasSearched = true;
-      let token = await this.$auth.getTokenSilently({audience: 'https://localhost:5001/api'})
+      let token = await this.$auth.getTokenSilently()
       this.userList = await getUsersSearch(this.searchParam, token)
       this.isLoading = false;
     }

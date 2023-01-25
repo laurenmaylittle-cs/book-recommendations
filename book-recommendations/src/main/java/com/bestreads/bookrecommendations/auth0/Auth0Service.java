@@ -23,9 +23,15 @@ public class Auth0Service {
 
   private String apiKey;
   private final String auth0ApiUri;
+  private final String authClientId;
+  private final String authClientSecret;
 
-  public Auth0Service(@Value("${auth0.api-uri}") String auth0ApiUri) {
+  public Auth0Service(@Value("${auth0.api-uri}") String auth0ApiUri,
+      @Value("${auth0.client-id}") String authClientId,
+      @Value("${auth0.client-secret}") String authClientSecret) {
     this.auth0ApiUri = auth0ApiUri;
+    this.authClientId = authClientId;
+    this.authClientSecret = authClientSecret;
   }
 
   public List<User> searchUsersByName(String name) {
@@ -98,12 +104,12 @@ public class Auth0Service {
           .header("content-type", "application/json")
           .body("""
                   {
-                    "client_id":"P46MtoBbpfbtbm94Z8Yt8NlsMKoM3mnf",
-                    "client_secret":"QaFjvdKU8iTyIlVyuV72Oektfq_aQdVlN5ILWR_S3T6nguTtj1DdYaA6rXEiYEOU",
+                    "client_id":"%s",
+                    "client_secret":"%s",
                     "audience":"https://bestreads.eu.auth0.com/api/v2/",
                     "grant_type":"client_credentials"
                   }
-              """)
+              """.formatted(authClientId, authClientSecret))
           .asString()
           .getBody();
       var objectMapper = getObjectMapper();
