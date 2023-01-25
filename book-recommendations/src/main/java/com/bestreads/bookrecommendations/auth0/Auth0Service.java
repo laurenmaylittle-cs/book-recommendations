@@ -16,6 +16,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Collections;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -26,19 +27,16 @@ public class Auth0Service {
   private final String auth0ApiUri;
   private final String authClientId;
   private final String authClientSecret;
-  private final UsersService usersService;
-
   private final FollowersFollowingService followersFollowingService;
 
   @Autowired
   public Auth0Service(@Value("${auth0.api-uri}") String auth0ApiUri,
-      FollowersFollowingService followersFollowingService, @Value("${auth0.api-uri}") String auth0ApiUri,
+      FollowersFollowingService followersFollowingService,
       @Value("${auth0.client-id}") String authClientId,
-      @Value("${auth0.client-secret}") String authClientSecret, UsersService usersService) {
+      @Value("${auth0.client-secret}") String authClientSecret) {
     this.auth0ApiUri = auth0ApiUri;
     this.authClientId = authClientId;
     this.authClientSecret = authClientSecret;
-    this.usersService = usersService;
     this.followersFollowingService = followersFollowingService;
   }
 

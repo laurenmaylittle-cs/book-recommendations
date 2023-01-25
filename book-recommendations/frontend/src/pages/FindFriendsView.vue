@@ -55,6 +55,7 @@
                 <img
                   :src="user.picture"
                   alt="Profile picture"
+                  referrerpolicy="no-referrer"
                 >
               </v-avatar>
               <v-avatar
@@ -78,7 +79,7 @@
             </v-col>
             <v-col class="pt-15">
               <v-btn
-                v-if="isAFollowerOfUser"
+                v-if="isAFollower(user.followers)"
                 @click.native="unfollowUser(user.email)"
               >
                 Following
@@ -128,6 +129,16 @@ export default {
       const token = await this.$auth.getTokenSilently();
       await unfollowUser(this.$auth.user.email, userToUnfollow, token)
       this.isAFollowerOfUser = false
+      this.isAFollower(null)
+    },
+    isAFollower(listOfFollowers) {
+      listOfFollowers.forEach(follower => this.checkIfUserIsAFollower(follower.followerEmail))
+      return this.isAFollowerOfUser
+    },
+    checkIfUserIsAFollower(followerEmail) {
+      if (this.$auth.user.email === followerEmail) {
+        this.isAFollowerOfUser = true;
+      }
     }
   }
 }

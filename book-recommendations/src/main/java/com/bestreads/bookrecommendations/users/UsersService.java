@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-class UsersService {
+public class UsersService {
 
   private final FollowersFollowingRepository followersFollowingRepository;
   private final Auth0Service auth0Service;

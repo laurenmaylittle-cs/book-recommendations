@@ -25,26 +25,19 @@
         {{ $auth.user.email }}
       </p>
     </v-row>
-    <v-row class="pl-2">
-      <v-col
-        cols="2"
-      >
-        <followers-following
-          :title="formatTitle()"
-          :total="followerFollowingDetails.totalFollowers"
-          :list-of-users="followerFollowingDetails.allFollowers"
-        />
-      </v-col>
-      <v-col
-        cols="2"
-        class="pl-10"
-      >
-        <followers-following
-          title="Following"
-          :total="followerFollowingDetails.totalFollowing"
-          :list-of-users="followerFollowingDetails.allFollowing"
-        />
-      </v-col>
+    <v-row class="pb-3">
+      <followers-following
+        :title="formatTitle()"
+        :total="followerFollowingDetails.totalFollowers"
+        :list-of-users="followerFollowingDetails.allFollowers"
+      />
+    </v-row>
+    <v-row class="pb-3">
+      <followers-following
+        title="Following"
+        :total="followerFollowingDetails.totalFollowing"
+        :list-of-users="followerFollowingDetails.allFollowing"
+      />
     </v-row>
     <v-row>
       <router-link
@@ -81,7 +74,6 @@ export default {
   async mounted() {
     const token = await this.$auth.getTokenSilently();
     this.followerFollowingDetails = await getFollowersAndFollowing(this.$auth.user.email, token)
-    this.getListOfFollowerEmails(followerFollowingDetails.allFollowers)
   },
   methods: {
     formatTitle() {
