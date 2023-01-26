@@ -34,6 +34,7 @@
                 :key="collection.id"
                 :collection-name="collection.name"
                 :collection-color="colors[index]"
+                @click.native="goToCollection(collection.id)"
               />
             </v-row>
           </v-sheet>
@@ -101,6 +102,11 @@ export default {
       generatePastelColors(this.colors, this.collections.length, {min: 50, max: 60},
         {min: 80, max: 88})
     },
+    goToCollection(collectionId) {
+      this.$router.push({name: 'bookshelfBooksPage', params: {collectionId: collectionId}}).catch(() => {
+      })
+      window.location.reload()
+    }
   }
 }
 </script>

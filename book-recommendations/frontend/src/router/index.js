@@ -5,6 +5,7 @@ import ProfileView from '../views/ProfileView.vue';
 import {authGuard} from '@/auth/authGuard';
 import SearchView from "@/views/SearchView";
 import HomePage from "@/pages/HomePage";
+import BookshelfBooksPage from "@/pages/BookshelfBooksPage";
 
 Vue.use(VueRouter)
 
@@ -47,6 +48,12 @@ const routes = [
     path: '/bookshelf',
     name: 'bookshelf',
     component: () => import(/* webpackChunkName: "bookshelf" */ '../pages/BookshelfPage.vue'),
+    beforeEnter: authGuard
+  },
+  {
+    path: '/bookshelf/:collectionId',
+    name: 'bookshelfBooksPage',
+    component: BookshelfBooksPage,
     beforeEnter: authGuard
   }
 ]
