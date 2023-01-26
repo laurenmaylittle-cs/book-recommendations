@@ -37,73 +37,26 @@
       v-else-if="hasSearched && userList.length > 0"
       :key="user.email"
     >
-      <v-col cols="10">
-        <v-card
-          v-if="user.email !== $auth.user.email"
-          class="ml-5 mt-2 mb-2"
-          height="150px"
-        >
-          <v-row>
-            <v-col
-              cols="2"
-            >
-              <v-avatar
-                v-if="user.picture !== null"
-                size="100px"
-                class="ml-3 mt-5 mb-5 mr-3"
-              >
-                <img
-                  :src="user.picture"
-                  alt="Profile picture"
-                  referrerpolicy="no-referrer"
-                >
-              </v-avatar>
-              <v-avatar
-                v-else
-                color="indigo"
-                size="100px"
-                class="ml-3 mt-5 mb-5 mr-3"
-              >
-                <v-icon dark>
-                  mdi-account-circle
-                </v-icon>
-              </v-avatar>
-            </v-col>
-            <v-col
-              cols="5"
-              class="pt-15 pl-8 pr-0"
-            >
-              <h3>
-                {{ user.name }}
-              </h3>
-            </v-col>
-            <v-col class="pt-15">
-              <v-btn
-                v-if="isAFollower(user.followers)"
-                @click.native="unfollowUser(user.email)"
-              >
-                Following
-              </v-btn>
-              <v-btn
-                v-else
-                color="primary"
-                @click.native="followUser(user.email)"
-              >
-                Follow
-              </v-btn>
-            </v-col>
-          </v-row>
-        </v-card>
-      </v-col>
+      <user-card
+        :name="user.name"
+        :email="user.email"
+        :is-a-follower="isAFollowerOfUser"
+        :picture="user.picture"
+        :following-list="user.followers"
+        @follow="follow"
+        @unfollow="unfollow"
+      />
     </v-row>
   </v-container>
 </template>
 
 <script>
 import {followUser, getUsersSearch, unfollowUser} from "@/api/find-friends";
+import UserCard from "@/components/UserCard";
 
 export default {
   name: "FindFriendsView",
+  components: {UserCard},
   data: () => ({
     searchParam: '',
     userList: [],
@@ -120,25 +73,15 @@ export default {
       this.isLoading = false;
       this.isAFollowerOfUser = false
     },
-    async followUser(userToFollow) {
+    async follow(userToFollow) {
       const token = await this.$auth.getTokenSilently();
       await followUser(this.$auth.user.email, userToFollow, token)
       this.isAFollowerOfUser = true
     },
-    async unfollowUser(userToUnfollow) {
+    async unfollow(userToUnfollow) {
       const token = await this.$auth.getTokenSilently();
       await unfollowUser(this.$auth.user.email, userToUnfollow, token)
       this.isAFollowerOfUser = false
-      this.isAFollower(null)
-    },
-    isAFollower(listOfFollowers) {
-      listOfFollowers.forEach(follower => this.checkIfUserIsAFollower(follower.followerEmail))
-      return this.isAFollowerOfUser
-    },
-    checkIfUserIsAFollower(followerEmail) {
-      if (this.$auth.user.email === followerEmail) {
-        this.isAFollowerOfUser = true;
-      }
     }
   }
 }
