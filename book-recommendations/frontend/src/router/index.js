@@ -38,11 +38,6 @@ const routes = [
     component: HomePage
   },
   {
-    path: '/search/:searchTerm',
-    name: 'search',
-    component: SearchView
-  },
-  {
     path: '/profile',
     name: 'profile',
     component: ProfileView,
