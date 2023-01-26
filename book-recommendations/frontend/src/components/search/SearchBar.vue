@@ -1,15 +1,15 @@
 <template>
   <div class="div_center d-flex align-center">
     <v-select
+      v-model="selectedQueryFilter"
       class="ml-3"
       style="width: 90px"
-      v-model="selectedQueryFilter"
       :items="queryFilters"
       item-text="displayText"
       item-value="value"
       return-object
       single-line
-    ></v-select>
+    />
     <v-text-field
       v-model="queryTerm"
       :label="getSearchTypeDescription"
@@ -44,16 +44,16 @@ export default {
       {displayText: 'Author', value: 'author'}
     ],
   }),
+  computed: {
+    getSearchTypeDescription() {
+      return `Search by ${this.selectedQueryFilter.displayText}`
+    }
+  },
   methods: {
     loadSearch() {
       this.$router.push({name: 'search', params: {searchType: this.selectedQueryFilter.value , searchTerm: this.queryTerm}}).catch(() => {
       })
       window.location.reload()
-    }
-  },
-  computed: {
-    getSearchTypeDescription() {
-      return `Search by ${this.selectedQueryFilter.displayText}`
     }
   }
 }
