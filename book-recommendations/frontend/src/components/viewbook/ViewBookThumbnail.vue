@@ -1,6 +1,6 @@
 <template>
   <v-img
-    class="ma-12 pa-3 rounded"
+    class="mb-0 pa-3 rounded"
     :lazy-src="thumbnail"
     max-height="300"
     max-width="200"
