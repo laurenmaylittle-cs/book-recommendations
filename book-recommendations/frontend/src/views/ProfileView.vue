@@ -25,13 +25,19 @@
         {{ $auth.user.email }}
       </p>
     </v-row>
-    <v-row class="pl-5 pb-3">
-      <h4 class="pr-5">
-        {{ followerFollowingDetails.totalFollowers }} Followers
-      </h4>
-      <h4 class="pl-5">
-        {{ followerFollowingDetails.totalFollowing }} Following
-      </h4>
+    <v-row class="pb-3">
+      <followers-following
+        :title="formatTitle()"
+        :total="followerFollowingDetails.totalFollowers"
+        :list-of-users="followerFollowingDetails.allFollowers"
+      />
+    </v-row>
+    <v-row class="pb-3">
+      <followers-following
+        title="Following"
+        :total="followerFollowingDetails.totalFollowing"
+        :list-of-users="followerFollowingDetails.allFollowing"
+      />
     </v-row>
     <v-row>
       <router-link
@@ -51,20 +57,31 @@
 <script>
 
 import {getFollowersAndFollowing} from "@/api/profile";
+import FollowersFollowing from "@/components/profile/FollowersFollowing";
 
 export default {
   name: 'ProfileView',
+  components: {FollowersFollowing},
   data() {
     return {
       style: {
         backgroundColor: '#E4E4E4'
       },
-      followerFollowingDetails: ''
+      followerFollowingDetails: '',
+      title: ''
     }
   },
   async mounted() {
     const token = await this.$auth.getTokenSilently();
     this.followerFollowingDetails = await getFollowersAndFollowing(this.$auth.user.email, token)
+  },
+  methods: {
+    formatTitle() {
+      if (this.followerFollowingDetails.totalFollowers === 1) {
+        return "Follower"
+      }
+      return "Followers"
+    }
   }
 }
 </script>

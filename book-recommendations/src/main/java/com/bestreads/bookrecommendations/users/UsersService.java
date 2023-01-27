@@ -1,6 +1,6 @@
 package com.bestreads.bookrecommendations.users;
 
-import java.util.List;
+import com.bestreads.bookrecommendations.auth0.Auth0Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,17 +8,16 @@ import org.springframework.stereotype.Service;
 public class UsersService {
 
   private final FollowersFollowingRepository followersFollowingRepository;
+  private final Auth0Service auth0Service;
 
   @Autowired
-  public UsersService(FollowersFollowingRepository followersFollowingRepository) {
+  UsersService(FollowersFollowingRepository followersFollowingRepository,
+      Auth0Service auth0Service) {
     this.followersFollowingRepository = followersFollowingRepository;
+    this.auth0Service = auth0Service;
   }
 
-  public List<FollowersFollowing> getAllFollowers(String currentUserEmail) {
-    return followersFollowingRepository.findAllByFollowingEmail(currentUserEmail);
-  }
-
-  public void unfollowUser(String currentUser, String userToUnfollow) {
+  void unfollowUser(String currentUser, String userToUnfollow) {
     var allPeopleThatUserIsFollowing = followersFollowingRepository.findAllByFollowerEmail(
         currentUser);
 
@@ -45,7 +44,16 @@ public class UsersService {
     var numberOfFollowers = allFollowers.size();
     var numberOfFollowing = allPeopleThatUserIsFollowing.size();
 
-    return new FollowersFollowingDetails(numberOfFollowers, allFollowers, numberOfFollowing,
-        allPeopleThatUserIsFollowing);
+    var followersEmails = allFollowers.stream()
+        .map(FollowersFollowing::getFollowerEmail)
+        .toList();
+
+    var followingEmails = allPeopleThatUserIsFollowing.stream()
+        .map(FollowersFollowing::getFollowingEmail)
+        .toList();
+
+    return new FollowersFollowingDetails(numberOfFollowers,
+        auth0Service.searchByMultipleEmails(followersEmails), numberOfFollowing,
+        auth0Service.searchByMultipleEmails(followingEmails));
   }
 }
