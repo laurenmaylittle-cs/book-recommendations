@@ -53,8 +53,13 @@ export default {
 
   methods: {
     loadSearch() {
-      this.$router.push({name: 'search', params: {searchType: this.selectedQueryFilter.value , searchTerm: this.queryTerm}}).catch(() => {
-      })
+      if (this.selectedQueryFilter.value === 'author') {
+        this.$router.push({name: 'search', params: {searchType: this.selectedQueryFilter.value , searchTerm: this.queryTerm}}).catch(() => {
+        })
+      } else {
+        this.$router.push({name: 'book', params: {isbn: this.queryTerm}}).catch(() => {
+        })
+      }
       window.location.reload()
     }
   }

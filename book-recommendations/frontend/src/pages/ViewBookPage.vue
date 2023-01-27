@@ -38,17 +38,20 @@ export default {
     ViewBookThumbnail,
     ViewBookDetails
   },
-  data: () => ({
-    bookData: '',
-    isLoading: true
-  }),
+  data: function () {
+    return {
+      bookData: '',
+      isLoading: true,
+      isbn: this.$route.params.isbn
+    }
+  },
   async mounted() {
     await this.getBookData()
     this.isLoading = false;
   },
   methods: {
     async getBookData() {
-      this.bookData = await getBookInfo('9780753827666');
+      this.bookData = await getBookInfo(this.isbn);
     }
   }
 }
