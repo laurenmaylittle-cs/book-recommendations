@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
@@ -31,19 +30,16 @@ public class GoogleBooksHttpResponseToBook implements HttpResponseToBook {
     }
     var objectMapper = getObjectMapper();
 
-    List<Item> items = new ArrayList<>();
+    List<Item> items;
     try {
       items = objectMapper.readValue(httpResponse.body(), Root.class).items();
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     }
 
-    if (items == null) {
-      return Collections.emptyList();
-    }
-
     return items.stream()
         .map(item -> new Book(
+            item.id(),
             item.volumeInfo().title(),
             item.volumeInfo().authors(),
             item.volumeInfo().publisher(),
@@ -54,7 +50,8 @@ public class GoogleBooksHttpResponseToBook implements HttpResponseToBook {
             getImageLinks(item),
             item.volumeInfo().language(),
             item.volumeInfo().averageRating(),
-            item.volumeInfo().ratingsCount()
+            item.volumeInfo().ratingsCount(),
+            getISBN(item)
         ))
         .toList();
   }
@@ -97,5 +94,35 @@ public class GoogleBooksHttpResponseToBook implements HttpResponseToBook {
     }
 
     return new ImageLinks(smallThumbnail, thumbnail);
+  }
+
+  private String getISBN(Item item) {
+
+    if (item.volumeInfo().industryIdentifiers() == null ||
+        item.volumeInfo().industryIdentifiers().isEmpty()) {
+      return "";
+    }
+
+    var industryIdentifiers = item.volumeInfo().industryIdentifiers();
+    var isbn13 = industryIdentifiers.stream()
+        .filter(isbnIdentifier -> isbnIdentifier.type().equals("ISBN_13"))
+        .toList();
+
+    if (isbn13.isEmpty()) {
+      var isbn10 = industryIdentifiers.stream()
+          .filter(isbnIdentifier -> isbnIdentifier.type().equals("ISBN_10"))
+          .toList();
+      return isbn10.isEmpty() ?
+          checkForOtherIdentifier(industryIdentifiers) : isbn10.get(0).identifier();
+    }
+
+    return isbn13.get(0).identifier();
+  }
+
+  private String checkForOtherIdentifier(List<IndustryIdentifier> industryIdentifiers) {
+    var other = industryIdentifiers.stream()
+        .filter(isbnIdentifier -> isbnIdentifier.type().equals("OTHER"))
+        .toList();
+    return other.isEmpty() ? "" : other.get(0).identifier();
   }
 }

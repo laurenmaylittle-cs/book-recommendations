@@ -50,7 +50,8 @@ class NyTimesHttpResponseToBookTest {
                       "author": "Matt Haig",
                       "publisher": "ABC publishing",
                       "description": "Some say it's a good book to read",
-                      "book_image": "https://google.com/image.jpg"                   
+                      "book_image": "https://google.com/image.jpg",
+                      "primary_isbn13":"9780735211292"         
                     }
                   ]
                 }
@@ -67,10 +68,16 @@ class NyTimesHttpResponseToBookTest {
         .extracting(Category::listId, Category::listName, Category::books)
         .containsExactly(
             tuple(1, "Hardcover Fiction",
-                List.of(new Book("The Midnight Library", List.of("Matt Haig"), "ABC publishing",
-                    "Some say it's a good book to read",
-                    new ImageLinks("https://google.com/image.jpg",
-                        "https://google.com/image.jpg")))));
+                List.of(
+                    new Book("The Midnight Library",
+                        List.of("Matt Haig"), "ABC publishing",
+                        "Some say it's a good book to read",
+                        new ImageLinks("https://google.com/image.jpg",
+                            "https://google.com/image.jpg"),
+                        "9780735211292")
+                )
+            )
+        );
 
   }
 }
