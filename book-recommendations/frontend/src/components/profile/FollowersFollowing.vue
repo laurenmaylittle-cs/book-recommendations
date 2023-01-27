@@ -3,7 +3,7 @@
     <v-dialog
       v-model="dialog"
       scrollable
-      max-width="300"
+      max-width="400"
     >
       <template #activator="{ on, attrs }">
         <v-btn
@@ -33,7 +33,7 @@
                 referrerpolicy="no-referrer"
               >
             </v-avatar>
-            <h3 class="ma-5 pt-2">
+            <h3 class="ma-5 pt-4">
               {{ user.name }}
             </h3>
           </v-row>
