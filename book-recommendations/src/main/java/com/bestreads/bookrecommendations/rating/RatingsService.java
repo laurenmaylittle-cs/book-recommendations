@@ -1,5 +1,6 @@
 package com.bestreads.bookrecommendations.rating;
 
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ class RatingsService {
     return userRating.get().getRating();
   }
 
+  @Transactional
   void saveUsersRating(String isbn, String email, int userRating) {
     var userRatingFromDB = ratingsRepository.findByIsbnAndEmail(isbn, email);
     var rating = new Rating();
