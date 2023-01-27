@@ -116,8 +116,8 @@ jobs:
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
           aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
-          application_name: book-recommendations-test
-          environment_name: Bookrecommendationstest-env-1
+          application_name: bookrecommendations
+          environment_name: Bookrecommendations-env
           version_label: "best-reads-test-${{ steps.format-time.outputs.replaced }}"
           region: eu-west-2
           deployment_package: book-recommendations/deploy.zip
