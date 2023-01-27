@@ -22,8 +22,5 @@ services:
     hostname: client
     ports:
       - "80:80"
-    environment:
-      - VUE_APP_AUTH0_DOMAIN=$VUE_APP_AUTH0_DOMAIN
-      - VUE_APP_AUTH0_CLIENT_ID=$VUE_APP_AUTH0_CLIENT_ID
 
 

@@ -86,7 +86,9 @@ jobs:
           context: ./book-recommendations/frontend
           push: true
           tags: augmart/book-recommendations-frontend
-
+          build-args: |
+            VUE_APP_AUTH0_DOMAIN=${{ secrets.VUE_APP_AUTH0_DOMAIN }}
+            VUE_APP_AUTH0_CLIENT_ID=${{ secrets.VUE_APP_AUTH0_CLIENT_ID }}
   deploy-to-aws:
     needs: [ publish-to-docker ]
     runs-on: ubuntu-latest
