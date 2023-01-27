@@ -11,7 +11,18 @@
         indeterminate
       />
     </v-row>
-    <v-row align="center">
+    <v-row
+      v-if="valid===false"
+      class="pt-6"
+    >
+      <p>
+        {{ errorMessage }}
+      </p>
+    </v-row>
+    <v-row
+      v-if="valid"
+      align="center"
+    >
       <v-col cols="3">
         <view-book-thumbnail :thumbnail="bookData.imageLinks.thumbnail" />
       </v-col>
@@ -42,14 +53,32 @@ export default {
     return {
       bookData: '',
       isLoading: true,
+      valid: '',
       isbn: this.$route.params.isbn
     }
   },
+  computed: {
+    errorMessage() {
+      return "Could not find a book with the ISBN: " + this.isbn
+    }
+  },
   async mounted() {
-    await this.getBookData()
+    if (this.validIsbn(this.isbn)) {
+      await this.getBookData();
+      if (this.bookData !== null) {
+        this.valid = true;
+      }
+    } else {
+      this.bookData = null;
+      this.valid = false;
+    }
     this.isLoading = false;
+
   },
   methods: {
+    validIsbn(isbn) {
+      return isbn.length === 10 || isbn.length === 13;
+    },
     async getBookData() {
       this.bookData = await getBookInfo(this.isbn);
     }
