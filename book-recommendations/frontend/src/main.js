@@ -10,9 +10,8 @@ import vuetify from './plugins/vuetify'
 // Import the plugin here
 import {Auth0Plugin} from './auth';
 
-const authConfig = require("./auth/auth_config");
-const domain = "bestreadsprod.eu.auth0.com";
-const clientId = "jNnYObZDCGx46fo9rbRaHqJbwrZyoNBX";
+const domain = process.env.VUE_APP_AUTH0_DOMAIN;
+const clientId = process.env.VUE_APP_AUTH0_CLIENT_ID;
 
 Vue.config.productionTip = false
 Vue.use(Vuetify)
