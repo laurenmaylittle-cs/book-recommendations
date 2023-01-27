@@ -40,6 +40,7 @@ class HomePageRestControllerTest {
                         "Test Description",
                         "Test Publisher",
                         new ImageLinks("smallThumbnail", "thumbnail")
+                        , "9780735211292"
                     )
                 )
             )
