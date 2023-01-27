@@ -43,7 +43,6 @@ export default {
     isLoading: true
   }),
   async mounted() {
-    console.log("auth domain", process.env.VUE_APP_AUTH0_DOMAIN);
     await this.getBookData()
     this.isLoading = false;
   },

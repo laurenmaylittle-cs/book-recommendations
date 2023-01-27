@@ -10,6 +10,8 @@ import vuetify from './plugins/vuetify'
 // Import the plugin here
 import {Auth0Plugin} from './auth';
 
+require('dotenv').config()
+
 const domain = process.env.VUE_APP_AUTH0_DOMAIN;
 const clientId = process.env.VUE_APP_AUTH0_CLIENT_ID;
 
