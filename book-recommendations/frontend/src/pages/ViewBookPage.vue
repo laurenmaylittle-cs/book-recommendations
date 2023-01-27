@@ -65,15 +65,12 @@ export default {
   async mounted() {
     if (this.validIsbn(this.isbn)) {
       await this.getBookData();
-      if (this.bookData !== null) {
-        this.valid = true;
-      }
+      this.valid = this.bookData !== null;
     } else {
       this.bookData = null;
       this.valid = false;
     }
     this.isLoading = false;
-
   },
   methods: {
     validIsbn(isbn) {
