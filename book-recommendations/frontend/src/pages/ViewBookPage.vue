@@ -18,7 +18,7 @@
       v-if="!isLoading"
       class="pb-0 pt-0 align-center"
     >
-      <v-col class="ml-10 pt-12">
+      <v-col class="ml-4 pt-4">
         <!-- TODO BES-70 show all authors and genres depending on the data returned from the API -->
         <h1
           v-if="bookData.title"
@@ -67,7 +67,7 @@
           :isbn="isbn.toString()"
         />
       </v-col>
-      <v-col class="pb-0 mb-0 mt-2">
+      <v-col class="ma-0">
         <view-book-thumbnail :thumbnail="bookData.imageLinks.thumbnail" />
       </v-col>
     </v-row>

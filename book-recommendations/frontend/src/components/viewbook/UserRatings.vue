@@ -1,13 +1,16 @@
 <template>
   <v-container v-if="$auth.isAuthenticated && $auth.user !== undefined">
-    <div v-if="hasRating">
+    <div
+      v-if="hasRating"
+      class="ma-0"
+    >
       <h3>
         Your rating
         <v-rating
           v-model="bookRating"
           background-color="orange lighten-3"
           color="orange"
-          large
+          size="30"
           readonly
         />
         <v-dialog
