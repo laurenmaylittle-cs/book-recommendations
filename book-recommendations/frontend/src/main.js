@@ -7,11 +7,12 @@ import 'vuetify/dist/vuetify.min.css'
 import '@mdi/font/css/materialdesignicons.css'
 import vuetify from './plugins/vuetify'
 
-// Import the Auth0 configuration
-import {clientId, domain} from '../auth_config.json';
-
 // Import the plugin here
 import {Auth0Plugin} from './auth';
+
+const authConfig = require("../auth_config.json");
+const domain = authConfig.domain;
+const clientId = authConfig.clientId;
 
 Vue.config.productionTip = false
 Vue.use(Vuetify)
