@@ -11,7 +11,7 @@ import vuetify from './plugins/vuetify'
 import {Auth0Plugin} from './auth';
 
 const authConfig = require("./auth/auth_config");
-const domain = authConfig.auth0Env.domain;
+const domain = "bestreadsprod.eu.auth0.com";
 const clientId = "jNnYObZDCGx46fo9rbRaHqJbwrZyoNBX";
 
 Vue.config.productionTip = false
