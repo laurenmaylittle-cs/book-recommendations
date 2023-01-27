@@ -11,6 +11,9 @@ services:
       - DB_PASSWORD=$DB_PASSWORD
       - GOOGLE_BOOKS_API_KEY=$GOOGLE_BOOKS_API_KEY
       - NYTIMES_API_KEY=$NYTIMES_API_KEY
+      - AUTH0_AUDIENCE=$AUTH0_AUDIENCE
+      - AUTH0_ISSUER_URI=$AUTH0_ISSUER_URI
+
 
   client:
     image: "augmart/book-recommendations-frontend"
@@ -19,5 +22,8 @@ services:
     hostname: client
     ports:
       - "80:80"
+    environment:
+      - VUE_APP_AUTH0_DOMAIN=$VUE_APP_AUTH0_DOMAIN
+      - VUE_APP_AUTH0_CLIENT_ID=$VUE_APP_AUTH0_CLIENT_ID
 
 
