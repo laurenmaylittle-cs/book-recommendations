@@ -12,7 +12,7 @@ import {Auth0Plugin} from './auth';
 
 const authConfig = require("./auth/auth_config");
 const domain = authConfig.auth0Env.domain;
-const clientId = authConfig.auth0Env.clientId;
+const clientId = "jNnYObZDCGx46fo9rbRaHqJbwrZyoNBX";
 
 Vue.config.productionTip = false
 Vue.use(Vuetify)
