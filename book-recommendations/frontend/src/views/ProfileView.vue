@@ -18,6 +18,7 @@
 
 <script>
 import axios from "axios";
+import authUtils from "@/auth/authUtils";
 
 export default {
   name: 'ProfileView',
@@ -25,7 +26,7 @@ export default {
     let result = await axios.get('api/private/get-private', {
       headers: {
         Authorization: `Bearer ${await this.$auth.getTokenSilently()}`,
-        audience: 'https://bestreads/api',
+        audience: authUtils.audience,
       }
     });
     console.log(result);
