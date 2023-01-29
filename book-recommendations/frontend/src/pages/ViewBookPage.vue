@@ -12,7 +12,7 @@
       />
     </v-row>
     <v-row
-      v-if="valid===false"
+      v-if="isValidISBN===false"
       class="pt-6"
     >
       <p>
@@ -20,7 +20,7 @@
       </p>
     </v-row>
     <v-row
-      v-if="valid"
+      v-if="isValidISBN"
       align="center"
     >
       <v-col cols="3">
@@ -53,22 +53,22 @@ export default {
     return {
       bookData: '',
       isLoading: true,
-      valid: '',
+      isValidISBN: '',
       isbn: this.$route.params.isbn
     }
   },
   computed: {
     errorMessage() {
-      return "Could not find a book with the ISBN: " + this.isbn
+      return "No results found for ISBN: " + this.isbn
     }
   },
   async mounted() {
     if (this.validIsbn(this.isbn)) {
       await this.getBookData();
-      this.valid = this.bookData !== null;
+      this.isValidISBN = this.bookData !== null;
     } else {
       this.bookData = null;
-      this.valid = false;
+      this.isValidISBN = false;
     }
     this.isLoading = false;
   },
