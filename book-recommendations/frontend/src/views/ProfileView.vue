@@ -22,12 +22,13 @@ import axios from "axios";
 export default {
   name: 'ProfileView',
   async mounted() {
+    let token = await this.$auth.getTokenSilently({
+      audience: 'https://bestreads/api'
+    });
+    console.log("token", token);
     let result = await axios.get('api/private/get-private', {
       headers: {
-        Authorization: `Bearer ${await this.$auth.getTokenSilently({
-          audience: 'https://bestreads/api'
-        })}`
-        ,
+        Authorization: `Bearer ${token}`
       }
     });
     console.log(result);
