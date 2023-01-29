@@ -80,7 +80,7 @@
         :published-date="bookData.publishedDate"
         :original-description="bookData.description"
         :pages="bookData.pageCount"
-        :publisher="bookData.publisher.toString()"
+        :publisher="bookData.publisher"
       />
     </v-row>
   </v-container>
