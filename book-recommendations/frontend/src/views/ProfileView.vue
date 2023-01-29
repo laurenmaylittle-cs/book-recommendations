@@ -15,3 +15,20 @@
     </div>
   </div>
 </template>
+
+<script>
+import axios from "axios";
+
+export default {
+  name: 'ProfileView',
+  async mounted() {
+    let result = await axios.get('api/private/get-private', {
+      headers: {
+        Authorization: `Bearer ${await this.$auth.getTokenSilently()}`
+      }
+    });
+    console.log(result);
+  }
+}
+
+</script>
