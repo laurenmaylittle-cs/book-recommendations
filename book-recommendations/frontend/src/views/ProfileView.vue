@@ -24,10 +24,8 @@ export default {
   async mounted() {
     let result = await axios.get('api/private/get-private', {
       headers: {
-        Authorization: `Bearer ${await this.$auth.getTokenSilently({
-          audience: 'https://bestreads/api'
-        })}`
-        ,
+        Authorization: `Bearer ${await this.$auth.getTokenSilently()}`,
+        audience: 'https://bestreads/api',
       }
     });
     console.log(result);
