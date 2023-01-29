@@ -4,6 +4,7 @@ import com.bestreads.bookrecommendations.googlebooks.GoogleBooksService;
 import com.bestreads.bookrecommendations.utils.SearchTermUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.net.http.HttpResponse;
 import java.util.List;
 
@@ -68,7 +69,6 @@ public class BookSearchService {
 
         return httpResponseToBook.extractFromHttpResponse(httpResponse);
     }
-
 
     public Book getBookByIsbn(String isbn) {
         HttpResponse<String> httpResponse = googleBooksService.getVolumeByIsbn(

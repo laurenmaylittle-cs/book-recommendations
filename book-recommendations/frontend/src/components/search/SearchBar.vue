@@ -42,18 +42,17 @@ export default {
     queryFilters: [
       {displayText: 'ISBN', value: 'isbn'},
       {displayText: 'Author', value: 'author'},
+      {displayText: 'Title', value: 'title'}
     ],
   }),
-
   computed: {
     getSearchTypeDescription() {
       return `Search by ${this.selectedQueryFilter.displayText}`;
     }
   },
-
   methods: {
     loadSearch() {
-      if (this.selectedQueryFilter.value === 'author') {
+      if (this.selectedQueryFilter.value !== 'isbn') {
         this.$router.push({name: 'search', params: {searchType: this.selectedQueryFilter.value , searchTerm: this.queryTerm}}).catch(() => {
         })
       } else {
