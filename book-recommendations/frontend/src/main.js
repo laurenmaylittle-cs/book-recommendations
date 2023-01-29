@@ -12,7 +12,6 @@ import {Auth0Plugin} from './auth';
 
 const domain = process.env.VUE_APP_AUTH0_DOMAIN;
 const clientId = process.env.VUE_APP_AUTH0_CLIENT_ID;
-const audience = 'https://bestreads/api';
 
 Vue.config.productionTip = false
 Vue.use(Vuetify)
@@ -21,7 +20,6 @@ Vue.use(Vuetify)
 Vue.use(Auth0Plugin, {
   domain,
   clientId,
-  audience,
   onRedirectCallback: appState => {
     router.push(
       appState && appState.targetUrl
