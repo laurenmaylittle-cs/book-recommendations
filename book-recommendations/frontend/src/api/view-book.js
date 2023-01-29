@@ -1,5 +1,4 @@
 import axios from "axios";
-import authUtils from "@/auth/authUtils";
 
 export async function getBookInfo(isbn) {
   return await axios('/api/public/book?isbn=' + isbn)
@@ -14,7 +13,6 @@ export async function getUserRating(email, isbn, token) {
     url: '/api/private/user-rating?isbn=' + isbn + '&email=' + email,
     headers: {
       authorization: `Bearer ${token}`,
-      audience: authUtils.audience
     }
   })
   .then(response => {
@@ -29,7 +27,6 @@ export async function saveUserRating(email, isbn, rating, token) {
       + '&rating=' + rating,
     headers: {
       authorization: `Bearer ${token}`,
-      audience: authUtils.audience
     }
   })
 }
@@ -41,7 +38,6 @@ export async function updateUserRating(email, isbn, rating, token) {
       + '&rating=' + rating,
     headers: {
       authorization: `Bearer ${token}`,
-      audience: authUtils.audience
     }
   })
 }
