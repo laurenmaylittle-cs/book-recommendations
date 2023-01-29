@@ -139,6 +139,12 @@ export default {
       this.isLoading = false
     }
   },
+  async mounted() {
+    await this.getRatingsData()
+    if (this.bookRating !== null && this.bookRating !== "") {
+      this.hasRating = true
+    }
+  },
   methods: {
     async getRatingsData() {
       const token = await this.$auth.getTokenSilently();
