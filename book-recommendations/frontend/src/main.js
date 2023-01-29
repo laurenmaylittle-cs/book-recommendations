@@ -10,7 +10,9 @@ import vuetify from './plugins/vuetify'
 // Import the plugin here
 import {Auth0Plugin} from './auth';
 
-import {audience, clientId, domain} from "./auth/auth_config.json";
+const domain = process.env.VUE_APP_AUTH0_DOMAIN;
+const clientId = process.env.VUE_APP_AUTH0_CLIENT_ID;
+const audience = 'https://bestreads/api';
 
 Vue.config.productionTip = false
 Vue.use(Vuetify)
