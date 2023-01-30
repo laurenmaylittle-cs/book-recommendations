@@ -4,7 +4,7 @@
     color="#46648c"
     dark
   >
-    <div class="d-flex align-center">
+    <div class="d-flex align-center ma-0">
       <v-hover v-slot="{ hover }">
         <v-btn
           href="/home"
@@ -12,7 +12,6 @@
           :style="{ ...getHoverEffect(hover) }"
         >
           <v-icon>mdi-book-open-page-variant</v-icon>
-          <span class="mr-2">{{ serviceName }}</span>
         </v-btn>
       </v-hover>
     </div>
@@ -53,6 +52,7 @@
         :src="$auth.user.picture"
         class="ml-3 mt-1"
         style="border-radius: 50%; max-width:50px;"
+        alt="profile picture"
       >
     </div>
   </v-app-bar>

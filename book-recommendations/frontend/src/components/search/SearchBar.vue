@@ -1,15 +1,33 @@
 <template>
   <div class="div_center d-flex align-center">
-    <v-select
-      v-model="selectedQueryFilter"
-      class="ml-3"
-      style="width: 90px"
-      :items="queryFilters"
-      item-text="displayText"
-      item-value="value"
-      return-object
-      single-line
-    />
+    <v-menu
+      left
+      bottom
+    >
+      <template #activator="{ on, attrs }">
+        <v-btn
+          icon
+          v-bind="attrs"
+          v-on="on"
+        >
+          <v-icon>
+            mdi-filter-menu-outline
+          </v-icon>
+        </v-btn>
+      </template>
+      <v-list>
+        <v-list-item @click="updateSearchBar('title')">
+          Title
+        </v-list-item>
+        <v-list-item @click="updateSearchBar('author')">
+          Author
+        </v-list-item>
+        <v-list-item @click="updateSearchBar('isbn')">
+          ISBN
+        </v-list-item>
+      </v-list>
+    </v-menu>
+
     <v-text-field
       v-model="queryTerm"
       :label="getSearchTypeDescription"
@@ -38,7 +56,7 @@ export default {
   },
   data: () => ({
     queryTerm: "",
-    selectedQueryFilter: { displayText: 'ISBN', value: 'isbn'},
+    selectedQueryFilter: {displayText: 'Title', value: 'title'},
     queryFilters: [
       {displayText: 'ISBN', value: 'isbn'},
       {displayText: 'Author', value: 'author'},
@@ -47,19 +65,34 @@ export default {
   }),
   computed: {
     getSearchTypeDescription() {
-      return `Search by ${this.selectedQueryFilter.displayText}`;
+      if (this.selectedQueryFilter.value === "isbn") {
+        return `Search by ${this.selectedQueryFilter.displayText}`;
+      }
+      return `Search by ${this.selectedQueryFilter.value}`;
     }
   },
   methods: {
     loadSearch() {
       if (this.selectedQueryFilter.value !== 'isbn') {
-        this.$router.push({name: 'search', params: {searchType: this.selectedQueryFilter.value , searchTerm: this.queryTerm}}).catch(() => {
+        this.$router.push({
+          name: 'search',
+          params: {searchType: this.selectedQueryFilter.value, searchTerm: this.queryTerm}
+        }).catch(() => {
         })
       } else {
         this.$router.push({name: 'book', params: {isbn: this.queryTerm}}).catch(() => {
         })
       }
       window.location.reload()
+    },
+    updateSearchBar(selectedQuery) {
+      if (selectedQuery === "isbn") {
+        this.selectedQueryFilter = this.queryFilters[0];
+      } else if (selectedQuery === "author") {
+        this.selectedQueryFilter = this.queryFilters[1];
+      } else {
+        this.selectedQueryFilter = this.queryFilters[2];
+      }
     }
   }
 }
