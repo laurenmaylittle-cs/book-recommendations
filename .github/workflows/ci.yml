@@ -36,24 +36,88 @@ jobs:
   build-vue:
     runs-on: ubuntu-latest
     defaults:
-        run:
-          working-directory: 'book-recommendations/frontend'
+      run:
+        working-directory: 'book-recommendations/frontend'
     steps:
-        - uses: actions/checkout@v3
-        - name: Setup node
-          uses: actions/setup-node@v3
-          with:
-            node-version: 16
-            cache: 'npm'
-            cache-dependency-path: '**/package-lock.json'
-        - run: |
-            npm install
-            npm run lint
-            npm run test:unit
-            npm run build
-        - name: Save vue test reports
-          if: success() || failure()
-          uses: actions/upload-artifact@v3
-          with:
-            name: Vue test report
-            path: book-recommendations/frontend/test-report/index.html
+      - uses: actions/checkout@v3
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+      - run: |
+          npm install
+          npm run lint
+          npm run test:unit
+          npm run build
+      - name: Save vue test reports
+        if: success() || failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: Vue test report
+          path: book-recommendations/frontend/test-report/index.html
+
+  publish-to-docker:
+    needs: [ build-spring, build-vue ]
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push spring image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./book-recommendations
+          push: true
+          tags: augmart/book-recommendations-api
+      - name: Build and push vue image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./book-recommendations/frontend
+          push: true
+          tags: augmart/book-recommendations-frontend
+          build-args: |
+            VUE_APP_AUTH0_DOMAIN=${{ secrets.VUE_APP_AUTH0_DOMAIN }}
+            VUE_APP_AUTH0_CLIENT_ID=${{ secrets.VUE_APP_AUTH0_CLIENT_ID }}
+
+  deploy-to-aws:
+    needs: [ publish-to-docker ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Generate deployment package
+        run: |
+          cd book-recommendations
+          zip -r deploy.zip . -x '*.git*'
+      - name: Get timestamp
+        uses: gerred/actions/current-time@master
+        id: current-time
+      - name: Run string replace
+        uses: frabert/replace-string-action@v2
+        id: format-time
+        with:
+          pattern: '[:\.]+'
+          string: "${{ steps.current-time.outputs.time }}"
+          replace-with: '-'
+          flags: 'g'
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+          application_name: bookrecommendations
+          environment_name: Bookrecommendations-env
+          version_label: "best-reads-test-${{ steps.format-time.outputs.replaced }}"
+          region: eu-west-2
+          deployment_package: book-recommendations/deploy.zip

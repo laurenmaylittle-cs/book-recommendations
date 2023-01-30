@@ -16,9 +16,10 @@ const routes = [
     component: HomePage,
   },
   {
-    path: '/book',
+    path: '/book/:isbn',
     name: 'book',
-    component: ViewBookPage
+    component: ViewBookPage,
+    props: true
   },
   {
     path: '/default-about-vue',
