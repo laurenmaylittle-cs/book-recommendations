@@ -1,6 +1,15 @@
 <template>
   <v-container>
-    <!--  TODO BES-36 this is just a placeholder (proper implementation is missing) to test functionality of AuthGuard-->
+    <v-row>
+      <v-btn
+        v-if="$auth.isAuthenticated && ($vuetify.breakpoint.xs || $vuetify.breakpoint.sm)"
+        :right="true"
+        :absolute="true"
+        @click="logout"
+      >
+        Logout
+      </v-btn>
+    </v-row>
     <v-row>
       <v-col cols="3">
         <v-avatar
@@ -57,6 +66,13 @@ export default {
       style: {
         backgroundColor: '#E4E4E4'
       }
+    }
+  },
+  methods: {
+    logout() {
+      this.$auth.logout({
+        returnTo: window.location.origin
+      });
     }
   }
 }
