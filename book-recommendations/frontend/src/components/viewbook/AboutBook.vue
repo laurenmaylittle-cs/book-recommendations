@@ -5,7 +5,10 @@
     </h3>
     <v-card class="pa-4">
       <v-row>
-        <v-col cols="3">
+        <v-col
+          v-if="category"
+          cols="3"
+        >
           <p>
             Genre:
           </p>
@@ -15,7 +18,10 @@
             {{ categories }}
           </p>
         </v-col>
-        <v-col cols="3">
+        <v-col
+          v-if="publisher"
+          cols="3"
+        >
           <p>
             Publisher:
           </p>
@@ -27,7 +33,10 @@
         </v-col>
       </v-row>
       <v-row class="mt-0">
-        <v-col cols="3">
+        <v-col
+          v-if="publishedDate"
+          cols="3"
+        >
           <p>
             Published date:
           </p>
@@ -37,7 +46,10 @@
             {{ formatDate() }}
           </p>
         </v-col>
-        <v-col cols="3">
+        <v-col
+          v-if="pages"
+          cols="3"
+        >
           <p>
             Number of pages:
           </p>
@@ -56,7 +68,10 @@
           {{ description }}
         </p>
         <v-layout justify-center>
-          <v-card-actions class="mb-5">
+          <v-card-actions
+            v-if="originalDescription"
+            class="mb-5"
+          >
             <v-btn
               v-if="isShortDescription"
               @click="viewWholeDescription"
@@ -77,7 +92,6 @@
 </template>
 
 <script>
-
 export default {
   name: "AboutBook",
   props: {
