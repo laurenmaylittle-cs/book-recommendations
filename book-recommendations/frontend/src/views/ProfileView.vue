@@ -9,6 +9,12 @@
       <h2>{{ $auth.user.name }}</h2>
       <p>{{ $auth.user.email }}</p>
     </div>
+    <v-btn
+      v-if="$auth.isAuthenticated"
+      @click="logout"
+    >
+      Logout
+    </v-btn>
 
     <div>
       <pre>{{ JSON.stringify($auth.user, null, 2) }}</pre>
@@ -17,18 +23,14 @@
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   name: 'ProfileView',
-  async mounted() {
-    let result = await axios.get('api/private/get-private', {
-      headers: {
-        Authorization: `Bearer ${await this.$auth.getTokenSilently()}`
-      }
-    });
-    console.log(result);
+  methods: {
+    logout() {
+      this.$auth.logout({
+        returnTo: window.location.origin
+      });
+    }
   }
 }
-
 </script>
