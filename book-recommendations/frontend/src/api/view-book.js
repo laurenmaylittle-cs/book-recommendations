@@ -33,7 +33,7 @@ export async function saveUserRating(email, isbn, rating, token) {
 
 export async function updateUserRating(email, isbn, rating, token) {
   return await axios({
-    method: 'POST',
+    method: 'PUT',
     url: '/api/private/update-user-rating?isbn=' + isbn + '&email=' + email
       + '&rating=' + rating,
     headers: {
