@@ -29,7 +29,7 @@ class UsersControllerTest {
     when(auth0Service.searchUsersByName("lauren")).thenReturn(
         List.of(
             new User(
-                "lml22@kent.ac.uk",
+                "lml@kent.ac.uk",
                 true,
                 "lauren",
                 "https://google.com")
@@ -39,7 +39,7 @@ class UsersControllerTest {
     var expectedJson = """
         [
           {
-            "email":"lml22@kent.ac.uk",
+            "email":"lml@kent.ac.uk",
             "emailVerified":true,
             "name":"lauren",
             "picture":"https://google.com"
