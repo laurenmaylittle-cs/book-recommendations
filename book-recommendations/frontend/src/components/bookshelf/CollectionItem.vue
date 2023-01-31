@@ -1,6 +1,11 @@
 <template>
-  <v-col :cols="numberOfColsToTake">
-    <v-hover v-slot="{ hover }">
+  <v-col
+    :cols="numberOfColsToTake"
+    :offset="getOffSet"
+  >
+    <v-hover
+      v-slot="{ hover}"
+    >
       <v-sheet
         :color="getHoverEffect(hover)"
         rounded
@@ -31,6 +36,12 @@ export default {
     },
   },
   computed: {
+    getOffSet() {
+      if (this.$vuetify.breakpoint.xs) {
+        return 2;
+      }
+      return 0;
+    },
     numberOfColsToTake() {
       if (this.$vuetify.breakpoint.xl) {
         return 2;
@@ -40,6 +51,9 @@ export default {
       }
       if (this.$vuetify.breakpoint.md) {
         return 4;
+      }
+      if (this.$vuetify.breakpoint.xs) {
+        return 12;
       }
       return 5;
     }

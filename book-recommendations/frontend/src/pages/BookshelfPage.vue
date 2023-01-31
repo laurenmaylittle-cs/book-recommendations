@@ -4,7 +4,7 @@
       <v-tabs
         background-color="transparent"
         color="background"
-        vertical
+        :vertical="!isAPhone"
       >
         <v-tab>Collections</v-tab>
         <v-tab>Wishlist</v-tab>
@@ -67,6 +67,11 @@ export default {
     colors: [],
     isLoading: true,
   }),
+  computed: {
+    isAPhone() {
+      return this.$vuetify.breakpoint.xs;
+    }
+  },
   watch: {
     collections: {
       handler() {
