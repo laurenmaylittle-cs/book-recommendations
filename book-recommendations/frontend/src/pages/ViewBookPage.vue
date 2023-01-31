@@ -119,9 +119,10 @@ export default {
     concatDetails(details) {
       if (details != null && details.length > 1) {
         return details.join(', ');
-      } else {
+      } else if (details != null) {
         return details.toString();
       }
+      return null;
     }
   }
 }
