@@ -104,7 +104,7 @@ export default {
     },
     _computeCollectionColors() {
       generatePastelColors(this.colors, this.collections.length, {min: 50, max: 60},
-        {min: 80, max: 88})
+        {min: 60, max: 80})
     },
   }
 }
