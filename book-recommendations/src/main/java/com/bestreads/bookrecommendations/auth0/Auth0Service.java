@@ -101,7 +101,6 @@ public class Auth0Service {
     }
   }
 
-  //TODO add secret and id to config
   private String getAuthToken() {
     try {
       var httpResponse = Unirest.post("%s/oauth/token".formatted(authAudience))
