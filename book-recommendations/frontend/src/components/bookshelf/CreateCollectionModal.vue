@@ -5,7 +5,7 @@
         ref="createCollectionBtn"
         class="mt-3"
         color="primary"
-        @click="dialog = true"
+        @click="openDialog"
       >
         <v-icon>mdi-plus</v-icon>
         Create Collection
@@ -19,14 +19,18 @@
       >
         <v-card>
           <v-card-text>
-            <v-form ref="form">
+            <v-form
+              ref="form"
+              onsubmit="return false"
+              @submit="createCollection"
+            >
               <v-container>
                 <v-row>
                   <v-col>
                     <v-text-field
                       v-model="collectionName"
                       label="Collection name"
-                      :rules="[rules.required]"
+                      :rules="collectionNameValidation"
                     />
                   </v-col>
                 </v-row>
@@ -72,9 +76,9 @@ export default {
     dialog: false,
     collectionName: "",
     collectionUpdateInProgress: false,
-    rules: {
-      required: value => !!value || 'Required.',
-    },
+    collectionNameValidation: [
+      v => !!v || 'Collection name required',
+    ],
   }),
   methods: {
     async createCollection() {
@@ -86,12 +90,19 @@ export default {
       const createResult = await createNewCollection(params, await this.$auth.getTokenSilently());
       this.$emit("collection-created", createResult.headers.location);
     },
+    openDialog() {
+      this.dialog = true;
+      this.$nextTick(() => {
+        //workaround for vuetify bug not clearing validation  when submitting forms
+        this.$refs.form.resetValidation();
+      });
+    },
     resetState() {
       this.collectionName = "";
       this.dialog = false;
       this.collectionUpdateInProgress = false;
       this.$refs.form.reset();
-    },
+    }
   }
 }
 </script>
