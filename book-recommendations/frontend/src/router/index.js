@@ -16,9 +16,10 @@ const routes = [
     component: HomePage,
   },
   {
-    path: '/book',
+    path: '/book/:isbn',
     name: 'book',
-    component: ViewBookPage
+    component: ViewBookPage,
+    props: true
   },
   {
     path: '/default-about-vue',
@@ -29,14 +30,14 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
   {
+    path: '/search/:searchType/:searchTerm',
+    name: 'search',
+    component: SearchView
+  },
+  {
     path: '/home',
     name: 'homePage',
     component: HomePage
-  },
-  {
-    path: '/search/:searchTerm',
-    name: 'search',
-    component: SearchView
   },
   {
     path: '/profile',
