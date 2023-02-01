@@ -38,11 +38,11 @@ export default {
   },
   data: () => ({
     queryTerm: "",
-    selectedQueryFilter: { displayText: 'ISBN', value: 'isbn'},
+    selectedQueryFilter: { displayText: 'Title', value: 'title'},
     queryFilters: [
-      {displayText: 'ISBN', value: 'isbn'},
+      {displayText: 'Title', value: 'title'},
       {displayText: 'Author', value: 'author'},
-      {displayText: 'Title', value: 'title'}
+      {displayText: 'ISBN', value: 'isbn'}
     ],
   }),
   computed: {

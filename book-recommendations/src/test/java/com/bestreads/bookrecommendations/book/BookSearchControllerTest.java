@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +46,8 @@ class BookSearchControllerTest {
 
   @BeforeAll
   static void setUp() {
-    Book book = new Book("title", List.of("author1"), "publisher", "2020",
-        "description", 200, null, null, "english", 5, 10);
+    Book book = new Book("id", "title", List.of("author1"), "publisher", "2020",
+        "description", 200, null, null, "english", 5, 10, "9780735211292");
     bookList = List.of(book);
   }
 

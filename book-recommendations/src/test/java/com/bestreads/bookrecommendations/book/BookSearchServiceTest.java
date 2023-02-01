@@ -133,6 +133,7 @@ class BookSearchServiceTest {
     when(googleBooksService.getVolumeByIsbn(ISBN, 1)).thenReturn(httpResponse);
 
     var expectedBook = new Book(
+        "id",
         "Gone Girl",
         List.of("Gillian Flynn"),
         "Hachette UK",
@@ -143,7 +144,8 @@ class BookSearchServiceTest {
         new ImageLinks("smallThumbnail", "largeThumbnail"),
         "en",
         0,
-        0
+        0,
+        "9780735211292"
     );
     when(httpResponseToBook.extractFromHttpResponse(httpResponse)).thenReturn(
         List.of(expectedBook));
