@@ -27,17 +27,22 @@
         </v-list-item>
       </v-list>
     </v-menu>
-
-    <v-text-field
-      v-model="queryTerm"
-      :label="getSearchTypeDescription"
-      clearable
-      type="String"
-      @keyup.enter="loadSearch(queryTerm)"
-    />
+    <v-col
+      :cols="numberOfColsToTake"
+      class="pa-0"
+    >
+      <v-text-field
+        v-model="queryTerm"
+        :label="getSearchTypeDescription"
+        clearable
+        type="String"
+        @keyup.enter="loadSearch(queryTerm)"
+      />
+    </v-col>
     <v-btn
       text
       :style="{ 'background-color': '#46648c', 'color': 'white' }"
+      class="pa-0"
       @click.native="loadSearch(queryTerm)"
     >
       <v-icon>mdi-magnify</v-icon>
@@ -69,6 +74,12 @@ export default {
         return `Search by ${this.selectedQueryFilter.displayText}`;
       }
       return `Search by ${this.selectedQueryFilter.value}`;
+    },
+    numberOfColsToTake() {
+      if (this.$vuetify.breakpoint.xs) {
+        return 6;
+      }
+      return 9;
     }
   },
   methods: {

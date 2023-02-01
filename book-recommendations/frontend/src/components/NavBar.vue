@@ -12,9 +12,11 @@
           :style="{ ...getHoverEffect(hover) }"
         >
           <v-icon>mdi-book-open-page-variant</v-icon>
+          {{ serviceName }}
         </v-btn>
       </v-hover>
     </div>
+    <v-spacer />
     <search-bar :search-term="searchTerm" />
     <v-spacer />
 
