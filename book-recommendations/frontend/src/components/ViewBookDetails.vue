@@ -10,13 +10,13 @@
       v-if="author"
     >
       <v-icon>mdi-account-edit</v-icon>
-      {{ concatDetails(author) }}
+      {{ author }}
     </h2>
     <h3
       v-if="genre"
     >
       <v-icon>mdi-filter</v-icon>
-      {{ concatDetails(genre) }}
+      {{ genre }}
     </h3>
     <br>
     <p
@@ -37,15 +37,6 @@ export default {
     author: {type: Array, required: true},
     genre: {type: Array, required: true},
     description: {type: String, required: true}
-  },
-  methods: {
-    concatDetails(details) {
-      if (details != null && details.length > 1) {
-        return details.join(', ');
-      } else {
-        return  details.toString();
-      }
-    }
   }
 }
 </script>

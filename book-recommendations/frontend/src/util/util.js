@@ -9,7 +9,10 @@
 export function generatePastelColors(colorsArray, itemsLength,
   saturationRange = {min: 30, max: 70}, lightnessRange = {min: 80, max: 100}) {
   for (let i = colorsArray.length; i < itemsLength; i++) {
-    const hue = Math.floor(Math.random() * 360);
+    let hue = Math.floor(Math.random() * (360 - (190 - 167 + 1) + 1)) + 0;
+    if (hue >= 167 && hue <= 190) {
+      hue += 190 - 167 + 1;
+    }
     const saturation = Math.floor(
       Math.random() * (saturationRange.max - saturationRange.min + 1)
       + saturationRange.min);

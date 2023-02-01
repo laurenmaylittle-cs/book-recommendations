@@ -26,14 +26,6 @@
       <v-icon>mdi-bookshelf</v-icon>
     </v-btn>
     <!--    TODO BES-36 do proper implementation of profile link, just placeholder to demo AuthGuard page authentication-->
-    <router-link
-      v-if="$auth.isAuthenticated"
-      to="/profile"
-      class="mr-6"
-      style="color: white; text-decoration: none"
-    >
-      Profile
-    </router-link>
     <div v-if="!$auth.loading">
       <!-- show login when not authenticated -->
       <button
@@ -54,12 +46,21 @@
       </button>
     </div>
     <div v-if="!$auth.loading">
-      <img
+      <router-link
         v-if="$auth.isAuthenticated"
-        :src="$auth.user.picture"
-        class="ml-3 mt-1"
-        style="border-radius: 50%; max-width:50px;"
+        to="/profile"
+        class="mr-6"
+        style="color: white; text-decoration: none"
       >
+        <img
+          v-if="$auth.isAuthenticated"
+          alt="Profile Picture"
+          referrerpolicy="no-referrer"
+          :src="$auth.user.picture"
+          class="ml-3 mt-1"
+          style="border-radius: 50%; max-width:50px;"
+        >
+      </router-link>
     </div>
   </v-app-bar>
 </template>

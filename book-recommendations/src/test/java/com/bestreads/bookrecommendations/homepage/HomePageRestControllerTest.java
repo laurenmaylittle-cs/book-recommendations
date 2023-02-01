@@ -26,7 +26,7 @@ class HomePageRestControllerTest {
 
   @Test
   @WithMockUser
-  void getLIstOfBestSellers() throws Exception {
+  void getListOfBestSellers() throws Exception {
 
     when(bestSellersService.getBestSellers()).thenReturn(
         List.of(
@@ -40,6 +40,7 @@ class HomePageRestControllerTest {
                         "Test Description",
                         "Test Publisher",
                         new ImageLinks("smallThumbnail", "thumbnail")
+                        , "9780735211292"
                     )
                 )
             )

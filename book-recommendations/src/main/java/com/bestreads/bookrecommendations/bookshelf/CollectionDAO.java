@@ -1,7 +1,6 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
 import java.util.LinkedHashSet;
-import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -68,21 +67,4 @@ class CollectionDAO {
     this.id = id;
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    CollectionDAO that = (CollectionDAO) o;
-    return id.equals(that.id) && name.equals(that.name) && userId.equals(that.userId)
-        && Objects.equals(bookDAOS, that.bookDAOS);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, name, userId, bookDAOS);
-  }
 }

@@ -4,7 +4,7 @@
       <v-tabs
         background-color="transparent"
         color="background"
-        vertical
+        :vertical="!isAPhone"
       >
         <v-tab>Collections</v-tab>
         <v-tab>Wishlist</v-tab>
@@ -68,6 +68,11 @@ export default {
     colors: [],
     isLoading: true,
   }),
+  computed: {
+    isAPhone() {
+      return this.$vuetify.breakpoint.xs;
+    }
+  },
   watch: {
     collections: {
       handler() {
@@ -100,7 +105,7 @@ export default {
     },
     _computeCollectionColors() {
       generatePastelColors(this.colors, this.collections.length, {min: 50, max: 60},
-        {min: 80, max: 88})
+        {min: 80, max: 90})
     },
     goToCollection(collectionId) {
       this.$router.push({name: 'bookshelfBooksPage', params: {collectionId: collectionId}}).catch(() => {

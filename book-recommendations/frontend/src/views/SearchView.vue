@@ -29,6 +29,7 @@
           :title="book.title"
           :published-date="book.publishedDate"
           :thumbnail="book.imageLinks.thumbnail"
+          :isbn="book.isbn"
         />
       </v-col>
     </v-row>
@@ -65,7 +66,7 @@
 </template>
 
 <script>
-import {searchByAuthor} from "@/api/search";
+import {searchByAuthor, searchByTitle} from "@/api/search";
 import BookDetails from "@/components/search/BookDetails";
 
 export default {
@@ -76,6 +77,7 @@ export default {
       searchResults: [],
       nextSearchResults: [],
       searchTerm: this.$route.params.searchTerm,
+      searchType: this.$route.params.searchType,
       isLoading: true,
       nextPageAvailable: true,
       previousPageAvailable: false,
@@ -96,7 +98,11 @@ export default {
     },
   },
   async mounted() {
-    await this.searchByAuthor(this.searchTerm, this.currentStartIndex)
+    if (this.searchType === "title") {
+      await this.searchByTitle(this.searchTerm, this.currentStartIndex)
+    } else {
+      await this.searchByAuthor(this.searchTerm, this.currentStartIndex)
+    }
 
     if (this.searchResults.length < this.numberOfItemsPerPage) {
       this.nextPageAvailable = false
@@ -107,9 +113,16 @@ export default {
     async searchByAuthor(author, startIndex) {
       this.searchResults = await searchByAuthor(author, startIndex)
     },
+    async searchByTitle(title, startIndex) {
+      this.searchResults = await searchByTitle(title, startIndex)
+    },
     async previousPage() {
       this.currentStartIndex = this.currentStartIndex - this.numberOfItemsPerPage
-      await this.searchByAuthor(this.searchTerm, this.currentStartIndex)
+      if (this.searchType === "title") {
+        await this.searchByTitle(this.searchTerm, this.currentStartIndex)
+      } else {
+        await this.searchByAuthor(this.searchTerm, this.currentStartIndex)
+      }
 
       if (this.currentStartIndex === 0) {
         this.previousPageAvailable = false
@@ -119,7 +132,11 @@ export default {
     async nextPage() {
       this.currentStartIndex = this.currentStartIndex + this.numberOfItemsPerPage
 
-      this.nextSearchResults = await searchByAuthor(this.searchTerm, this.currentStartIndex)
+      if (this.searchType === "title") {
+        this.nextSearchResults = await this.searchByTitle(this.searchTerm, this.currentStartIndex)
+      } else {
+        this.nextSearchResults = await this.searchByAuthor(this.searchTerm, this.currentStartIndex)
+      }
       this.previousPageAvailable = this.currentStartIndex > 0
 
       if (this.nextSearchResults.length !== this.numberOfItemsPerPage) {

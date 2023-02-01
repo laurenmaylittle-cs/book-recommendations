@@ -5,6 +5,8 @@ import ProfileView from '../views/ProfileView.vue';
 import {authGuard} from '@/auth/authGuard';
 import SearchView from "@/views/SearchView";
 import HomePage from "@/pages/HomePage";
+import FindFriendsPage from "@/pages/FindFriendsPage";
+import BookShelfPage from "@/pages/BookshelfPage"
 import BookshelfBooksPage from "@/pages/BookshelfBooksPage";
 
 Vue.use(VueRouter)
@@ -16,9 +18,10 @@ const routes = [
     component: HomePage,
   },
   {
-    path: '/book',
+    path: '/book/:isbn',
     name: 'book',
-    component: ViewBookPage
+    component: ViewBookPage,
+    props: true
   },
   {
     path: '/default-about-vue',
@@ -29,14 +32,14 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
   {
+    path: '/search/:searchType/:searchTerm',
+    name: 'search',
+    component: SearchView
+  },
+  {
     path: '/home',
     name: 'homePage',
     component: HomePage
-  },
-  {
-    path: '/search/:searchTerm',
-    name: 'search',
-    component: SearchView
   },
   {
     path: '/profile',
@@ -45,9 +48,15 @@ const routes = [
     beforeEnter: authGuard
   },
   {
+    path: '/find-friends',
+    name: 'find-friends',
+    component: FindFriendsPage,
+    beforeEnter: authGuard
+  },
+  {
     path: '/bookshelf',
     name: 'bookshelf',
-    component: () => import(/* webpackChunkName: "bookshelf" */ '../pages/BookshelfPage.vue'),
+    component: BookShelfPage,
     beforeEnter: authGuard
   },
   {
