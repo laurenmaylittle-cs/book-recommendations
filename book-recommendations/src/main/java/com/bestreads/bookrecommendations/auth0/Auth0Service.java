@@ -28,16 +28,19 @@ public class Auth0Service {
   private final String authClientId;
   private final String authClientSecret;
   private final FollowersFollowingService followersFollowingService;
+  private final String authAudience;
 
   @Autowired
   public Auth0Service(@Value("${auth0.api-uri}") String auth0ApiUri,
       FollowersFollowingService followersFollowingService,
       @Value("${auth0.client-id}") String authClientId,
-      @Value("${auth0.client-secret}") String authClientSecret) {
+      @Value("${auth0.client-secret}") String authClientSecret,
+      @Value("${auth0.audience-for-users}") String authAudience) {
     this.auth0ApiUri = auth0ApiUri;
     this.authClientId = authClientId;
     this.authClientSecret = authClientSecret;
     this.followersFollowingService = followersFollowingService;
+    this.authAudience = authAudience;
   }
 
   public List<User> searchUsersByName(String name) {
@@ -136,7 +139,6 @@ public class Auth0Service {
     }
   }
 
-  //TODO add secret and id to config
   private String getAuthToken() {
     try {
       var httpResponse = Unirest.post("https://bestreads.eu.auth0.com/oauth/token")
@@ -145,10 +147,10 @@ public class Auth0Service {
                   {
                     "client_id":"%s",
                     "client_secret":"%s",
-                    "audience":"https://bestreads.eu.auth0.com/api/v2/",
+                    "audience":"%s/api/v2/",
                     "grant_type":"client_credentials"
                   }
-              """.formatted(authClientId, authClientSecret))
+              """.formatted(authClientId, authClientSecret, authAudience))
           .asString()
           .getBody();
       var objectMapper = getObjectMapper();

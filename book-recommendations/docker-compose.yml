@@ -13,7 +13,8 @@ services:
       - NYTIMES_API_KEY=$NYTIMES_API_KEY
       - AUTH0_AUDIENCE=$AUTH0_AUDIENCE
       - AUTH0_ISSUER_URI=$AUTH0_ISSUER_URI
-
+      - CLIENT_SECRET=$CLIENT_SECRET
+      - CLIENT_ID=$CLIENT_ID
 
   client:
     image: "augmart/book-recommendations-frontend"

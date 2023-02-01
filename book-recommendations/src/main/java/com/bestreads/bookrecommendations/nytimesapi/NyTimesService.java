@@ -9,6 +9,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,12 +25,19 @@ public class NyTimesService {
   @Value("${nytimes.api.key}")
   private String apiKey;
 
+  @Cacheable(value = "best-sellers")
   public HttpResponse<String> getCurrentBestSellers() {
     var uri = "%s/lists/overview.json?api-key=%s".formatted(
         nyTimesApiUri,
         apiKey
     );
     return sendHttpRequest(getGetHttpRequest(uri));
+  }
+
+  @CacheEvict(value = "best-sellers", allEntries = true)
+  @Scheduled(fixedDelayString = "86400000")
+  public void emptyBestSellersCache() {
+    logger.info("emptying best sellers cache");
   }
 
   private HttpRequest getGetHttpRequest(String uri) {
