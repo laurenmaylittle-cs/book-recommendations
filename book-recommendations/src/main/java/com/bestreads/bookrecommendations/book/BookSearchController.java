@@ -25,6 +25,11 @@ public class BookSearchController {
     return bookSearchService.searchByAuthor(author, startIndex, 40);
   }
 
+  @GetMapping("/isbn")
+  public List<Book> searchByIsbn(@Param("isbn") String isbn) {
+    return bookSearchService.searchByIsbn(isbn,40);
+  }
+
   @GetMapping("/title")
   public List<Book> searchByTitle(@Param("title") String title,
                                   @Param("startIndex") int startIndex) {
