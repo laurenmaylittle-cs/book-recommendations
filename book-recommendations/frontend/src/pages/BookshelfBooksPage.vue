@@ -20,6 +20,7 @@
           :author="book.author"
           :title="book.title"
           :thumbnail="book.thumbnail"
+          :isbn="book.isbn"
         />
       </v-col>
     </v-row>
