@@ -54,7 +54,7 @@
 export default {
   name: "UserCard",
   props: {
-    user: {type: JSON, required: true}
+    user: {type: Object, required: true}
   }
 }
 </script>
