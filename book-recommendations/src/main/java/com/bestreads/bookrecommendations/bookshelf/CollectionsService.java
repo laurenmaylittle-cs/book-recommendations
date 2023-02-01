@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 class CollectionsService {
@@ -28,6 +29,7 @@ class CollectionsService {
     return collectionsRepository.findById(collectionId);
   }
 
+  @Transactional
   CollectionDAO createNewCollection(String userId, String name) {
     var collection = new CollectionDAO();
     collection.setName(name);
