@@ -9,15 +9,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class BookController {
-    private final BookSearchService bookSearchService;
 
-    @Autowired
-    public BookController(BookSearchService bookSearchService) {
-        this.bookSearchService = bookSearchService;
-    }
+  private final BookSearchService bookSearchService;
 
-    @GetMapping("/public/book")
-    public Book getBookInfo(@Param("isbn") String isbn) {
-        return bookSearchService.getBookByIsbn(isbn);
-    }
+  @Autowired
+  public BookController(BookSearchService bookSearchService) {
+    this.bookSearchService = bookSearchService;
+  }
+
+  @GetMapping("/public/book")
+  public Book getBookInfo(@Param("isbn") String isbn) {
+    return bookSearchService.getBookByIsbn(isbn);
+  }
 }

@@ -97,6 +97,7 @@ export default {
   }
 }
 </script>
+
 <style scoped>
 .div_center {
   display: table;

@@ -5,6 +5,7 @@ import ProfileView from '../views/ProfileView.vue';
 import {authGuard} from '@/auth/authGuard';
 import SearchView from "@/views/SearchView";
 import HomePage from "@/pages/HomePage";
+import FindFriendsPage from "@/pages/FindFriendsPage";
 
 Vue.use(VueRouter)
 
@@ -17,7 +18,8 @@ const routes = [
   {
     path: '/book/:isbn',
     name: 'book',
-    component: ViewBookPage
+    component: ViewBookPage,
+    props: true
   },
   {
     path: '/default-about-vue',
@@ -41,6 +43,12 @@ const routes = [
     path: '/profile',
     name: 'profile',
     component: ProfileView,
+    beforeEnter: authGuard
+  },
+  {
+    path: '/find-friends',
+    name: 'find-friends',
+    component: FindFriendsPage,
     beforeEnter: authGuard
   }
 ]

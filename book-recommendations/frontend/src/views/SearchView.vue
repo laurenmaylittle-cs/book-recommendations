@@ -22,13 +22,14 @@
     <v-row no-gutters>
       <v-col
         v-for="book in searchResults"
-        :key="book.title"
+        :key="book.isbn"
       >
         <book-details
           :author="checkForMultipleAuthors(book.authors)"
           :title="book.title"
           :published-date="book.publishedDate"
           :thumbnail="book.imageLinks.thumbnail"
+          :isbn="book.isbn"
         />
       </v-col>
     </v-row>
