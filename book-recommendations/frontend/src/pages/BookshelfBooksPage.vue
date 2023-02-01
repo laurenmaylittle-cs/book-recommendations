@@ -17,10 +17,9 @@
         :key="book.title"
       >
         <book-details
-          :author="checkForMultipleAuthors(book.authors)"
+          :author="book.author"
           :title="book.title"
-          :published-date="book.publishedDate"
-          :thumbnail="book.imageLinks.thumbnail"
+          :thumbnail="book.thumbnail"
         />
       </v-col>
     </v-row>
