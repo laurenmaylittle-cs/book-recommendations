@@ -37,23 +37,17 @@ public class CollectionsController {
       JwtAuthenticationToken authenticationToken) {
     var userId = AuthUtils.getUserId(authenticationToken);
 
-    if (userId.isPresent()) {
-      return ok(collectionsService.getCollections(userId.get()));
-    } else {
-      return badRequest().build();
-    }
-
+    return userId.map(s -> ok(collectionsService.getCollections(s)))
+        .orElseGet(() -> badRequest().build());
   }
 
   @GetMapping("/{Id}")
   public ResponseEntity<CollectionJson> getCollectionById(@PathVariable Long Id) {
     var collection = collectionsService.getCollectionById(Id);
-    if (collection.isPresent()) {
-      return ok(
-          new CollectionJson(collection.get().getId(), collection.get().getName()));
-    } else {
-      return notFound().build();
-    }
+
+    return collection.map(collectionDAO -> ok(
+            new CollectionJson(collectionDAO.getId(), collectionDAO.getName())))
+        .orElseGet(() -> notFound().build());
   }
 
   @PostMapping

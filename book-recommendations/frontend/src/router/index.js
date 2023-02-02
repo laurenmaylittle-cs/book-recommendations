@@ -9,6 +9,7 @@ import FindFriendsPage from "@/pages/FindFriendsPage";
 import BookShelfPage from "@/pages/BookshelfPage"
 import BookshelfBooksPage from "@/pages/BookshelfBooksPage";
 
+
 Vue.use(VueRouter)
 
 const routes = [

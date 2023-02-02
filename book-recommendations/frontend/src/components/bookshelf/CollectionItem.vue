@@ -43,19 +43,16 @@ export default {
       return 0;
     },
     numberOfColsToTake() {
-      if (this.$vuetify.breakpoint.xl) {
-        return 2;
-      }
-      if (this.$vuetify.breakpoint.lg) {
-        return 3;
-      }
-      if (this.$vuetify.breakpoint.md) {
-        return 4;
-      }
-      if (this.$vuetify.breakpoint.xs) {
-        return 12;
-      }
-      return 5;
+      const breakpointValues = {
+        xl: 2,
+        lg: 3,
+        md: 4,
+        xs: 12
+      };
+      const breakpoint = Object.keys(breakpointValues).find(
+        breakpoint => this.$vuetify.breakpoint[breakpoint]);
+
+      return breakpointValues[breakpoint] || 5;
     }
   },
   methods: {
