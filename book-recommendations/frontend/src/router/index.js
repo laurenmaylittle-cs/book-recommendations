@@ -6,6 +6,7 @@ import {authGuard} from '@/auth/authGuard';
 import SearchView from "@/views/SearchView";
 import HomePage from "@/pages/HomePage";
 import FindFriendsPage from "@/pages/FindFriendsPage";
+import BookShelfPage from "@/pages/BookshelfPage"
 
 Vue.use(VueRouter)
 
@@ -49,6 +50,12 @@ const routes = [
     path: '/find-friends',
     name: 'find-friends',
     component: FindFriendsPage,
+    beforeEnter: authGuard
+  },
+  {
+    path: '/bookshelf',
+    name: 'bookshelf',
+    component: BookShelfPage,
     beforeEnter: authGuard
   }
 ]
