@@ -21,6 +21,7 @@
           :title="book.title"
           :thumbnail="book.thumbnail"
           :isbn="book.isbn"
+          :published-date="book.publishedDate"
         />
       </v-col>
     </v-row>
