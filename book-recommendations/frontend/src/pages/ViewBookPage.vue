@@ -126,9 +126,9 @@ export default {
     if (this.validIsbn(this.isbn)) {
       await this.getBookData();
       this.isValidISBN = this.bookData !== null;
-      // if (this.bookData !== null) {
-      //   this.postData();
-      // }
+    if (this.bookData !== null) {
+      await this.postData();
+    }
     } else {
       this.bookData = null;
       this.isValidISBN = false;
@@ -150,8 +150,9 @@ export default {
       }
       return null;
     },
-    postData() {
-      exportData(this.isbn,this.bookData.title,this.bookData.author,this.bookData.categories,"ABC123")
+    async postData() {
+      const token = await this.$auth.getTokenSilently();
+      await exportData(this.isbn,this.bookData.title,this.bookData.authors,this.bookData.categories,"ABC123", token)
     }
   }
 }
