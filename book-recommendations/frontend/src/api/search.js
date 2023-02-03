@@ -9,12 +9,5 @@ export async function searchByAuthor(author, startIndex) {
 export async function searchByTitle(title, startIndex) {
   return axios.get(
     `/api/search/title?title=${title}&startIndex=${startIndex}`)
-    .then(response => response.data)
+  .then(response => response.data)
 }
-
-export async function searchByIsbn(isbn) {
-  return axios.get(
-    `/api/search/isbn?isbn=${isbn}`)
-    .then(response => response.data)
-}
-

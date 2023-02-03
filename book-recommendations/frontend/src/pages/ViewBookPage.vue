@@ -27,7 +27,6 @@
       class="pb-0 pt-0 align-center"
     >
       <v-col class="ml-4 pt-4">
-        <!-- TODO BES-70 show all authors and genres depending on the data returned from the API -->
         <h1
           v-if="bookData.title"
           class="mt-0"
