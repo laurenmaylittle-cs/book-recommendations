@@ -42,11 +42,11 @@ export async function updateUserRating(email, isbn, rating, token) {
   })
 }
 
-export async function exportData(isbn, title, author, genre, userID, token) {
+export async function exportData(isbn, title, author, genre, publisher, userID,  token) {
   return await axios({
     method: 'POST',
     url: '/api/public/book?isbn=' + isbn + '&title=' + title
-      + '&author=' + author + '&genre=' + genre + '&userID=' + userID,
+      + '&author=' + author + '&genre=' + genre +'&publisher=' + publisher + '&userID=' + userID,
     headers: {
       authorization: `Bearer ${token}`,
     }

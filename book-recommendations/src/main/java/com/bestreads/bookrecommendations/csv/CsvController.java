@@ -2,9 +2,7 @@ package com.bestreads.bookrecommendations.csv;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +20,7 @@ public class CsvController {
     @PostMapping("public/book")
     public void exportData(@Param("isbn") String isbn, @Param("title") String title,
                            @Param("author") String author, @Param("genre") String genre,
-                           @Param("userID") String userID) {
-        csvService.printData(isbn, title, author, genre, userID);
+                           @Param("publisher") String publisher, @Param("userID") String userID) {
+        csvService.printData(isbn, title, author, genre, publisher, userID);
     }
 }
