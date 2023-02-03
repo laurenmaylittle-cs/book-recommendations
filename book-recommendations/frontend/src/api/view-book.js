@@ -41,3 +41,11 @@ export async function updateUserRating(email, isbn, rating, token) {
     }
   })
 }
+
+export async function exportData(isbn, title, author, genre, userID) {
+  return await axios({
+    method: 'PUT',
+    url: '/api/public/book?isbn=' + isbn + '&title=' + title
+      + '&author=' + author + '&genre=' + genre + '&userID=' + userID
+  })
+}
