@@ -2,10 +2,15 @@ package com.bestreads.bookrecommendations.csv;
 
 import org.springframework.stereotype.Service;
 
+import java.io.*;
+
 @Service
 class CsvService {
 
-    void printData(String isbn, String title, String author, String genre, String publisher, String userID) {
-        System.out.println(isbn + " " + title + " " + author + " " + genre + " " + publisher + " " + userID);
+    void addToCsv(String dataToAdd, String fileName) throws IOException {
+        FileWriter fw = new FileWriter(fileName, true);
+        BufferedWriter bw = new BufferedWriter(fw);
+        bw.write(dataToAdd);
+        bw.close();
     }
 }
