@@ -152,7 +152,7 @@ export default {
     },
     async postData() {
       const token = await this.$auth.getTokenSilently();
-      await exportData(this.isbn,this.bookData.title,this.bookData.authors,this.bookData.categories,this.bookData.publisher,"ABC123", token)
+      await exportData(this.isbn,this.bookData.title,this.bookData.authors,this.bookData.categories,this.bookData.publisher, token)
     }
   }
 }
