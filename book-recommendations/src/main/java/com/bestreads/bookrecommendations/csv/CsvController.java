@@ -36,7 +36,9 @@ public class CsvController {
         var bookCsv = isbn + "," + title + "," + author + "," + genre + "," + publisher + "\n";
         var interactionCsv = userId + "," + isbn + "," + timestamp + "\n";
 
-        csvService.addToCsv(bookCsv, "books.csv");
+        if (!csvService.checkIfBookExists(isbn)) {
+            csvService.addToCsv(bookCsv, "books.csv");
+        }
         csvService.addToCsv(interactionCsv, "interactions.csv");
     }
 }
