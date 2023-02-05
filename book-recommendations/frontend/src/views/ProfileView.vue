@@ -11,6 +11,18 @@
       </v-btn>
     </v-row>
     <v-row>
+      <v-btn
+        @click="getBooksCSV"
+      >
+        Download Books CSV
+      </v-btn>
+      <v-btn
+        @click="getInteractionsCSV"
+      >
+        Download Interactions CSV
+      </v-btn>
+    </v-row>
+    <v-row>
       <v-col cols="3">
         <v-avatar
           size="100px"
@@ -73,6 +85,14 @@ export default {
       this.$auth.logout({
         returnTo: window.location.origin
       });
+    },
+    getBooksCSV() {
+      this.$router.push('/api/downloadBooksCsv');
+      window.location.reload();
+    },
+    getInteractionsCSV() {
+      this.$router.push('/api/downloadInteractionsCsv');
+      window.location.reload();
     }
   }
 }
