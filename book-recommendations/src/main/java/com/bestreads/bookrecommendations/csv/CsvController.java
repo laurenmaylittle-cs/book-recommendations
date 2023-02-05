@@ -3,6 +3,7 @@ package com.bestreads.bookrecommendations.csv;
 import com.bestreads.bookrecommendations.utils.AuthUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,10 +29,11 @@ public class CsvController {
     }
 
     @PostMapping("public/book")
-    public void exportData(@RequestBody JwtAuthenticationToken authenticationToken,
-                           @RequestBody String isbn, @RequestBody String title,
-                           @RequestBody String author, @RequestBody String genre,
-                           @RequestBody String publisher) throws IOException {
+    @ResponseBody
+    public void exportData(@Param ("token") JwtAuthenticationToken authenticationToken,
+                           @RequestParam ("isbn") String isbn, @RequestParam ("title") String title,
+                           @RequestParam ("author") String author, @RequestParam ("genre") String genre,
+                           @RequestParam ("publisher") String publisher) throws IOException {
         var userId = AuthUtils.getUserId(authenticationToken).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user ID found in token");
         });
