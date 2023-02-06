@@ -15,7 +15,15 @@
       />
     </v-row>
     <v-row
-      v-if="!isLoading"
+      v-if="isValidISBN===false"
+      class="pt-6"
+    >
+      <p>
+        {{ errorMessage }}
+      </p>
+    </v-row>
+    <v-row
+      v-if="!isLoading && isValidISBN"
       class="pb-0 pt-0 align-center"
     >
       <v-col class="ml-4 pt-4">
@@ -72,7 +80,7 @@
       </v-col>
     </v-row>
     <v-row
-      v-if="!isLoading"
+      v-if="!isLoading && isValidISBN"
       class="pt-0 ma-0 align-center"
     >
       <about-book
@@ -105,14 +113,29 @@ export default {
     return {
       bookData: '',
       isLoading: true,
+      isValidISBN: '',
       isbn: this.$route.params.isbn
     }
   },
+  computed: {
+    errorMessage() {
+      return "No results found for ISBN: " + this.isbn
+    }
+  },
   async mounted() {
-    await this.getBookData()
+    if (this.validIsbn(this.isbn)) {
+      await this.getBookData();
+      this.isValidISBN = this.bookData !== null;
+    } else {
+      this.bookData = null;
+      this.isValidISBN = false;
+    }
     this.isLoading = false;
   },
   methods: {
+    validIsbn(isbn) {
+      return isbn.length === 10 || isbn.length === 13;
+    },
     async getBookData() {
       this.bookData = await getBookInfo(this.isbn);
     },

@@ -24,6 +24,8 @@
 </template>
 
 <script>
+import {generatePastelColors} from "@/util/util";
+
 export default {
   name: "BestSellerFilter",
   props: {
@@ -45,17 +47,14 @@ export default {
       }).sort((a, b) => a.text.localeCompare(b.text));
     },
     chipColors() {
-      //HSL - a model to define colors, but with hue, saturation, and lightness
-      //pastel color - a color with low to medium saturation (low - medium intensity) and high lightness
       const colors = [];
-      for (let i = 0; i < this.bestSellerCategories.length; i++) {
-        const hue = Math.floor(Math.random() * 360);
-        const saturation = Math.floor(Math.random() * 40) + 30; // between 30 and 70 (low - medium)
-        const lightness = Math.floor(Math.random() * 20) + 80; // between 80 and 100 (high)
-
-        const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-        colors.includes(color) ? i-- : colors.push(color);
-      }
+      generatePastelColors(colors, this.bestSellerCategories.length, {
+        min: 30,
+        max: 70
+      }, {
+        min: 80,
+        max: 100
+      });
       return colors;
     },
   },

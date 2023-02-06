@@ -41,24 +41,29 @@ export default {
     selectedQueryFilter: { displayText: 'Title', value: 'title'},
     queryFilters: [
       {displayText: 'Title', value: 'title'},
-      {displayText: 'Author', value: 'author'}
+      {displayText: 'Author', value: 'author'},
+      {displayText: 'ISBN', value: 'isbn'}
     ],
   }),
   computed: {
     getSearchTypeDescription() {
-      return `Search by ${this.selectedQueryFilter.displayText}`
+      return `Search by ${this.selectedQueryFilter.displayText}`;
     }
   },
   methods: {
     loadSearch() {
-      this.$router.push({name: 'search', params: {searchType: this.selectedQueryFilter.value , searchTerm: this.queryTerm}}).catch(() => {
-      })
+      if (this.selectedQueryFilter.value !== 'isbn') {
+        this.$router.push({name: 'search', params: {searchType: this.selectedQueryFilter.value , searchTerm: this.queryTerm}}).catch(() => {
+        })
+      } else {
+        this.$router.push({name: 'book', params: {isbn: this.queryTerm}}).catch(() => {
+        })
+      }
       window.location.reload()
     }
   }
 }
 </script>
-
 <style scoped>
 .div_center {
   display: table;

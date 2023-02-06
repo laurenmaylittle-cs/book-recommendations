@@ -18,7 +18,13 @@
     </div>
     <search-bar :search-term="searchTerm" />
     <v-spacer />
-
+    <v-btn
+      text
+      color="white"
+      href="/bookshelf"
+    >
+      <v-icon>mdi-bookshelf</v-icon>
+    </v-btn>
     <!--    TODO BES-36 do proper implementation of profile link, just placeholder to demo AuthGuard page authentication-->
     <div v-if="!$auth.loading">
       <!-- show login when not authenticated -->

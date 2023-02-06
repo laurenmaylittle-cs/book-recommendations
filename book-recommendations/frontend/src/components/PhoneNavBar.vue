@@ -20,19 +20,19 @@
 
       <v-list>
         <v-list-item
-          @click="homeRedirect"
+          @click="() => $router.push({ name: 'Root' })"
         >
           <v-icon>mdi-home</v-icon>
           Home
         </v-list-item>
         <v-list-item
-          @click="() => {}"
+          @click="() => $router.push({ name: 'bookshelf' })"
         >
           <v-icon>mdi-bookshelf</v-icon>
           Bookshelf
         </v-list-item>
         <v-list-item
-          @click="profileRedirect"
+          @click="() => $router.push({ name: 'profile' })"
         >
           <v-icon>mdi-account</v-icon>
           Profile
@@ -50,16 +50,6 @@ import SearchBar from "@/components/search/SearchBar";
 export default {
   name: 'PhoneNavBar',
   components: {SearchBar},
-  methods: {
-    homeRedirect() {
-      this.$router.push({name: 'Root'}).catch(() => {
-      })
-    },
-    profileRedirect() {
-      this.$router.push({name: 'profile'}).catch(() => {
-      })
-    }
-  }
 }
 </script>
 
