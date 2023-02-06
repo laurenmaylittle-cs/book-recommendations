@@ -126,9 +126,9 @@ export default {
     if (this.validIsbn(this.isbn)) {
       await this.getBookData();
       this.isValidISBN = this.bookData !== null;
-    if (this.bookData !== null) {
-      await this.postData();
-    }
+      if (this.bookData !== null) {
+        await this.postData();
+      }
     } else {
       this.bookData = null;
       this.isValidISBN = false;
@@ -152,7 +152,14 @@ export default {
     },
     async postData() {
       const token = await this.$auth.getTokenSilently();
-      await exportData(this.isbn,this.bookData.title,this.bookData.authors,this.bookData.categories,this.bookData.publisher, token)
+      const bookData = {
+        title: this.bookData.title,
+        authors: this.bookData.authors,
+        categories: this.bookData.categories,
+        publisher: this.bookData.publisher,
+        isbn: this.isbn
+      }
+      await exportData(bookData, token)
     }
   }
 }

@@ -70,6 +70,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 
 export default {
   name: 'ProfileView',
@@ -86,13 +87,36 @@ export default {
         returnTo: window.location.origin
       });
     },
-    getBooksCSV() {
-      this.$router.push('/api/downloadBooksCsv');
-      window.location.reload();
+    async getBooksCSV() {
+      const result = await axios.get("/api/private/book-data/books", {
+        headers: {
+          Authorization: `Bearer ${await this.$auth.getTokenSilently()}`
+        },
+      })
+
+      //create an <a> tag and click it to download the file
+      const file = new Blob([result.data], {type: 'text/csv'});
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(file);
+      link.download = 'books.csv';
+
+      document.body.appendChild(link);
+      link.click();
     },
-    getInteractionsCSV() {
-      this.$router.push('/api/downloadInteractionsCsv');
-      window.location.reload();
+    async getInteractionsCSV() {
+      const result = await axios.get("/api/private/book-data/interactions", {
+        headers: {
+          Authorization: `Bearer ${await this.$auth.getTokenSilently()}`
+        },
+      })
+
+      const file = new Blob([result.data], {type: 'text/csv'});
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(file);
+      link.download = 'interactions.csv';
+
+      document.body.appendChild(link);
+      link.click();
     }
   }
 }
