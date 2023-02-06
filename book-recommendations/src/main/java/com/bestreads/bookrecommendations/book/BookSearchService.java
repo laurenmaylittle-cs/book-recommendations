@@ -80,19 +80,7 @@ public class BookSearchService {
     if (!httpResponseToBook.extractFromHttpResponse(httpResponse).isEmpty()
         && httpResponseToBook.extractFromHttpResponse(httpResponse).size() == 1) {
       return httpResponseToBook.extractFromHttpResponse(httpResponse).get(0);
-
-    } else if (httpResponseToBook.extractFromHttpResponse(httpResponse).isEmpty()) {
-      var response = googleBooksService.getVolumeByISBN(
-          SearchTermUtils.encodeURLTerm(isbn),
-          1
-      );
-      if (!httpResponseToBook.extractFromHttpResponse(response).isEmpty()
-          && httpResponseToBook.extractFromHttpResponse(response).size() == 1) {
-        return httpResponseToBook.extractFromHttpResponse(response).get(0);
-
-      } else {
-        throw new IllegalArgumentException(isbn + " is an invalid ISBN.");
-      }
+      
     } else {
       throw new IllegalArgumentException(isbn + " is an invalid ISBN.");
     }
