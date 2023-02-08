@@ -100,6 +100,7 @@ import {getBookInfo} from "@/api/view-book";
 import AverageRatings from "@/components/viewbook/AverageRatings";
 import UserRatings from "@/components/viewbook/UserRatings";
 import AboutBook from "@/components/viewbook/AboutBook";
+import axios from "axios";
 
 export default {
   name: 'ViewBook',
@@ -112,7 +113,6 @@ export default {
   data: function () {
     return {
       bookData: '',
-      isLoading: true,
       isValidISBN: '',
       isbn: this.$route.params.isbn
     }
@@ -120,7 +120,7 @@ export default {
   computed: {
     errorMessage() {
       return "No results found for ISBN: " + this.isbn
-    }
+    },
   },
   async mounted() {
     if (this.validIsbn(this.isbn)) {
@@ -137,7 +137,14 @@ export default {
       return isbn.length === 10 || isbn.length === 13;
     },
     async getBookData() {
-      this.bookData = await getBookInfo(this.isbn);
+      //Todo: update to getBookInfo
+      const url = "/api/public/book";
+      const params = new URLSearchParams();
+      params.append("title", this.$route.query.title);
+      params.append("isbn", this.$route.params.isbn);
+      params.append("authors", this.$route.query.authors);
+
+      this.bookData = (await axios.get(url, {params: params})).data;
     },
     concatDetails(details) {
       if (details != null && details.length > 1) {

@@ -1,7 +1,8 @@
 <template>
   <v-col>
     <router-link
-      :to="{ name: 'book', params: {isbn:isbn}}"
+      :to="{ name: 'book', params: {isbn:isbn},
+             query: {title: bookTitle, image: bookImageLink, authors: authors}}"
       style="text-decoration: none"
     >
       <v-hover v-slot="{ hover }">
@@ -36,6 +37,11 @@ export default {
       type: String,
       required: true,
       default: "Unavailable",
+    },
+    authors: {
+      type: Array,
+      required: true,
+      default: () => [],
     },
     bookTitle: {
       type: String,

@@ -18,7 +18,8 @@ public class BookController {
   }
 
   @GetMapping("/public/book")
-  public Book getBookInfo(@Param("isbn") String isbn) {
-    return bookSearchService.getBookByIsbn(isbn);
+  public Book getBookInfo(@Param("isbn") String isbn, @Param("title") String title,
+      @Param("author") String authors) {
+    return bookSearchService.getBookData(isbn, title, authors);
   }
 }

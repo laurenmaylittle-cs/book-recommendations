@@ -37,6 +37,10 @@ public class GoogleBooksHttpResponseToBook implements HttpResponseToBook {
       throw new RuntimeException(e);
     }
 
+    if (items == null) {
+      return Collections.emptyList();
+    }
+
     return items.stream()
         .map(item -> new Book(
             item.id(),

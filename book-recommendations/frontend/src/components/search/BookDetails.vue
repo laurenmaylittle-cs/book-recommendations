@@ -3,7 +3,7 @@
     <v-card>
       <v-card-actions class="justify-center mb-0 pt-6">
         <router-link
-          :to="{ name: 'book', params: {isbn:isbn}}"
+          :to="{ name: 'book', params: {isbn:isbn}, query: {title: title, authors: authors}}"
         >
           <!-- TODO BES-66 redirect to view book page-->
           <v-img
@@ -36,7 +36,7 @@ export default {
       type: String,
       default: 'Book title'
     },
-    author: {
+    authors: {
       type: String,
       default: 'Author'
     },
@@ -55,10 +55,10 @@ export default {
   },
   computed: {
     getTruncatedAuthor() {
-      if (this.author === "") {
+      if (this.authors === "") {
         return this.formatDate()
       }
-      return `${this.truncateText(this.author, 50)} - ${this.formatDate()}`
+      return `${this.truncateText(this.authors, 50)} - ${this.formatDate()}`
     }
   },
   methods: {

@@ -44,7 +44,7 @@ export default {
         return this.categories;
       }
       return this.categories.filter(category => this.selectedCategories.includes(category.list_id));
-    }
+    },
   },
   async mounted() {
     this.categories = await getBestSellers();

@@ -24,6 +24,7 @@
                 :book-image-link="books[+index + i].imageLinks.thumbnail"
                 :book-title="books[+index + i].title"
                 :isbn="books[+index + i].isbn"
+                :authors="books[+index + i].authors"
               />
             </template>
           </v-row>
