@@ -12,6 +12,7 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,6 +31,27 @@ class BookSearchServiceTest {
 
   @InjectMocks
   private BookSearchService bookSearchService;
+
+  private static Book book;
+
+  @BeforeAll
+  static void setUp() {
+    book = new Book(
+        "id",
+        "Gone Girl",
+        List.of("Gillian Flynn"),
+        "Hachette UK",
+        "2012-05-24",
+        "Test Description",
+        0,
+        new ArrayList<>(),
+        new ImageLinks("smallThumbnail", "largeThumbnail"),
+        "en",
+        0,
+        0,
+        "9780735211292"
+    );
+  }
 
   @Test
   void searchByTitle_withMaxResults_verifyServiceCall() {
@@ -115,7 +137,7 @@ class BookSearchServiceTest {
     var searchTerm = "9781302945534";
     var maxResults = 41;
     assertThrows(IllegalArgumentException.class,
-            () -> bookSearchService.searchByIsbn(searchTerm, maxResults));
+        () -> bookSearchService.searchByIsbn(searchTerm, maxResults));
   }
 
   @Test
@@ -123,42 +145,58 @@ class BookSearchServiceTest {
     var searchTerm = "9781779501127";
     var maxResults = -1;
     assertThrows(IllegalArgumentException.class,
-            () -> bookSearchService.searchByIsbn(searchTerm, maxResults));
+        () -> bookSearchService.searchByIsbn(searchTerm, maxResults));
   }
 
   @Test
-  void viewIndividualBook_withISBNReturnsABook() {
+  void getBookData_withValidISBN() {
     HttpResponse<String> httpResponse = mock(HttpResponse.class);
     String ISBN = "9780297859406";
-    when(googleBooksService.getVolumeByIsbn(ISBN, 1)).thenReturn(httpResponse);
+    when(googleBooksService.searchVolumeByIsbn(ISBN, 0, 1)).thenReturn(httpResponse);
 
-    var expectedBook = new Book(
-        "id",
-        "Gone Girl",
-        List.of("Gillian Flynn"),
-        "Hachette UK",
-        "2012-05-24",
-        "Test Description",
-        0,
-        new ArrayList<>(),
-        new ImageLinks("smallThumbnail", "largeThumbnail"),
-        "en",
-        0,
-        0,
-        "9780735211292"
-    );
+    var expectedBook = book;
     when(httpResponseToBook.extractFromHttpResponse(httpResponse)).thenReturn(
         List.of(expectedBook));
 
-    var receivedBook = bookSearchService.getBookByIsbn(ISBN);
+    var receivedBook = bookSearchService.getBookData(ISBN, "Gone Girl", "Gillian Flynn");
     assertEquals(expectedBook, receivedBook);
   }
 
   @Test
-  void viewIndividualBook_ThrowsExceptionWhenISBNIsInvalid() {
-    var exception = assertThrows(IllegalArgumentException.class,
-        () -> bookSearchService.getBookByIsbn("INVALID_ISBN"));
-    assertEquals("INVALID_ISBN is an invalid ISBN.", exception.getMessage());
+  void getBookData_withInvalidISBN_searchByTitleAndAuthor() {
+    HttpResponse emptyHttpResponse = mock(HttpResponse.class);
+    when(googleBooksService.searchVolumeByIsbn("123456", 0, 1)).thenReturn(emptyHttpResponse);
+    when(httpResponseToBook.extractFromHttpResponse(emptyHttpResponse)).thenReturn(List.of());
+
+    HttpResponse responseWithBook = mock(HttpResponse.class);
+    when(googleBooksService.searchVolumeByTitleAndAuthors("Gone+Girl", "Gillian+Flynn")).thenReturn(
+        responseWithBook);
+
+    var expectedBook = book;
+    when(httpResponseToBook.extractFromHttpResponse(responseWithBook)).thenReturn(
+        List.of(expectedBook));
+
+    var receivedBook = bookSearchService.getBookData("123456", "Gone Girl", "Gillian Flynn");
+
+    assertEquals(expectedBook, receivedBook);
+  }
+
+  @Test
+  void getBookData_APIReturnsNothing() {
+    HttpResponse emptyHttpResponse = mock(HttpResponse.class);
+    when(googleBooksService.searchVolumeByIsbn("123456", 0, 1)).thenReturn(emptyHttpResponse);
+    when(httpResponseToBook.extractFromHttpResponse(emptyHttpResponse)).thenReturn(List.of());
+    when(googleBooksService.searchVolumeByTitleAndAuthors("Gone+Girl", "Gillian+Flynn")).thenReturn(
+        emptyHttpResponse);
+
+    when(httpResponseToBook.extractFromHttpResponse(emptyHttpResponse)).thenReturn(
+        List.of());
+
+    try {
+      bookSearchService.getBookData("123456", "Gone Girl", "Gillian Flynn");
+    } catch (IllegalArgumentException e) {
+      assertEquals("No book found with title: Gone Girl and author: Gillian Flynn", e.getMessage());
+    }
   }
 
 }

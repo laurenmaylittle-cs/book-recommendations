@@ -63,7 +63,7 @@ public class GoogleBooksService {
     return sendHttpRequest(getGetHttpRequest(uri));
   }
 
-  public HttpResponse<String> getVolumeByTitleAndAuthors(String title, String authors) {
+  public HttpResponse<String> searchVolumeByTitleAndAuthors(String title, String authors) {
     var uri = "%s/volumes?q=%s+inauthor:%s&maxResults=%s&key=%s".formatted(
         googleBooksApiUri,
         title,

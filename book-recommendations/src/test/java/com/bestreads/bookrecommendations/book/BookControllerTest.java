@@ -48,6 +48,8 @@ class BookControllerTest {
           """;
 
   String ISBN = "9780297859406";
+  String bookTitle = "Gone Girl";
+  String bookAuthor = "Gillian Flynn";
 
   @BeforeAll
   static void setUp() {
@@ -73,10 +75,12 @@ class BookControllerTest {
   @Test
   @WithMockUser
   void getBookInfo() throws Exception {
-    when(bookSearchService.getBookByIsbn(ISBN)).thenReturn(book);
+    when(bookSearchService.getBookData(ISBN, bookTitle, bookAuthor)).thenReturn(book);
     mockMvc.perform(
             get("/api/public/book")
-                .param("isbn", ISBN))
+                .param("isbn", ISBN)
+                .param("title", bookTitle)
+                .param("authors", bookAuthor))
         .andExpect(content().json(bookJson));
   }
 }

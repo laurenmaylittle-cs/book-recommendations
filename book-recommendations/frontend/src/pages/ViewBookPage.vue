@@ -135,14 +135,8 @@ export default {
       return isbn.length === 10 || isbn.length === 13;
     },
     async getBookData() {
-      //Todo: update to getBookInfo
-      const url = "/api/public/book";
-      const params = new URLSearchParams();
-      params.append("title", this.$route.query.title);
-      params.append("isbn", this.$route.params.isbn);
-      params.append("authors", this.$route.query.authors);
-
-      this.bookData = (await axios.get(url, {params: params})).data;
+      this.bookData = await getBookInfo(this.isbn, this.$route.query.title,
+        this.$route.query.authors);
     },
     concatDetails(details) {
       if (details != null && details.length > 1) {
