@@ -3,6 +3,7 @@ package com.bestreads.bookrecommendations.book;
 import com.bestreads.bookrecommendations.googlebooks.GoogleBooksService;
 import com.bestreads.bookrecommendations.utils.SearchTermUtils;
 import java.net.http.HttpResponse;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,41 +71,45 @@ public class BookSearchService {
     return httpResponseToBook.extractFromHttpResponse(httpResponse);
   }
 
+  /**
+   * Makes a request to Google Books API to get the book data for the given ISBN. If no book is
+   * found, it makes a request to search by title and author. If no book is found, it throws an
+   * `IllegalArgumentException`.
+   */
   public Book getBookData(String isbn, String title, String authors) {
-    HttpResponse<String> httpResponse = googleBooksService.searchVolumeByIsbn(
+    List<Book> books = getBooksFromResponse(googleBooksService.searchVolumeByIsbn(
         SearchTermUtils.encodeURLTerm(isbn),
         0,
         1
-    );
+    ), title);
 
-    List<Book> books = httpResponseToBook.extractFromHttpResponse(httpResponse);
-
-    if (!books.isEmpty() && books.size() == 1) {
+    if (!books.isEmpty()) {
       return books.get(0);
     } else {
       return searchByTitleAndAuthor(title, authors);
     }
-
   }
 
-  /**
-   * Returns the first book found with the given title and author
-   *
-   * @throws IllegalArgumentException if no book is found for given title and authors
-   */
   private Book searchByTitleAndAuthor(String title, String authors) {
-    HttpResponse<String> httpResponse = googleBooksService.getVolumeByTitleAndAuthors(
+    List<Book> books = getBooksFromResponse(googleBooksService.getVolumeByTitleAndAuthors(
         SearchTermUtils.encodeURLTerm(title),
         SearchTermUtils.encodeURLTerm(authors)
-    );
+    ), title);
 
-    List<Book> books = httpResponseToBook.extractFromHttpResponse(httpResponse);
-
-    if (books.size() > 0) {
-      return books.get(0);
-    } else {
+    if (books.isEmpty()) {
       throw new IllegalArgumentException(
           "No book found with title: %s and author: %s".formatted(title, authors));
     }
+    return books.get(0);
   }
+
+  private List<Book> getBooksFromResponse(HttpResponse<String> response, String title) {
+    List<Book> books = httpResponseToBook.extractFromHttpResponse(response);
+    return books.isEmpty() || !isResultValid(books.get(0), title) ? Collections.emptyList() : books;
+  }
+
+  private boolean isResultValid(Book book, String title) {
+    return book.title().equalsIgnoreCase(title);
+  }
+
 }

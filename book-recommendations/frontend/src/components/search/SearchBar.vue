@@ -20,7 +20,7 @@
     <v-btn
       text
       :style="{ 'background-color': '#46648c', 'color': 'white' }"
-      @click.native="loadSearch(queryTerm)"
+      @click="loadSearch(queryTerm)"
     >
       <v-icon>mdi-magnify</v-icon>
     </v-btn>
@@ -38,7 +38,7 @@ export default {
   },
   data: () => ({
     queryTerm: "",
-    selectedQueryFilter: { displayText: 'Title', value: 'title'},
+    selectedQueryFilter: {displayText: 'Title', value: 'title'},
     queryFilters: [
       {displayText: 'Title', value: 'title'},
       {displayText: 'Author', value: 'author'},
@@ -53,13 +53,15 @@ export default {
   methods: {
     loadSearch() {
       if (this.selectedQueryFilter.value !== 'isbn') {
-        this.$router.push({name: 'search', params: {searchType: this.selectedQueryFilter.value , searchTerm: this.queryTerm}}).catch(() => {
+        this.$router.push({
+          name: 'search',
+          params: {searchType: this.selectedQueryFilter.value, searchTerm: this.queryTerm}
+        }).catch(() => {
         })
       } else {
         this.$router.push({name: 'book', params: {isbn: this.queryTerm}}).catch(() => {
         })
       }
-      window.location.reload()
     }
   }
 }

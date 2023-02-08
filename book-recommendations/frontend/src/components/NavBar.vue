@@ -6,26 +6,28 @@
   >
     <div class="d-flex align-center">
       <v-hover v-slot="{ hover }">
-        <v-btn
-          href="/home"
+        <router-link
+          to="/home"
+          tag="v-btn"
           text
-          :style="{ ...getHoverEffect(hover) }"
+          :style="{ ...getHoverEffect(hover) , boxShadow: 'none' }"
         >
           <v-icon>mdi-book-open-page-variant</v-icon>
           <span class="mr-2">{{ serviceName }}</span>
-        </v-btn>
+        </router-link>
       </v-hover>
     </div>
     <search-bar :search-term="searchTerm" />
     <v-spacer />
-    <v-btn
-      text
-      color="white"
-      href="/bookshelf"
+    <router-link
+      to="/bookshelf"
+      tag="v-btn"
+      :style="{ ...getHoverEffect(), boxShadow: 'none'}"
     >
       <v-icon>mdi-bookshelf</v-icon>
-    </v-btn>
-    <!--    TODO BES-36 do proper implementation of profile link, just placeholder to demo AuthGuard page authentication-->
+    </router-link>
+    <!-- TODO BES-36 do proper implementation of profile link, just placeholder to demo AuthGuard page
+    authentication-->
     <div v-if="!$auth.loading">
       <!-- show login when not authenticated -->
       <button
@@ -106,5 +108,9 @@ export default {
 
 /deep/ .v-input__control {
   margin-top: 25px;
+}
+
+.v-btn {
+  box-shadow: none;
 }
 </style>

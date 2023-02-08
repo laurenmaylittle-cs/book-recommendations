@@ -10,6 +10,7 @@
       >
         Based on <a
           :href="reviewsUrl"
+          target="_blank"
         >{{ ratingsCount }}
           ratings</a>
       </p>

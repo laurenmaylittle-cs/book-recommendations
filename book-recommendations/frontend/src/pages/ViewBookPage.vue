@@ -1,7 +1,6 @@
 <template>
   <v-container
     fill-height
-    fluid
   >
     <v-row
       v-if="isLoading"
