@@ -52,19 +52,19 @@ public class GoogleBooksService {
   }
 
   public HttpResponse<String> searchVolumeByIsbn(String searchTerm, int startIndex,
-                                                   int maxResults) {
+      int maxResults) {
     var uri = "%s/volumes?q=isbn:%s&startIndex=%s&maxResults=%s&key=%s".formatted(
-            googleBooksApiUri,
-            searchTerm,
-            startIndex,
-            maxResults,
-            apiKey
+        googleBooksApiUri,
+        searchTerm,
+        startIndex,
+        maxResults,
+        apiKey
     );
     return sendHttpRequest(getGetHttpRequest(uri));
   }
 
   public HttpResponse<String> getVolumeByIsbn(String isbn, int maxResults) {
-    var uri = "%s/volumes/?q=ISBN:%s&maxResults=%s&key=%s".formatted(
+    var uri = "%s/volumes/?q=isbn:%s&maxResults=%s&key=%s".formatted(
         googleBooksApiUri,
         isbn,
         maxResults,
