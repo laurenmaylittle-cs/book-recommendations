@@ -139,7 +139,7 @@ export default {
     if (this.validIsbn(this.isbn)) {
       await this.getBookData();
       this.isValidISBN = this.bookData !== null;
-      if (this.bookData !== null) {
+      if (this.bookData !== null && this.$auth.isAuthenticated) {
         await this.postData();
       }
     } else {

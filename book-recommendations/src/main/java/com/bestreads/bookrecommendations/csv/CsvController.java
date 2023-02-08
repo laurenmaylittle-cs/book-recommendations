@@ -39,8 +39,8 @@ public class CsvController {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user ID found in token");
     });
 
-    var authors = join(",", book.authors());
-    var categories = join(",", book.categories());
+    var authors = join("/", book.authors());
+    var categories = join("/", book.categories());
 
     var bookCsv = "%s,%s,%s,%s,%s\n".formatted(book.isbn(), book.title(), authors,
         categories, book.publisher());
