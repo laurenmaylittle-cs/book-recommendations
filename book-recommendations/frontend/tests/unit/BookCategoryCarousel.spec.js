@@ -60,10 +60,20 @@ describe("BookCategoryCarousel", () => {
         expect(wrapper.findAllComponents(BookItem).length).toBe(3);
       });
 
-      it("renders 2 by default", () => {
-        const wrapper = createComponentWrapper();
+      it("renders 2 for sm", () => {
+        const wrapper = createComponentWrapper({
+          breakpoint: {
+            sm: true,
+          },
+        });
 
         expect(wrapper.findAllComponents(BookItem).length).toBe(2);
+      });
+
+      it("renders 1 by default", () => {
+        const wrapper = createComponentWrapper();
+
+        expect(wrapper.findAllComponents(BookItem).length).toBe(1);
       });
     });
 });
