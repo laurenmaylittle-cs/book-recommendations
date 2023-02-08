@@ -109,7 +109,7 @@
 
 <script>
 import ViewBookThumbnail from "@/components/viewbook/ViewBookThumbnail";
-import {getBookInfo} from "@/api/view-book";
+import {getBookInfo, exportData} from "@/api/view-book";
 import AverageRatings from "@/components/viewbook/AverageRatings";
 import UserRatings from "@/components/viewbook/UserRatings";
 import AboutBook from "@/components/viewbook/AboutBook";
@@ -139,6 +139,9 @@ export default {
     if (this.validIsbn(this.isbn)) {
       await this.getBookData();
       this.isValidISBN = this.bookData !== null;
+      if (this.bookData !== null) {
+        await this.postData();
+      }
     } else {
       this.bookData = null;
       this.isValidISBN = false;
@@ -159,6 +162,17 @@ export default {
         return details.toString();
       }
       return null;
+    },
+    async postData() {
+      const token = await this.$auth.getTokenSilently();
+      const bookData = {
+        title: this.bookData.title,
+        authors: this.bookData.authors,
+        categories: this.bookData.categories,
+        publisher: this.bookData.publisher,
+        isbn: this.isbn
+      }
+      await exportData(bookData, token)
     }
   }
 }
