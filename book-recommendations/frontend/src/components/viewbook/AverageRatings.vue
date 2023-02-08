@@ -34,7 +34,7 @@ export default {
     id: {type: String, required: true}
   },
   data: () => ({
-    bookRating: '',
+    bookRating: 0,
     reviewsUrl: ''
   }),
   mounted() {

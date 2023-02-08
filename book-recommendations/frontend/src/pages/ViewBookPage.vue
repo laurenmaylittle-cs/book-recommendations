@@ -15,7 +15,7 @@
       />
     </v-row>
     <v-row
-      v-if="isValidISBN===false"
+      v-if="bookData === null"
       class="pt-6"
     >
       <p>
@@ -23,7 +23,7 @@
       </p>
     </v-row>
     <v-row
-      v-if="!isLoading && isValidISBN"
+      v-if="!isLoading && bookData !== null"
       class="pb-0 pt-0 align-center"
     >
       <v-col class="ml-4 pt-4">
@@ -67,12 +67,13 @@
         </div>
         <average-ratings
           :id="bookData.id"
-          :rating="bookData.averageRating"
+          :rating="bookData.averageRating ? parseInt(bookData.averageRating) : 0"
           heading="Average rating"
-          :ratings-count="bookData.ratingsCount"
+          :ratings-count="bookData.ratingsCount ? parseInt(bookData.ratingsCount) : 0"
         />
         <user-ratings
-          :isbn="isbn.toString()"
+          :isbn="
+            isbn.toString()"
         />
       </v-col>
       <v-col class="ma-0">
@@ -80,7 +81,7 @@
       </v-col>
     </v-row>
     <v-row
-      v-if="!isLoading && isValidISBN"
+      v-if="!isLoading && bookData !== null"
       class="pt-0 ma-0 align-center"
     >
       <about-book
@@ -113,8 +114,8 @@ export default {
   data: function () {
     return {
       bookData: '',
-      isValidISBN: '',
-      isbn: this.$route.params.isbn
+      isbn: this.$route.params.isbn,
+      isLoading: true,
     }
   },
   computed: {
@@ -123,17 +124,15 @@ export default {
     },
   },
   async mounted() {
-    if (this.validIsbn(this.isbn)) {
+    if (this.validateIsbn(this.isbn)) {
       await this.getBookData();
-      this.isValidISBN = this.bookData !== null;
     } else {
       this.bookData = null;
-      this.isValidISBN = false;
     }
     this.isLoading = false;
   },
   methods: {
-    validIsbn(isbn) {
+    validateIsbn(isbn) {
       return isbn.length === 10 || isbn.length === 13;
     },
     async getBookData() {
