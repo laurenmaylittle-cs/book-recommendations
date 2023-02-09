@@ -109,7 +109,9 @@ public class BookSearchService {
   }
 
   private boolean isResultValid(Book book, String title) {
-    return book.title().equalsIgnoreCase(title);
+    //when titles are not available, vue pass them as "undefined"
+    //this method can be called with no title (search by isbn from search)
+    return title.equals("undefined") || book.title().equalsIgnoreCase(title);
   }
 
 }

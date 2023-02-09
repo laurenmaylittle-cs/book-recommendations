@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import {EventBus} from "@/event-bus";
+
 export default {
   name: "SearchBar",
   props: {
@@ -52,15 +54,19 @@ export default {
   },
   methods: {
     loadSearch() {
-      if (this.selectedQueryFilter.value !== 'isbn') {
-        this.$router.push({
-          name: 'search',
-          params: {searchType: this.selectedQueryFilter.value, searchTerm: this.queryTerm}
-        }).catch(() => {
-        })
+      const routeName = this.selectedQueryFilter.value === 'isbn' ? 'book' : 'search';
+      const emitSearchEvent = () => {
+        EventBus.$emit('search-triggered', {
+          searchType: this.selectedQueryFilter.value,
+          searchTerm: this.queryTerm
+        });
+        this.queryTerm = '';
+      };
+
+      if (this.$route.name !== routeName) {
+        this.$router.push({name: routeName}).then(emitSearchEvent);
       } else {
-        this.$router.push({name: 'book', params: {isbn: this.queryTerm}}).catch(() => {
-        })
+        emitSearchEvent();
       }
     }
   }

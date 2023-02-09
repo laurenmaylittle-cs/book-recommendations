@@ -42,25 +42,25 @@
           >
             <h2 v-if="index === 0 && bookData.authors.length === 1">
               By
-              <router-link :to="{ name: 'search', params: {searchTerm: author}}">
+              <a @click="emitAuthorSearch(author)">
                 {{ author }}
-              </router-link>
+              </a>
             </h2>
             <h2 v-else-if="index === 0">
               By
-              <router-link :to="{ name: 'search', params: {searchTerm: author}}">
+              <a @click="emitAuthorSearch(author)">
                 {{ author }},
-              </router-link>
+              </a>
             </h2>
             <h2 v-else-if="index === bookData.authors.length -1">
-              <router-link :to="{ name: 'search', params: {searchTerm: author}}">
+              <a @click="emitAuthorSearch(author)">
                 {{ author }}
-              </router-link>
+              </a>
             </h2>
             <h2 v-else>
-              <router-link :to="{ name: 'search', params: {searchTerm: author}}">
+              <a @click="emitAuthorSearch(author)">
                 {{ author }},
-              </router-link>
+              </a>
             </h2>
           </div>
         </div>
@@ -100,7 +100,7 @@ import {getBookInfo} from "@/api/view-book";
 import AverageRatings from "@/components/viewbook/AverageRatings";
 import UserRatings from "@/components/viewbook/UserRatings";
 import AboutBook from "@/components/viewbook/AboutBook";
-import axios from "axios";
+import {EventBus} from "@/event-bus";
 
 export default {
   name: 'ViewBook',
@@ -130,9 +130,22 @@ export default {
     }
     this.isLoading = false;
   },
+  beforeDestroy() {
+    EventBus.$off('search-triggered')
+  },
   methods: {
     validateIsbn(isbn) {
       return isbn.length === 10 || isbn.length === 13;
+    },
+    emitAuthorSearch(author) {
+      const emitSearchEvent = () => {
+        EventBus.$emit('search-triggered', {
+          searchType: 'author',
+          searchTerm: author
+        });
+      };
+
+      this.$router.push({name: 'search'}).then(emitSearchEvent);
     },
     async getBookData() {
       this.bookData = await getBookInfo(this.isbn, this.$route.query.title,
