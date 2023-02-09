@@ -61,17 +61,23 @@
               </h2>
               <h2 v-else-if="index === 0">
                 By
-                <router-link :to="{ name: 'search', params: {searchTerm: author}}">
+                <router-link
+                  :to="{ name: 'search', params: {searchTerm: author, searchType: 'author'}}"
+                >
                   {{ author }},
                 </router-link>
               </h2>
               <h2 v-else-if="index === bookData.authors.length -1">
-                <router-link :to="{ name: 'search', params: {searchTerm: author}}">
+                <router-link
+                  :to="{ name: 'search', params: {searchTerm: author, searchType: 'author'}}"
+                >
                   {{ author }}
                 </router-link>
               </h2>
               <h2 v-else>
-                <router-link :to="{ name: 'search', params: {searchTerm: author}}">
+                <router-link
+                  :to="{ name: 'search', params: {searchTerm: author, searchType: 'author'}}"
+                >
                   {{ author }},
                 </router-link>
               </h2>
@@ -109,7 +115,7 @@
 
 <script>
 import ViewBookThumbnail from "@/components/viewbook/ViewBookThumbnail";
-import {getBookInfo, exportData} from "@/api/view-book";
+import {exportData, getBookInfo} from "@/api/view-book";
 import AverageRatings from "@/components/viewbook/AverageRatings";
 import UserRatings from "@/components/viewbook/UserRatings";
 import AboutBook from "@/components/viewbook/AboutBook";
