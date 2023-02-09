@@ -8,7 +8,10 @@
           class="ma-5"
           height="75px"
         >
-          <td width="10%">
+          <td
+            v-if="user.email !== $auth.user.email"
+            width="10%"
+          >
             <v-avatar
               v-if="user.picture !== null"
               size="50px"
@@ -30,7 +33,10 @@
               </v-icon>
             </v-avatar>
           </td>
-          <td width="70%">
+          <td
+            v-if="user.email !== $auth.user.email"
+            width="70%"
+          >
             {{ user.name }}
           </td>
         </tr>
@@ -52,6 +58,15 @@ export default {
         {text: '', value: 'name', sortable: false}
       ]
     }
+  },
+  mounted() {
+    this.userList.every(user => {
+      if (user.email === this.$auth.user.email) {
+        let index = this.userList.indexOf(user);
+        let newList = this.userList
+        newList.splice(index, 1)
+      }
+    })
   }
 }
 </script>
