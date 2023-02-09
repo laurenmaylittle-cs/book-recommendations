@@ -32,6 +32,10 @@
         indeterminate
       />
     </v-row>
+    <user-table
+      v-else-if="hasSearched && userList.length > 0 && $vuetify.breakpoint.xs"
+      :user-list="userList"
+    />
     <user-card
       v-for="user in userList"
       v-else-if="hasSearched && userList.length > 0"
@@ -49,11 +53,12 @@
 
 <script>
 import {getUsersSearch} from "@/api/find-friends";
+import UserTable from "@/components/findfriends/UserTable";
 import UserCard from "@/components/findfriends/UserCard";
 
 export default {
   name: "FindFriendsView",
-  components: {UserCard},
+  components: {UserCard, UserTable},
   data: () => ({
     searchParam: '',
     userList: [],
