@@ -53,7 +53,7 @@ export default {
     }
   },
   methods: {
-    loadSearch() {
+    async loadSearch() {
       const routeName = this.selectedQueryFilter.value === 'isbn' ? 'book' : 'search';
       const emitSearchEvent = () => {
         EventBus.$emit('search-triggered', {
@@ -64,7 +64,8 @@ export default {
       };
 
       if (this.$route.name !== routeName) {
-        this.$router.push({name: routeName}).then(emitSearchEvent);
+        await this.$router.push({name: routeName});
+        emitSearchEvent();
       } else {
         emitSearchEvent();
       }

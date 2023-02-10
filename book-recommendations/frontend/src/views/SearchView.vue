@@ -30,6 +30,7 @@
           :published-date="book.publishedDate"
           :thumbnail="book.imageLinks.thumbnail"
           :isbn="book.isbn"
+          :book-data="book"
         />
       </v-col>
     </v-row>

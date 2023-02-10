@@ -2,10 +2,7 @@
   <div>
     <v-card>
       <v-card-actions class="justify-center mb-0 pt-6">
-        <router-link
-          :to="{ name: 'book', params: {isbn:isbn}, query: {title: title, authors: authors}}"
-        >
-          <!-- TODO BES-66 redirect to view book page-->
+        <a @click="emitViewBook">
           <v-img
             class="rounded mb-0"
             :lazy-src="thumbnail"
@@ -13,7 +10,7 @@
             width="128px"
             :src="thumbnail"
           />
-        </router-link>
+        </a>
       </v-card-actions>
       <v-card-text class="mt-0">
         <div class="text-subtitle-2 text--primary mt-0">
@@ -28,6 +25,7 @@
 </template>
 
 <script>
+import {EventBus} from "@/event-bus";
 
 export default {
   name: 'BookDetails',
@@ -51,6 +49,10 @@ export default {
     isbn: {
       type: String,
       required: true
+    },
+    bookData: {
+      type: Object,
+      required: true
     }
   },
   computed: {
@@ -71,6 +73,10 @@ export default {
         return text.substring(0, maxCharacterCount) + '...'
       }
       return text
+    },
+    async emitViewBook() {
+      await this.$router.push({name: 'book'});
+      EventBus.$emit('view-book', this.bookData);
     }
   }
 }

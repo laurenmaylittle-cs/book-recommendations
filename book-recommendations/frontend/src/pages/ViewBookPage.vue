@@ -14,7 +14,7 @@
       />
     </v-row>
     <v-row
-      v-if="bookData === null"
+      v-if="bookData === null && !isLoading"
       class="pt-6"
     >
       <p>
@@ -112,8 +112,8 @@ export default {
   },
   data: function () {
     return {
-      bookData: '',
-      isbn: this.$route.params.isbn,
+      bookData: null,
+      isbn: "",
       isLoading: true,
     }
   },
@@ -122,42 +122,49 @@ export default {
       return "No results found for ISBN: " + this.isbn
     },
   },
-  async mounted() {
-    if (this.validateIsbn(this.isbn)) {
-      await this.getBookData();
-    } else {
-      this.bookData = null;
-    }
-    this.isLoading = false;
+  mounted() {
+    EventBus.$on('view-book', this.populateBookData);
+    EventBus.$on("view-book-home", this.getBookData);
   },
   beforeDestroy() {
-    EventBus.$off('search-triggered')
+    EventBus.$off(['search-triggered', 'view-book', 'view-book-home']);
   },
   methods: {
+    populateBookData(bookData) {
+      if (bookData) {
+        this.bookData = bookData;
+        this.isbn = bookData.isbn;
+      }
+
+      this.isLoading = false;
+    },
+    async getBookData(queryData) {
+      if (!this.validateIsbn(queryData.isbn)) {
+        this.bookData = null;
+        this.isLoading = false;
+        return;
+      }
+      this.bookData = await getBookInfo(queryData.isbn, queryData.title, queryData.authors);
+      this.isLoading = false;
+    },
     validateIsbn(isbn) {
       return isbn.length === 10 || isbn.length === 13;
     },
-    emitAuthorSearch(author) {
-      const emitSearchEvent = () => {
-        EventBus.$emit('search-triggered', {
-          searchType: 'author',
-          searchTerm: author
-        });
-      };
-
-      this.$router.push({name: 'search'}).then(emitSearchEvent);
-    },
-    async getBookData() {
-      this.bookData = await getBookInfo(this.isbn, this.$route.query.title,
-        this.$route.query.authors);
+    async emitAuthorSearch(author) {
+      await this.$router.push({name: 'search'});
+      EventBus.$emit('search-triggered', {
+        searchType: 'author',
+        searchTerm: author
+      });
     },
     concatDetails(details) {
-      if (details != null && details.length > 1) {
-        return details.join(', ');
-      } else if (details != null) {
-        return details.toString();
+      if (!details) {
+        return null;
       }
-      return null;
+      if (details.length > 1) {
+        return details.join(', ');
+      }
+      return details.toString();
     }
   }
 }

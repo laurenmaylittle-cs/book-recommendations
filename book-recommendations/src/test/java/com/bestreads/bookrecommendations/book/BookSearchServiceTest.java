@@ -2,6 +2,9 @@ package com.bestreads.bookrecommendations.book;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -13,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -199,4 +203,19 @@ class BookSearchServiceTest {
     }
   }
 
+  @Test
+  @DisplayName("Should return a book when called without a title - search by isbn")
+  void getBookData_withValidISBNAndNoTitle() {
+    String isbn = "9780735211292";
+    String title = "undefined";
+    String authors = "undefined";
+    HttpResponse<String> httpResponse = mock(HttpResponse.class);
+    when(googleBooksService.searchVolumeByIsbn(anyString(), anyInt(), anyInt()))
+        .thenReturn(httpResponse);
+    when(httpResponseToBook.extractFromHttpResponse(any())).thenReturn(List.of(book));
+
+    Book result = bookSearchService.getBookData(isbn, title, authors);
+
+    assertEquals(book, result);
+  }
 }

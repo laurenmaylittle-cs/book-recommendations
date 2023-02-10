@@ -1,10 +1,6 @@
 <template>
   <v-col>
-    <router-link
-      :to="{ name: 'book', params: {isbn:isbn},
-             query: {title: bookTitle, image: bookImageLink, authors: authors}}"
-      style="text-decoration: none"
-    >
+    <a @click="emitViewBook">
       <v-hover v-slot="{ hover }">
         <v-sheet
           :color="getHoverEffect(hover)"
@@ -23,12 +19,13 @@
           </div>
         </v-sheet>
       </v-hover>
-    </router-link>
+    </a>
   </v-col>
 </template>
 
 <script>
 import {titleCase} from "title-case";
+import {EventBus} from "@/event-bus";
 
 export default {
   name: "BookItem",
@@ -60,6 +57,14 @@ export default {
     getHoverEffect(hover) {
       return hover ? "blue-grey lighten-4" : "transparent";
     },
+    async emitViewBook() {
+      await this.$router.push({name: 'book'});
+      EventBus.$emit('view-book-home', {
+        isbn: this.isbn,
+        title: this.bookTitle,
+        authors: this.authors,
+      })
+    }
   }
 }
 </script>
