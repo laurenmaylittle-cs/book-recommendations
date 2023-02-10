@@ -124,7 +124,7 @@ export default {
   },
   mounted() {
     EventBus.$on('view-book', this.populateBookData);
-    EventBus.$on("view-book-home", this.getBookData);
+    EventBus.$on(['view-book-home', 'search-triggered'], this.getBookData);
   },
   beforeDestroy() {
     EventBus.$off(['search-triggered', 'view-book', 'view-book-home']);
@@ -139,12 +139,13 @@ export default {
       this.isLoading = false;
     },
     async getBookData(queryData) {
-      if (!this.validateIsbn(queryData.isbn)) {
+      this.isbn = queryData.isbn || queryData.searchTerm; //when coming from SearchBar isbn is added to searchTerm property
+      if (!this.validateIsbn(this.isbn)) {
         this.bookData = null;
         this.isLoading = false;
         return;
       }
-      this.bookData = await getBookInfo(queryData.isbn, queryData.title, queryData.authors);
+      this.bookData = await getBookInfo(this.isbn, queryData.title, queryData.authors);
       this.isLoading = false;
     },
     validateIsbn(isbn) {
