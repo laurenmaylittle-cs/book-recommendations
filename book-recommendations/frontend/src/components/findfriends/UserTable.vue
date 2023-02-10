@@ -39,6 +39,11 @@
           >
             {{ user.name }}
           </td>
+          <td>
+            <v-btn color="primary">
+              Follow
+            </v-btn>
+          </td>
         </tr>
       </tbody>
     </v-simple-table>
