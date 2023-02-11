@@ -99,10 +99,10 @@ export default {
       return `There are no results for ${this.searchTerm}`
     },
   },
-  mounted() {
+  activated() {
     EventBus.$on('search-triggered', this.performSearch);
   },
-  beforeDestroy() {
+  deactivated() {
     EventBus.$off('search-triggered')
   },
   methods: {

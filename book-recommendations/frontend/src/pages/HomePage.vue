@@ -13,6 +13,7 @@
     </v-row>
     <best-seller-filter
       v-if="!isLoading"
+      ref="bestSellerFilter"
       :best-seller-categories="categories"
       @change="updateBestSellerList"
     />
@@ -29,6 +30,7 @@
 import BookCategoryCarousel from "@/components/home/BookCategoryCarousel";
 import {getBestSellers} from "@/api/home-page-api-calls";
 import BestSellerFilter from "@/components/home/BestSellerFilter";
+import {EventBus} from "@/event-bus";
 
 export default {
   name: "HomePage",
@@ -46,15 +48,28 @@ export default {
       return this.categories.filter(category => this.selectedCategories.includes(category.list_id));
     },
   },
+  activated() {
+    EventBus.$on("refresh-homepage", () => {
+      this.$refs.bestSellerFilter.reset();
+      this.setUpBestSellers();
+    });
+  },
+  deactivated() {
+    EventBus.$off("refresh-homepage");
+  },
   async mounted() {
-    this.categories = await getBestSellers();
-    this.categories.sort((a, b) => a.list_name.localeCompare(b.list_name));
-    this.isLoading = false;
+    await this.setUpBestSellers();
   },
   methods: {
     updateBestSellerList(selectedCategories) {
       this.selectedCategories = selectedCategories;
-    }
+    },
+    async setUpBestSellers() {
+      this.selectedCategories = [];
+      this.categories = await getBestSellers();
+      this.categories.sort((a, b) => a.list_name.localeCompare(b.list_name));
+      this.isLoading = false;
+    },
   }
 }
 </script>

@@ -6,25 +6,28 @@
   >
     <div class="d-flex align-center">
       <v-hover v-slot="{ hover }">
-        <router-link
-          to="/home"
-          tag="v-btn"
+        <v-btn
           text
-          :style="{ ...getHoverEffect(hover) , boxShadow: 'none' }"
+          :style="{ ...getHoverEffect(hover), boxShadow: 'none' }"
+          @click="redirectToHomePage"
         >
           <v-icon>mdi-book-open-page-variant</v-icon>
           <span class="mr-2">{{ serviceName }}</span>
-        </router-link>
+        </v-btn>
       </v-hover>
     </div>
     <search-bar :search-term="searchTerm" />
     <v-spacer />
     <router-link
       to="/bookshelf"
-      tag="v-btn"
+      custom
       :style="{ ...getHoverEffect(), boxShadow: 'none'}"
     >
-      <v-icon>mdi-bookshelf</v-icon>
+      <template #default="{ navigate }">
+        <v-btn @click="navigate">
+          <v-icon>mdi-bookshelf</v-icon>
+        </v-btn>
+      </template>
     </router-link>
     <!-- TODO BES-36 do proper implementation of profile link, just placeholder to demo AuthGuard page
     authentication-->
@@ -69,6 +72,7 @@
 
 <script>
 import SearchBar from '@/components/search/SearchBar'
+import {EventBus} from "@/event-bus";
 
 export default {
   name: 'NavBar',
@@ -88,10 +92,16 @@ export default {
     getHoverEffect(hover) {
       return {'background-color': hover ? 'white' : '#46648c', 'color': hover ? '#46648c' : 'white'}
     },
+    async redirectToHomePage() {
+      if (this.$router.currentRoute.name === 'homePage') {
+        EventBus.$emit('refresh-homepage');
+      } else {
+        await this.$router.push({name: 'homePage'})
+      }
+    },
     login() {
       this.$auth.loginWithRedirect();
     },
-    // Log the user out
     logout() {
       this.$auth.logout({
         returnTo: window.location.origin

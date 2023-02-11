@@ -1,7 +1,10 @@
 <template>
   <v-col>
     <a @click="emitViewBook">
-      <v-hover v-slot="{ hover }">
+      <v-hover
+        v-slot="{ hover }"
+        ref="hoverEffectRef"
+      >
         <v-sheet
           :color="getHoverEffect(hover)"
           class="d-flex flex-column align-center justify-center"
@@ -50,6 +53,10 @@ export default {
       required: true
     }
   },
+  deactivated() {
+    //clear the hover effect when navigating away from the page
+    this.$refs.hoverEffectRef._data.isActive = false;
+  },
   methods: {
     getUpdatedTitle(title) {
       return titleCase(title.toLowerCase());
@@ -58,7 +65,7 @@ export default {
       return hover ? "blue-grey lighten-4" : "transparent";
     },
     async emitViewBook() {
-      await this.$router.push({name: 'book'});
+      await this.$router.push({name: 'book', params: {isbn: this.isbn}});
       EventBus.$emit('view-book-home', {
         isbn: this.isbn,
         title: this.bookTitle,

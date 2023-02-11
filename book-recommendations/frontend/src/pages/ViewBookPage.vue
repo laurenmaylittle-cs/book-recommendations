@@ -115,6 +115,8 @@ export default {
       bookData: null,
       isbn: "",
       isLoading: true,
+      previousBookData: null,
+      viewBookEmitted: false,
     }
   },
   computed: {
@@ -122,15 +124,27 @@ export default {
       return "No results found for ISBN: " + this.isbn
     },
   },
-  mounted() {
+  async activated() {
     EventBus.$on('view-book', this.populateBookData);
     EventBus.$on(['view-book-home', 'search-triggered'], this.getBookData);
+
+    await this.$nextTick();
+
+    if (this.viewBookEmitted === false) {
+      this.bookData = this.previousBookData;
+      this.isLoading = false;
+    }
   },
-  beforeDestroy() {
+  deactivated() {
+    this.previousBookData = this.bookData;
+    this.bookData = null;
+    this.isLoading = true;
+    this.viewBookEmitted = false;
     EventBus.$off(['search-triggered', 'view-book', 'view-book-home']);
   },
   methods: {
     populateBookData(bookData) {
+      this.viewBookEmitted = true;
       if (bookData) {
         this.bookData = bookData;
         this.isbn = bookData.isbn;
@@ -139,14 +153,19 @@ export default {
       this.isLoading = false;
     },
     async getBookData(queryData) {
-      this.isbn = queryData.isbn || queryData.searchTerm; //when coming from SearchBar isbn is added to searchTerm property
+      this.viewBookEmitted = true;
+      this.isbn = queryData.isbn || queryData.searchTerm; //when coming from SearchBar, isbn is added to searchTerm property
       if (!this.validateIsbn(this.isbn)) {
         this.bookData = null;
         this.isLoading = false;
         return;
       }
-      this.bookData = await getBookInfo(this.isbn, queryData.title, queryData.authors);
-      this.isLoading = false;
+      try {
+        this.bookData = await getBookInfo(this.isbn, queryData.title, queryData.authors);
+        this.isLoading = false;
+      } catch (error) {
+        this.isLoading = false;
+      }
     },
     validateIsbn(isbn) {
       return isbn.length === 10 || isbn.length === 13;

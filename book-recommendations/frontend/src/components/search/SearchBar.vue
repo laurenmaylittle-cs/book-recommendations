@@ -56,10 +56,9 @@ export default {
     async loadSearch() {
       const routeName = this.selectedQueryFilter.value === 'isbn' ? 'book' : 'search';
       const emitSearchEvent = () => {
-        let searchTerm = this.queryTerm;
         // Remove hyphens and spaces from ISBN
         if (this.selectedQueryFilter.value === 'isbn') {
-          searchTerm = searchTerm.replace(/[-\s]+/g, "");
+          this.queryTerm.replace(/[-\s]+/g, "");
         }
         EventBus.$emit('search-triggered', {
           searchType: this.selectedQueryFilter.value,
