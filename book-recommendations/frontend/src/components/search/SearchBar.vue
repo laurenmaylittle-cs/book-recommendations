@@ -61,9 +61,9 @@ export default {
     queryTerm: "",
     selectedQueryFilter: {displayText: 'Title', value: 'title'},
     queryFilters: [
-      {displayText: 'ISBN', value: 'isbn'},
+      {displayText: 'Title', value: 'title'},
       {displayText: 'Author', value: 'author'},
-      {displayText: 'Title', value: 'title'}
+      {displayText: 'ISBN', value: 'isbn'},
     ],
   }),
   computed: {
