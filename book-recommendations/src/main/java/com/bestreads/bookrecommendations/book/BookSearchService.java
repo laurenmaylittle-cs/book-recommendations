@@ -53,24 +53,6 @@ public class BookSearchService {
     return httpResponseToBook.extractFromHttpResponse(httpResponse);
   }
 
-  public List<Book> searchByIsbn(String searchTerm, int maxResults) {
-    return searchByIsbn(searchTerm, 0, maxResults);
-  }
-
-  public List<Book> searchByIsbn(String searchTerm, int startIndex, int maxResults) {
-    if (maxResults < 0 || maxResults > 40) {
-      throw new IllegalArgumentException("maxResults should be between 0 and 40");
-    }
-
-    HttpResponse<String> httpResponse = googleBooksService.searchVolumeByIsbn(
-        SearchTermUtils.encodeURLTerm(searchTerm),
-        startIndex,
-        maxResults
-    );
-
-    return httpResponseToBook.extractFromHttpResponse(httpResponse);
-  }
-
   /**
    * Makes a request to Google Books API to get the book data for the given ISBN. If no book is
    * found, it makes a request to search by title and author. If no book is found, it throws an
