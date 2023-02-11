@@ -4,7 +4,7 @@
     color="#46648c"
     dark
   >
-    <div class="d-flex align-center">
+    <div class="d-flex align-center ma-0">
       <v-hover v-slot="{ hover }">
         <v-btn
           text
@@ -12,10 +12,11 @@
           @click="redirectToHomePage"
         >
           <v-icon>mdi-book-open-page-variant</v-icon>
-          <span class="mr-2">{{ serviceName }}</span>
+          {{ serviceName }}
         </v-btn>
       </v-hover>
     </div>
+    <v-spacer />
     <search-bar :search-term="searchTerm" />
     <v-spacer />
     <router-link

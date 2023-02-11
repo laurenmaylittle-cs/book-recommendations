@@ -7,26 +7,26 @@
       <v-row>
         <v-col
           v-if="category"
-          cols="3"
+          :cols="getNumberOfColumns"
         >
           <p>
             Genre:
           </p>
         </v-col>
-        <v-col cols="3">
+        <v-col :cols="getNumberOfColumns">
           <p v-if="category">
             {{ categories }}
           </p>
         </v-col>
         <v-col
           v-if="publisher"
-          cols="3"
+          :cols="getNumberOfColumns"
         >
           <p>
             Publisher:
           </p>
         </v-col>
-        <v-col cols="3">
+        <v-col :cols="getNumberOfColumns">
           <p v-if="publisher">
             {{ publisher }}
           </p>
@@ -35,26 +35,26 @@
       <v-row class="mt-0">
         <v-col
           v-if="publishedDate"
-          cols="3"
+          :cols="getNumberOfColumns"
         >
           <p>
             Published date:
           </p>
         </v-col>
-        <v-col cols="3">
+        <v-col :cols="getNumberOfColumns">
           <p v-if="publishedDate">
             {{ formatDate() }}
           </p>
         </v-col>
         <v-col
           v-if="pages"
-          cols="3"
+          :cols="getNumberOfColumns"
         >
           <p>
             Number of pages:
           </p>
         </v-col>
-        <v-col cols="3">
+        <v-col :cols="getNumberOfColumns">
           <p v-if="pages">
             {{ pages }}
           </p>
@@ -69,7 +69,7 @@
         </p>
         <v-layout justify-center>
           <v-card-actions
-            v-if="originalDescription"
+            v-if="originalDescription && originalDescription.length > 400"
             class="mb-5"
           >
             <v-btn
@@ -107,6 +107,14 @@ export default {
     description: '',
     isShortDescription: true
   }),
+  computed: {
+    getNumberOfColumns() {
+      if (this.$vuetify.breakpoint.xs) {
+        return 6;
+      }
+      return 3;
+    },
+  },
   mounted() {
     this.categories = this.category
     this.date = this.publishedDate

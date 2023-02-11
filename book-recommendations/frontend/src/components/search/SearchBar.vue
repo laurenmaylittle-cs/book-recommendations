@@ -1,22 +1,44 @@
 <template>
   <div class="div_center d-flex align-center">
-    <v-select
-      v-model="selectedQueryFilter"
-      class="ml-3"
-      style="width: 90px"
-      :items="queryFilters"
-      item-text="displayText"
-      item-value="value"
-      return-object
-      single-line
-    />
-    <v-text-field
-      v-model="queryTerm"
-      :label="getSearchTypeDescription"
-      clearable
-      type="String"
-      @keyup.enter="loadSearch(queryTerm)"
-    />
+    <v-menu
+      left
+      bottom
+    >
+      <template #activator="{ on, attrs }">
+        <v-btn
+          icon
+          v-bind="attrs"
+          v-on="on"
+        >
+          <v-icon>
+            mdi-filter-menu-outline
+          </v-icon>
+        </v-btn>
+      </template>
+      <v-list>
+        <v-list-item @click="updateSearchBar('title')">
+          Title
+        </v-list-item>
+        <v-list-item @click="updateSearchBar('author')">
+          Author
+        </v-list-item>
+        <v-list-item @click="updateSearchBar('isbn')">
+          ISBN
+        </v-list-item>
+      </v-list>
+    </v-menu>
+    <v-col
+      :cols="numberOfColsToTake"
+      class="pa-0"
+    >
+      <v-text-field
+        v-model="queryTerm"
+        :label="getSearchTypeDescription"
+        clearable
+        type="String"
+        @keyup.enter="loadSearch(queryTerm)"
+      />
+    </v-col>
     <v-btn
       text
       :style="{ 'background-color': '#46648c', 'color': 'white' }"
@@ -42,14 +64,20 @@ export default {
     queryTerm: "",
     selectedQueryFilter: {displayText: 'Title', value: 'title'},
     queryFilters: [
-      {displayText: 'Title', value: 'title'},
+      {displayText: 'ISBN', value: 'isbn'},
       {displayText: 'Author', value: 'author'},
-      {displayText: 'ISBN', value: 'isbn'}
+      {displayText: 'Title', value: 'title'}
     ],
   }),
   computed: {
     getSearchTypeDescription() {
       return `Search by ${this.selectedQueryFilter.displayText}`;
+    },
+    numberOfColsToTake() {
+      if (this.$vuetify.breakpoint.xs) {
+        return 6;
+      }
+      return 9;
     }
   },
   methods: {
@@ -76,6 +104,7 @@ export default {
   }
 }
 </script>
+
 <style scoped>
 .div_center {
   display: table;

@@ -54,14 +54,14 @@ export default {
     numberOfBooksToDisplay() {
       if (this.$vuetify.breakpoint.xl) {
         return 5;
-      }
-      if (this.$vuetify.breakpoint.lg) {
+      } else if (this.$vuetify.breakpoint.lg) {
         return 4;
-      }
-      if (this.$vuetify.breakpoint.md) {
+      } else if (this.$vuetify.breakpoint.md) {
         return 3;
+      } else if (this.$vuetify.breakpoint.sm) {
+        return 2
       }
-      return 2;
+      return 1;
     }
   }
 }

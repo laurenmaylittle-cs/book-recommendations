@@ -11,6 +11,18 @@
       </v-btn>
     </v-row>
     <v-row>
+      <v-btn
+        @click="getBooksCSV"
+      >
+        Download Books CSV
+      </v-btn>
+      <v-btn
+        @click="getInteractionsCSV"
+      >
+        Download Interactions CSV
+      </v-btn>
+    </v-row>
+    <v-row>
       <v-col cols="3">
         <v-avatar
           size="100px"
@@ -58,6 +70,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 
 export default {
   name: 'ProfileView',
@@ -73,6 +86,37 @@ export default {
       this.$auth.logout({
         returnTo: window.location.origin
       });
+    },
+    async getBooksCSV() {
+      const result = await axios.get("/api/private/book-data/books", {
+        headers: {
+          Authorization: `Bearer ${await this.$auth.getTokenSilently()}`
+        },
+      })
+
+      //create an <a> tag and click it to download the file
+      const file = new Blob([result.data], {type: 'text/csv'});
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(file);
+      link.download = 'books.csv';
+
+      document.body.appendChild(link);
+      link.click();
+    },
+    async getInteractionsCSV() {
+      const result = await axios.get("/api/private/book-data/interactions", {
+        headers: {
+          Authorization: `Bearer ${await this.$auth.getTokenSilently()}`
+        },
+      })
+
+      const file = new Blob([result.data], {type: 'text/csv'});
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(file);
+      link.download = 'interactions.csv';
+
+      document.body.appendChild(link);
+      link.click();
     }
   }
 }

@@ -50,8 +50,8 @@ public class BookSearchService {
         maxResults
     );
 
-    return httpResponseToBook.extractFromHttpResponse(httpResponse);
-  }
+        return httpResponseToBook.extractFromHttpResponse(httpResponse);
+    }
 
   /**
    * Makes a request to Google Books API to get the book data for the given ISBN. If no book is

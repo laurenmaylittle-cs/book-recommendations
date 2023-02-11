@@ -22,7 +22,7 @@
     <v-row no-gutters>
       <v-col
         v-for="book in searchResults"
-        :key="book.id"
+        :key="book.isbn"
       >
         <book-details
           :authors="checkForMultipleAuthors(book.authors)"
