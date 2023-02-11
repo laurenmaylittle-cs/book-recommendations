@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -16,21 +17,39 @@ import java.util.List;
 @RequestMapping("/api/private/bookshelf/singleBookshelf")
 public class SingleCollectionController {
     private final CollectionsRepository collectionsRepository;
+    private final CollectionsService collectionsService;
 
     @Autowired
-    public SingleCollectionController(CollectionsRepository collectionsRepository) {
+    public SingleCollectionController(CollectionsRepository collectionsRepository, CollectionsService collectionsService) {
         this.collectionsRepository = collectionsRepository;
+        this.collectionsService = collectionsService;
     }
 
     @GetMapping
     public List<BookDAO> getBooksInCollection(JwtAuthenticationToken authenticationToken,
                                               @Param("bookshelfId") Long bookshelfId) {
-        var userId = AuthUtils.getUserId(authenticationToken).orElseThrow(() -> {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user ID found in token");
-        });
+        var userId = getUserIdOrBadRequest(authenticationToken);
 
         return collectionsRepository.findByIdAndUserId(bookshelfId, userId).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No collection found");
         }).getBookDAOS().stream().toList();
+    }
+
+    @PostMapping
+    public void deleteBookInCollection(JwtAuthenticationToken authenticationToken,
+                                       @Param("bookshelfId") Long bookshelfId,
+                                       @Param("bookIds") List<Long> bookIds) {
+        var userId = getUserIdOrBadRequest(authenticationToken);
+        if (!collectionsService.collectionBelongsToUser(userId, bookshelfId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No collection for user found");
+        }
+
+        collectionsService.deleteBooksFromCollection(bookshelfId, bookIds);
+    }
+
+    private String getUserIdOrBadRequest(JwtAuthenticationToken authenticationToken) {
+        return AuthUtils.getUserId(authenticationToken).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user ID found in token");
+        });
     }
 }

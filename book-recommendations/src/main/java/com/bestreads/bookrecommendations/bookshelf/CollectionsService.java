@@ -1,12 +1,14 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
-import java.util.Comparator;
-import java.util.LinkedHashSet;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 class CollectionsService {
@@ -37,4 +39,19 @@ class CollectionsService {
     return collectionsRepository.save(collection);
   }
 
+  boolean collectionBelongsToUser(String userId, Long collectionId) {
+    return collectionsRepository.findByIdAndUserId(collectionId, userId).isPresent();
+  }
+
+  @Transactional
+  void deleteBooksFromCollection(Long bookshelfId, List<Long> bookIds) {
+    var collection = collectionsRepository.findById(bookshelfId)
+            .orElseThrow(() -> new IllegalArgumentException("No bookshelf with such ID"));
+    var remainingBooks = collection.getBookDAOS()
+            .stream()
+            .filter(bookDAO -> !bookIds.contains(bookDAO.getId()))
+            .collect(Collectors.toSet());
+    collection.setBookDaos(remainingBooks);
+    collectionsRepository.save(collection);
+  }
 }

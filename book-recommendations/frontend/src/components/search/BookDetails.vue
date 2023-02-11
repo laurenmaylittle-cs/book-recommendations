@@ -1,11 +1,13 @@
 <template>
   <div>
-    <v-card>
+    <v-card
+      :class="{ 'selected': selected }"
+      @click="changeSelected"
+    >
       <v-card-actions class="justify-center mb-0 pt-6">
         <router-link
           :to="{ name: 'book', params: {isbn:isbn}}"
         >
-          <!-- TODO BES-66 redirect to view book page-->
           <v-img
             class="rounded mb-0"
             :lazy-src="thumbnail"
@@ -51,7 +53,17 @@ export default {
     isbn: {
       type: String,
       required: true
+    },
+    selectable: {
+      type: Boolean,
+      required: false,
+      default: false
     }
+  },
+  data() {
+    return {
+      selected: false,
+    };
   },
   computed: {
     getTruncatedAuthor() {
@@ -71,6 +83,11 @@ export default {
         return text.substring(0, maxCharacterCount) + '...'
       }
       return text
+    },
+    changeSelected() {
+      if (this.selectable) {
+        this.selected = !this.selected;
+      }
     }
   }
 }
@@ -87,5 +104,9 @@ div {
 /deep/ .v-card {
   width: 250px;
   height: 350px;
+}
+.selected {
+  /* !important to make sure that style take precedence and is not override by scoped styles */
+  background-color: Khaki !important;
 }
 </style>
