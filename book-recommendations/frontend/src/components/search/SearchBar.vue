@@ -58,7 +58,7 @@ export default {
       const emitSearchEvent = () => {
         // Remove hyphens and spaces from ISBN
         if (this.selectedQueryFilter.value === 'isbn') {
-          this.queryTerm.replace(/[-\s]+/g, "");
+          this.queryTerm = this.queryTerm.replace(/[-\s]+/g, "");
         }
         EventBus.$emit('search-triggered', {
           searchType: this.selectedQueryFilter.value,

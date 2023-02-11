@@ -111,7 +111,8 @@ public class BookSearchService {
   private boolean isResultValid(Book book, String title) {
     //when titles are not available, vue pass them as "undefined"
     //this method can be called with no title (search by isbn from search)
-    return title.equals("undefined") || book.title().equalsIgnoreCase(title);
+    //partial match done as the results from google books api often have extra words (Graphic Books and Manga category)
+    return title.equals("undefined") || book.title().toLowerCase().contains(title.toLowerCase());
   }
 
 }

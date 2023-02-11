@@ -93,11 +93,11 @@ export default {
       return {'background-color': hover ? 'white' : '#46648c', 'color': hover ? '#46648c' : 'white'}
     },
     async redirectToHomePage() {
-      if (this.$router.currentRoute.name === 'homePage') {
-        EventBus.$emit('refresh-homepage');
-      } else {
-        await this.$router.push({name: 'homePage'})
+      const isOnHomePage = this.$router.currentRoute.name === 'homePage';
+      if (!isOnHomePage) {
+        await this.$router.push({name: 'homePage'});
       }
+      EventBus.$emit('refresh-homepage');
     },
     login() {
       this.$auth.loginWithRedirect();
