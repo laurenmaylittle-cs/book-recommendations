@@ -15,15 +15,12 @@
           </v-icon>
         </v-btn>
       </template>
-      <v-list>
-        <v-list-item @click="updateSearchBar('title')">
-          Title
-        </v-list-item>
-        <v-list-item @click="updateSearchBar('author')">
-          Author
-        </v-list-item>
-        <v-list-item @click="updateSearchBar('isbn')">
-          ISBN
+      <v-list
+        v-for="filter in queryFilters"
+        :key="filter.value"
+      >
+        <v-list-item @click="selectedQueryFilter = filter">
+          {{ filter.displayText }}
         </v-list-item>
       </v-list>
     </v-menu>
