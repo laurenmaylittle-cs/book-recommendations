@@ -125,6 +125,9 @@ export default {
     },
   },
   async activated() {
+    //view-book - from search results
+    //view-book-home - from home page
+    //search-triggered - search by isbn
     EventBus.$on('view-book', this.populateBookData);
     EventBus.$on(['view-book-home', 'search-triggered'], this.getBookData);
 
@@ -153,6 +156,7 @@ export default {
       this.isLoading = false;
     },
     async getBookData(queryData) {
+      this.isLoading = true;
       this.viewBookEmitted = true;
       this.isbn = queryData.isbn || queryData.searchTerm; //when coming from SearchBar, isbn is added to searchTerm property
       if (!this.validateIsbn(this.isbn)) {

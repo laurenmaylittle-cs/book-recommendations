@@ -50,8 +50,8 @@ public class BookSearchService {
         maxResults
     );
 
-        return httpResponseToBook.extractFromHttpResponse(httpResponse);
-    }
+    return httpResponseToBook.extractFromHttpResponse(httpResponse);
+  }
 
   /**
    * Makes a request to Google Books API to get the book data for the given ISBN. If no book is
@@ -73,6 +73,12 @@ public class BookSearchService {
   }
 
   private Book searchByTitleAndAuthor(String title, String authors) {
+    //when doing an ISBN search, vue pass the title and authors as "undefined"
+    if (title.equals("undefined") && authors.equals("undefined")) {
+      throw new IllegalArgumentException(
+          "No book found with title: %s and author: %s".formatted(title, authors));
+    }
+
     List<Book> books = getBooksFromResponse(googleBooksService.searchVolumeByTitleAndAuthors(
         SearchTermUtils.encodeURLTerm(title),
         SearchTermUtils.encodeURLTerm(authors)
@@ -82,6 +88,7 @@ public class BookSearchService {
       throw new IllegalArgumentException(
           "No book found with title: %s and author: %s".formatted(title, authors));
     }
+
     return books.get(0);
   }
 
