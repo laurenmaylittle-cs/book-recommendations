@@ -10,10 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/private/bookshelf/singleBookshelf")
 public class SingleCollectionController {
-
     private final CollectionsRepository collectionsRepository;
 
     @Autowired
@@ -22,21 +23,14 @@ public class SingleCollectionController {
     }
 
     @GetMapping
-    public SingleCollection getBooksInCollection(JwtAuthenticationToken authenticationToken,
-        @Param("bookshelfId") Long bookshelfId) {
+    public List<BookDAO> getBooksInCollection(JwtAuthenticationToken authenticationToken,
+                                              @Param("bookshelfId") Long bookshelfId) {
         var userId = AuthUtils.getUserId(authenticationToken).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user ID found in token");
         });
 
-        var collectionDetails = collectionsRepository.findByIdAndUserId(bookshelfId, userId)
-            .orElseThrow(() -> {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No collection found");
-            });
-        var booksInCollection = collectionDetails.getBookDAOS()
-            .stream()
-            .toList();
-        var collectionName = collectionDetails.getName();
-
-        return new SingleCollection(collectionName, booksInCollection);
+        return collectionsRepository.findByIdAndUserId(bookshelfId, userId).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No collection found");
+        }).getBookDAOS().stream().toList();
     }
 }
