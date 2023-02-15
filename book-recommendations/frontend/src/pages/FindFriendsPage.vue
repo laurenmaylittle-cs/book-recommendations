@@ -55,7 +55,7 @@ import {followUser, getUsersSearch, unfollowUser} from "@/api/find-friends";
 import UserCard from "@/components/UserCard";
 
 export default {
-  name: "FindFriendsView",
+  name: "FindFriendsPage",
   components: {UserCard},
   data: () => ({
     searchParam: '',
@@ -68,7 +68,7 @@ export default {
     async loadSearch() {
       this.isLoading = true;
       this.hasSearched = true;
-      let token = await this.$auth.getTokenSilently()
+      const token = await this.$auth.getTokenSilently()
       this.userList = await getUsersSearch(this.searchParam, token)
       this.isLoading = false;
       this.isAFollowerOfUser = false

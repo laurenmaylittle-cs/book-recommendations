@@ -141,7 +141,7 @@ public class Auth0Service {
 
   private String getAuthToken() {
     try {
-      var httpResponse = Unirest.post("https://bestreads.eu.auth0.com/oauth/token")
+      var httpResponse = Unirest.post("%s/oauth/token".formatted(authAudience))
           .header("content-type", "application/json")
           .body("""
                   {

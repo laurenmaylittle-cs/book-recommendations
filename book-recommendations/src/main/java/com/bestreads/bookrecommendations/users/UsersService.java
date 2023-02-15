@@ -3,6 +3,7 @@ package com.bestreads.bookrecommendations.users;
 import com.bestreads.bookrecommendations.auth0.Auth0Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UsersService {
@@ -17,6 +18,7 @@ public class UsersService {
     this.auth0Service = auth0Service;
   }
 
+  @Transactional
   void unfollowUser(String currentUser, String userToUnfollow) {
     var allPeopleThatUserIsFollowing = followersFollowingRepository.findAllByFollowerEmail(
         currentUser);
@@ -28,6 +30,7 @@ public class UsersService {
     });
   }
 
+  @Transactional
   void followUser(String currentUserEmail, String emailToFollow) {
     var followersFollowing = new FollowersFollowing();
 
@@ -41,8 +44,6 @@ public class UsersService {
     var allFollowers = followersFollowingRepository.findAllByFollowingEmail(currentUserEmail);
     var allPeopleThatUserIsFollowing = followersFollowingRepository.findAllByFollowerEmail(
         currentUserEmail);
-    var numberOfFollowers = allFollowers.size();
-    var numberOfFollowing = allPeopleThatUserIsFollowing.size();
 
     var followersEmails = allFollowers.stream()
         .map(FollowersFollowing::getFollowerEmail)
@@ -52,8 +53,10 @@ public class UsersService {
         .map(FollowersFollowing::getFollowingEmail)
         .toList();
 
-    return new FollowersFollowingDetails(numberOfFollowers,
-        auth0Service.searchByMultipleEmails(followersEmails), numberOfFollowing,
-        auth0Service.searchByMultipleEmails(followingEmails));
+    var followers = auth0Service.searchByMultipleEmails(followersEmails);
+    var following = auth0Service.searchByMultipleEmails(followingEmails);
+
+    return new FollowersFollowingDetails(allFollowers.size(), followers,
+        allPeopleThatUserIsFollowing.size(), following);
   }
 }

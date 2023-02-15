@@ -86,10 +86,7 @@ export default {
   },
   methods: {
     formatTitle() {
-      if (this.followerFollowingDetails.totalFollowers === 1) {
-        return "Follower"
-      }
-      return "Followers"
+      return this.followerFollowingDetails.totalFollowers === 1 ? "Follower" : "Followers"
     },
     logout() {
       this.$auth.logout({
