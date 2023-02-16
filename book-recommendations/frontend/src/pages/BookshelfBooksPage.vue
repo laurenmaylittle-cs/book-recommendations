@@ -1,18 +1,13 @@
 <template>
   <v-container>
-    <v-row
+    <v-btn
       v-if="isAnyBookSelected"
+      color="#DC143C"
+      class="ma-7 white--text"
+      @click="deleteBooks"
     >
-      <v-col>
-        <v-btn
-          color="error"
-          class="pe2"
-          @click="deleteBooks"
-        >
-          Delete from bookshelf
-        </v-btn>
-      </v-col>
-    </v-row>
+      Delete from bookshelf
+    </v-btn>
     <v-row
       v-if="isLoading"
       class="justify-center pt-10"
@@ -95,9 +90,11 @@ export default {
       this.isAnyBookSelected = this.booksSelected.length > 0;
     },
     async deleteBooks() {
-      const deleteBooksParams = new URLSearchParams({bookshelfId: this.collectionId, bookIds: this.booksSelected})
-      await deleteBooksInCollection(deleteBooksParams,
-        await this.$auth.getTokenSilently())
+      const deleteBooksParams = new URLSearchParams({bookshelfId: this.collectionId, bookIds: this.booksSelected});
+      await deleteBooksInCollection(deleteBooksParams, await this.$auth.getTokenSilently());
+      this.booksSelected = []
+      this.checkIfBooksSelected();
+      await this.getBooksInCollection();
     }
   }
 }
