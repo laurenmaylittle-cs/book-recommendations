@@ -95,9 +95,9 @@ export default {
       this.isAnyBookSelected = this.booksSelected.length > 0;
     },
     async deleteBooks() {
-      await deleteBooksInCollection(this.collectionId,
-        await this.$auth.getTokenSilently(),
-        this.booksSelected)
+      const deleteBooksParams = new URLSearchParams({bookshelfId: this.collectionId, bookIds: this.booksSelected})
+      await deleteBooksInCollection(deleteBooksParams,
+        await this.$auth.getTokenSilently())
     }
   }
 }

@@ -49,7 +49,7 @@ class CollectionsService {
             .orElseThrow(() -> new IllegalArgumentException("No bookshelf with such ID"));
     var remainingBooks = collection.getBookDAOS()
             .stream()
-            .filter(bookDAO -> !bookIds.contains(bookDAO.getId()))
+            .filter(bookDAO -> !bookIds.contains(Long.parseLong(bookDAO.getIsbn())))
             .collect(Collectors.toSet());
     collection.setBookDaos(remainingBooks);
     collectionsRepository.save(collection);

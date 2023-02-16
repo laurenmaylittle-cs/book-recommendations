@@ -14,8 +14,9 @@ export async function getBooksInCollection(collectionId, token) {
   return result.data;
 }
 
-export async function deleteBooksInCollection(collectionId, token, listOfBooks) {
-  await axios.post(`/api/private/bookshelf/singleBookshelf/delete?bookshelfId=${collectionId}&bookIds=${listOfBooks}`, {
+export async function deleteBooksInCollection(deleteBooksParams, token) {
+  await axios.post(`/api/private/bookshelf/singleBookshelf/delete`,
+    deleteBooksParams, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

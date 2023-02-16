@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -37,8 +34,8 @@ public class SingleCollectionController {
 
     @PostMapping("/delete")
     public void deleteBookInCollection(JwtAuthenticationToken authenticationToken,
-                                       @Param("bookshelfId") Long bookshelfId,
-                                       @Param("bookIds") List<Long> bookIds) {
+                                       @RequestParam Long bookshelfId,
+                                       @RequestParam List<Long> bookIds) {
         var userId = getUserIdOrBadRequest(authenticationToken);
         if (!collectionsService.collectionBelongsToUser(userId, bookshelfId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No collection for user found");
