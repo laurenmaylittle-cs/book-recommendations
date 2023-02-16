@@ -1,6 +1,19 @@
 <template>
   <v-container>
     <v-row
+      v-if="isAnyBookSelected"
+    >
+      <v-col>
+        <v-btn
+          color="error"
+          class="pe2"
+          @click="deleteBooks"
+        >
+          Delete from bookshelf
+        </v-btn>
+      </v-col>
+    </v-row>
+    <v-row
       v-if="isLoading"
       class="justify-center pt-10"
     >
@@ -23,6 +36,8 @@
           :isbn="book.isbn"
           :published-date="book.publishedDate"
           :selectable="true"
+          @selected="bookSelected"
+          @unselected="bookUnselected"
         />
       </v-col>
     </v-row>
@@ -30,7 +45,7 @@
 </template>
 <script>
 import BookDetails from "@/components/search/BookDetails";
-import {getBooksInCollection} from "@/api/bookshelfBooks";
+import {deleteBooksInCollection, getBooksInCollection} from "@/api/bookshelfBooks";
 
 export default {
   name: "CollectionBooksPage",
@@ -39,7 +54,9 @@ export default {
     return {
       collectionId: this.$route.params.collectionId,
       isLoading: true,
-      collectionBooks: []
+      collectionBooks: [],
+      booksSelected: [],
+      isAnyBookSelected: false
     }
   },
   async mounted() {
@@ -60,6 +77,27 @@ export default {
         authorList === "" ? authorList = authors[i] : authorList = authorList + ", " + authors[i]
       }
       return authorList
+    },
+    bookSelected(isbn) {
+      this.booksSelected.push(isbn);
+      this.checkIfBooksSelected();
+      console.log(this.booksSelected.toString());
+    },
+    bookUnselected(isbn) {
+      const index = this.booksSelected.indexOf(isbn);
+      if (index !== -1) {
+        this.booksSelected.splice(index, 1);
+        console.log(this.booksSelected.toString());
+      }
+      this.checkIfBooksSelected();
+    },
+    checkIfBooksSelected() {
+      this.isAnyBookSelected = this.booksSelected.length > 0;
+    },
+    async deleteBooks() {
+      await deleteBooksInCollection(this.collectionId,
+        await this.$auth.getTokenSilently(),
+        this.booksSelected)
     }
   }
 }

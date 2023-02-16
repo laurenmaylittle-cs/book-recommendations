@@ -13,3 +13,11 @@ export async function getBooksInCollection(collectionId, token) {
   });
   return result.data;
 }
+
+export async function deleteBooksInCollection(collectionId, token, listOfBooks) {
+  await axios.post(`/api/private/bookshelf/singleBookshelf/delete?bookshelfId=${collectionId}&bookIds=${listOfBooks}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}

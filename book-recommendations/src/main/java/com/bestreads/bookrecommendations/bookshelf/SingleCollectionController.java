@@ -35,7 +35,7 @@ public class SingleCollectionController {
         }).getBookDAOS().stream().toList();
     }
 
-    @PostMapping
+    @PostMapping("/delete")
     public void deleteBookInCollection(JwtAuthenticationToken authenticationToken,
                                        @Param("bookshelfId") Long bookshelfId,
                                        @Param("bookIds") List<Long> bookIds) {
