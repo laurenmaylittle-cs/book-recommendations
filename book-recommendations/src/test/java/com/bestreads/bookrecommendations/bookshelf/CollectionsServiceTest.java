@@ -28,6 +28,23 @@ class CollectionsServiceTest {
   private CollectionProjection collectionProjectionOne;
   private CollectionProjection collectionProjectionTwo;
 
+  private final CollectionBookProjection collectionBookProjection = new CollectionBookProjection() {
+    @Override
+    public Long getId() {
+      return 1L;
+    }
+
+    @Override
+    public String getName() {
+      return "collectionName";
+    }
+
+    @Override
+    public Set<BookDAO> getBookDAOS() {
+      return Set.of(new BookDAO());
+    }
+  };
+
   @BeforeEach
   void setUp() {
     collectionProjectionOne = new CollectionProjection() {
@@ -84,6 +101,42 @@ class CollectionsServiceTest {
         CollectionDAO.class);
 
     collectionsService.createNewCollection(userId, "Collection Spring");
+    verify(collectionsRepository).save(collectionArgumentCaptor.capture());
+
+    assertEquals("Collection Spring", collectionArgumentCaptor.getValue().getName());
+    assertEquals(userId, collectionArgumentCaptor.getValue().getUserId());
+  }
+
+  @Test
+  void updateCollectionName() {
+    var collection = new CollectionDAO();
+    collection.setId(1L);
+    collection.setName("Want to read");
+    collection.setUserId(userId);
+
+    when(collectionsRepository.findById(1L))
+        .thenReturn(Optional.of(collection));
+
+    ArgumentCaptor<CollectionDAO> collectionDAOArgumentCaptor =
+        ArgumentCaptor.forClass(CollectionDAO.class);
+
+    collectionsService.updateCollectionName(1L, "Wishlist", userId);
+    verify(collectionsRepository).save(collectionDAOArgumentCaptor.capture());
+
+    assertEquals("Wishlist", collectionDAOArgumentCaptor.getValue().getName());
+    assertEquals(1L, collectionDAOArgumentCaptor.getValue().getId());
+    assertEquals(userId, collectionDAOArgumentCaptor.getValue().getUserId());
+  }
+
+  @Test
+  void updateCollection_noExistingCollection() {
+    when(collectionsRepository.findById(1L))
+        .thenReturn(Optional.empty());
+
+    ArgumentCaptor<CollectionDAO> collectionArgumentCaptor = ArgumentCaptor.forClass(
+        CollectionDAO.class);
+
+    collectionsService.updateCollectionName(1L, "Collection Spring", userId);
     verify(collectionsRepository).save(collectionArgumentCaptor.capture());
 
     assertEquals("Collection Spring", collectionArgumentCaptor.getValue().getName());

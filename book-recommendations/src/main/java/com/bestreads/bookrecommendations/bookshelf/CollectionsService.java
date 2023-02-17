@@ -57,6 +57,4 @@ class CollectionsService {
       collectionsRepository.save(collection.get());
     }
   }
-
-
 }
