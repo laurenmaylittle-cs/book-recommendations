@@ -35,7 +35,7 @@
           <v-card-text>
             <v-form
               ref="form"
-              onsubmit="return false"
+              onsubmit="dialog=false"
               @submit="updateCollection"
             >
               <v-container>
