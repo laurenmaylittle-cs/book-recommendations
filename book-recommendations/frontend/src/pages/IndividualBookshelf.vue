@@ -43,7 +43,7 @@ import BookDetails from "@/components/search/BookDetails";
 import {deleteBooksInCollection, getBooksInCollection} from "@/api/bookshelfBooks";
 
 export default {
-  name: "CollectionBooksPage",
+  name: "IndividualBookshelf",
   components: {BookDetails},
   data: function () {
     return {
@@ -64,14 +64,13 @@ export default {
         await this.$auth.getTokenSilently())
     },
     checkForMultipleAuthors(authors) {
-      if (authors === undefined || authors === null) {
-        return ""
+      if (!authors || authors.length === 0) {
+        return '';
       }
-      let authorList = "";
-      for (let i = 0; i < authors.length; i++) {
-        authorList === "" ? authorList = authors[i] : authorList = authorList + ", " + authors[i]
-      }
-      return authorList
+
+      return authors.reduce((acc, curr, index) => {
+        return index === 0 ? curr : `${acc}, ${curr}`;
+      }, '')
     },
     bookSelected(isbn) {
       this.booksSelected.push(isbn);

@@ -11,14 +11,12 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/private/bookshelf/singleBookshelf")
-public class SingleCollectionController {
-    private final CollectionsRepository collectionsRepository;
+@RequestMapping("/api/private/bookshelf/books")
+public class IndividualBookshelfController {
     private final CollectionsService collectionsService;
 
     @Autowired
-    public SingleCollectionController(CollectionsRepository collectionsRepository, CollectionsService collectionsService) {
-        this.collectionsRepository = collectionsRepository;
+    public IndividualBookshelfController(CollectionsService collectionsService) {
         this.collectionsService = collectionsService;
     }
 
@@ -27,9 +25,7 @@ public class SingleCollectionController {
                                               @Param("bookshelfId") Long bookshelfId) {
         var userId = getUserIdOrBadRequest(authenticationToken);
 
-        return collectionsRepository.findByIdAndUserId(bookshelfId, userId).orElseThrow(() -> {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No collection found");
-        }).getBookDAOS().stream().toList();
+        return collectionsService.getBooksInCollectionByIdAndUserOrBadRequest(bookshelfId, userId);
     }
 
     @PostMapping("/delete")

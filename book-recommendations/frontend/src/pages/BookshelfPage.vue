@@ -108,9 +108,8 @@ export default {
         {min: 80, max: 90})
     },
     goToCollection(collectionId) {
-      this.$router.push({name: 'bookshelfBooksPage', params: {collectionId: collectionId}}).catch(() => {
+      this.$router.push({name: 'individualBookshelf', params: {collectionId: collectionId}}).catch(() => {
       })
-      window.location.reload()
     }
   }
 }
