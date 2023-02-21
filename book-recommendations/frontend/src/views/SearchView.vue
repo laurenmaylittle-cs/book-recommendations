@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import {searchByAuthor, searchByIsbn, searchByTitle} from "@/api/search";
+import {searchByAuthor, searchByTitle} from "@/api/search";
 import BookDetails from "@/components/search/BookDetails";
 
 export default {
