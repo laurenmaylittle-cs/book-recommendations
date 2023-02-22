@@ -1,120 +1,118 @@
 <template>
-  <div v-if="collectionsLoaded">
-    <v-sheet
-      rounded
-      color="transparent"
+  <v-sheet
+    rounded
+    color="transparent"
+  >
+    <v-subheader v-if="isEnabledInACollection">
+      Book in following collections:
+    </v-subheader>
+    <template
+      v-for="(collection, index) in collectionsMap"
     >
-      <v-subheader v-if="isEnabledInACollection">
-        Book in following collections:
-      </v-subheader>
-      <template
-        v-for="(collection, index) in collectionsMap"
+      <v-chip
+        v-if="collection.enabled"
+        :key="collection.id"
+        :color="collectionColors[index]"
+        class="ma-2"
       >
-        <v-chip
-          v-if="collection.enabled"
-          :key="collection.id"
-          :color="colors[index]"
-          class="ma-2"
-        >
-          {{ collection.name }}
-        </v-chip>
-      </template>
-      <v-col>
-        <v-btn
-          color="primary"
-          @click="dialog = true"
-        >
-          {{ collectionButtonText }}
-        </v-btn>
-      </v-col>
-      <div>
-        <v-dialog
-          v-model="dialog"
-          max-width="500"
-        >
-          <v-card>
-            <v-card-text>
-              <v-row
-                no-gutters
+        {{ collection.name }}
+      </v-chip>
+    </template>
+    <v-col>
+      <v-btn
+        color="primary"
+        @click="dialog = true"
+      >
+        {{ collectionButtonText }}
+      </v-btn>
+    </v-col>
+    <div>
+      <v-dialog
+        v-model="dialog"
+        max-width="500"
+      >
+        <v-card>
+          <v-card-text>
+            <v-row
+              no-gutters
+            >
+              <v-col
+                cols="12"
+                class="mb-2 mt-5"
               >
-                <v-col
-                  cols="12"
-                  class="mb-2 mt-5"
-                >
-                  <template v-if="!showInput">
-                    <v-btn
-                      rounded
-                      color="primary"
-                      outlined
-                      @click.prevent="showInput = true"
-                    >
-                      <v-icon left>
-                        mdi-plus
-                      </v-icon>
-                      Create a new collection
-                    </v-btn>
-                  </template>
-                  <template v-else>
-                    <v-form
-                      ref="form"
-                      onsubmit="return false"
-                      @submit="createCollection"
-                    >
-                      <v-text-field
-                        v-model="newCollectionName"
-                        label="Collection name"
-                        :append-outer-icon="shouldCreateCollection ? 'mdi-plus' : 'mdi-close-circle'"
-                        clear-icon="mdi-close-circle"
-                        clearable
-                        :rules="collectionValidationRules"
-                        @click:append-outer="shouldCreateCollection ? createCollection() : clear()"
-                        @click:clear="clear"
-                        @keydown.enter="createCollection"
-                      />
-                    </v-form>
-                  </template>
-                </v-col>
-              </v-row>
-              <v-row no-gutters>
-                <v-col
-                  v-for="(collection, index) in collectionsToUpdate"
-                  :key="index"
-                  cols="6"
-                >
-                  <v-checkbox
-                    v-model="collection.enabled"
-                    :label="collection.name"
-                  />
-                </v-col>
-              </v-row>
-            </v-card-text>
-            <v-card-actions>
-              <v-btn
-                v-if="isCollectionsChanged"
-                color="primary"
-                text
-                @click="saveCollection"
+                <template v-if="!showInput">
+                  <v-btn
+                    rounded
+                    color="primary"
+                    outlined
+                    @click.prevent="showInput = true"
+                  >
+                    <v-icon left>
+                      mdi-plus
+                    </v-icon>
+                    Create a new collection
+                  </v-btn>
+                </template>
+                <template v-else>
+                  <v-form
+                    ref="form"
+                    onsubmit="return false"
+                    @submit="createCollection"
+                  >
+                    <v-text-field
+                      v-model="newCollectionName"
+                      label="Collection name"
+                      :append-outer-icon="shouldCreateCollection ? 'mdi-plus' : 'mdi-close-circle'"
+                      clear-icon="mdi-close-circle"
+                      clearable
+                      :rules="collectionValidationRules"
+                      @click:append-outer="shouldCreateCollection ? createCollection() : clear()"
+                      @click:clear="clear"
+                      @keydown.enter="createCollection"
+                    />
+                  </v-form>
+                </template>
+              </v-col>
+            </v-row>
+            <v-row no-gutters>
+              <v-col
+                v-for="(collection, index) in collectionsToUpdate"
+                :key="index"
+                cols="6"
               >
-                Save
-                <v-progress-circular
-                  v-if="collectionSaveInProgress"
-                  indeterminate
-                  color="primary"
+                <v-checkbox
+                  v-model="collection.enabled"
+                  :label="collection.name"
                 />
-              </v-btn>
-              <v-btn
-                color="secondary"
-                text
-                @click="clearDialogAndResetState"
-              >
-                Cancel
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </div>
-    </v-sheet>
-  </div>
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn
+              v-if="isCollectionsChanged"
+              color="primary"
+              text
+              @click="saveCollection"
+            >
+              Save
+              <v-progress-circular
+                v-if="collectionSaveInProgress"
+                indeterminate
+                color="primary"
+              />
+            </v-btn>
+            <v-btn
+              color="secondary"
+              text
+              @click="clearDialogAndResetState"
+            >
+              Cancel
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+  </v-sheet>
 </template>
 
 <script>
@@ -137,8 +135,7 @@ export default {
     collectionsMap: [],
     collectionsToUpdate: [],
     collectionSaveInProgress: false,
-    colors: [],
-    collectionsLoaded: false,
+    collectionColors: [],
   }),
   computed: {
     collectionButtonText() {
@@ -159,8 +156,7 @@ export default {
     ...mapGetters(['collectionValidationRules'])
   },
   async mounted() {
-    await this.getRelatedCollections();
-    this.collectionsLoaded = true;
+    await this.getUsersCollections();
     this.$emit('collections-loaded');
   },
   methods: {
@@ -177,7 +173,7 @@ export default {
       this.newCollectionName = "";
       this.showInput = false;
     },
-    async getRelatedCollections() {
+    async getUsersCollections() {
       const token = await this.$auth.getTokenSilently();
       const userCollections = await getUserCollections(token, this.bookData.isbn);
 
@@ -213,7 +209,7 @@ export default {
       this.showInput = false;
     },
     _computeCollectionColors() {
-      generatePastelColors(this.colors, this.collectionsMap.length, {min: 50, max: 60},
+      generatePastelColors(this.collectionColors, this.collectionsMap.length, {min: 50, max: 60},
         {min: 80, max: 90})
     },
     _createDeepCopyOfCollections() {

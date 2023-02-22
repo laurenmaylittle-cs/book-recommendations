@@ -2,14 +2,14 @@ package com.bestreads.bookrecommendations.bookshelf;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Stream.concat;
 
 import com.bestreads.bookrecommendations.book.Book;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,22 +49,13 @@ public class CollectionsBookService {
         collectionBookRootJson.collections(), book);
 
     var savedCollections = collectionsRepository.saveAll(
-        Stream.concat(newCollections.stream(), updatedCollections.stream())
-            .collect(Collectors.toSet()));
+        concat(newCollections.stream(), updatedCollections.stream())
+            .collect(toSet()));
 
     return StreamSupport.stream(savedCollections.spliterator(), false)
         .map(collectionDAO -> new CollectionBookJson(collectionDAO.getId(), collectionDAO.getName(),
             collectionDAO.getBookDaos().contains(book)))
-        .collect(Collectors.toSet());
-  }
-
-  private BookDAO createNewBookDAOFromBook(Book book) {
-    var newBook = new BookDAO();
-    newBook.setIsbn(book.isbn());
-    newBook.setAuthor(String.join(", ", book.authors()));
-    newBook.setTitle(book.title());
-    newBook.setThumbnail(book.imageLinks().thumbnail());
-    return bookDAORepository.save(newBook);
+        .collect(toSet());
   }
 
   private LinkedHashSet<CollectionBookJson> getCollectionsForBookHelper(String userId, String isbn,
@@ -80,19 +71,28 @@ public class CollectionsBookService {
         .collect(toCollection(LinkedHashSet::new));
   }
 
+  private BookDAO createNewBookDAOFromBook(Book book) {
+    var newBook = new BookDAO();
+    newBook.setIsbn(book.isbn());
+    newBook.setAuthor(String.join(", ", book.authors()));
+    newBook.setTitle(book.title());
+    newBook.setThumbnail(book.imageLinks().thumbnail());
+    return bookDAORepository.save(newBook);
+  }
+
   private Set<CollectionDAO> createNewCollections(List<CollectionBookJson> collectionBookJsons,
       String userId, BookDAO book) {
     return collectionBookJsons.stream()
-        .filter(cb -> cb.id() < 0)
+        .filter(cb -> cb.id() < 0) //new collections have negative ids (assigned by frontend)
         .map(cb -> new CollectionDAO(cb.name(), userId, cb.enabled() ? Set.of(book) : Set.of()))
-        .collect(Collectors.toSet());
+        .collect(toSet());
   }
 
   private Set<CollectionDAO> updateExistingCollections(Set<CollectionDAO> existingCollections,
       List<CollectionBookJson> collectionBookJsons, BookDAO book) {
     return existingCollections.stream()
         .map(collectionDAO -> updateCollectionDAO(collectionDAO, collectionBookJsons, book))
-        .collect(Collectors.toSet());
+        .collect(toSet());
   }
 
   private CollectionDAO updateCollectionDAO(CollectionDAO collectionDAO,
