@@ -3,6 +3,7 @@ package com.bestreads.bookrecommendations.bookshelf;
 import java.util.List;
 import java.util.Set;
 import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 interface CollectionsRepository extends CrudRepository<CollectionDAO, Long> {
@@ -17,4 +18,17 @@ interface CollectionsRepository extends CrudRepository<CollectionDAO, Long> {
   //For getting the collections by book ISBN (issues 1 query and gives you the collection Id's and names of them - N+1 tested)
   List<CollectionProjection> findByUserIdAndBookDAOS_Isbn(String userId, String isbn);
 
+  //Update to sets
+  @Query(value = """
+      select c from CollectionDAO c
+      where c.userId = ?1 and
+        not exists (select 1 from c.bookDAOS b where b.isbn = ?2)""")
+  List<CollectionProjection> findUnassociatedCollectionsForIsbn(String userId, String isbn);
+
+
+  @Query(value = """
+      select c from CollectionDAO c 
+       where c.userId = ?1
+      """)
+  Set<CollectionDAO> findAllCollectionsByUser(String userId);
 }

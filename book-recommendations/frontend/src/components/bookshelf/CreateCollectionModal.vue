@@ -78,7 +78,7 @@ export default {
     collectionUpdateInProgress: false,
     collectionNameValidation: [
       v => !!v || 'Collection name required',
-      v => (v && v.length <= 16) || 'Collection name must be less than 16 characters'
+      v => (v && v.length <= 15) || 'Collection name must be less than 15 characters'
     ],
   }),
   methods: {

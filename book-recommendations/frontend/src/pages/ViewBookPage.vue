@@ -70,10 +70,26 @@
           heading="Average rating"
           :ratings-count="bookData.ratingsCount ? parseInt(bookData.ratingsCount) : 0"
         />
-        <user-ratings
-          :isbn="
-            isbn.toString()"
-        />
+        <template v-if="$auth.isAuthenticated">
+          <template v-if="!ratingsLoaded && !collectionsLoaded">
+            <v-progress-circular
+              :size="30"
+              :width="7"
+              color="secondary"
+              indeterminate
+            />
+          </template>
+          <user-ratings
+            :isbn="
+              isbn.toString()"
+            @user-rating-loaded="ratingsLoaded = true"
+          />
+          <book-collections
+            :book-isbn="isbn.toString()"
+            :book-data="bookData"
+            @collections-loaded="collectionsLoaded = true"
+          />
+        </template>
       </v-col>
       <v-col class="ma-0">
         <view-book-thumbnail :thumbnail="bookData.imageLinks.thumbnail" />
@@ -101,10 +117,12 @@ import AverageRatings from "@/components/viewbook/AverageRatings";
 import UserRatings from "@/components/viewbook/UserRatings";
 import AboutBook from "@/components/viewbook/AboutBook";
 import {EventBus} from "@/event-bus";
+import BookCollections from "@/components/viewbook/BookCollections.vue";
 
 export default {
   name: 'ViewBook',
   components: {
+    BookCollections,
     AboutBook,
     UserRatings,
     AverageRatings,
@@ -117,6 +135,8 @@ export default {
       isLoading: true,
       previousBookData: null,
       viewBookEmitted: false,
+      ratingsLoaded: false,
+      collectionsLoaded: false,
     }
   },
   computed: {
@@ -143,6 +163,8 @@ export default {
     this.bookData = null;
     this.isLoading = true;
     this.viewBookEmitted = false;
+    this.collectionsLoaded = false;
+    this.ratingsLoaded = false;
     EventBus.$off(['search-triggered', 'view-book', 'view-book-home']);
   },
   methods: {

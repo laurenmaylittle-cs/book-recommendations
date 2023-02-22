@@ -9,6 +9,7 @@ import com.bestreads.bookrecommendations.utils.AuthUtils;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.LinkedHashSet;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,9 +18,12 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/private/bookshelf/collections")
@@ -48,6 +52,32 @@ public class CollectionsController {
     return collection.map(collectionDAO -> ok(
             new CollectionJson(collectionDAO.getId(), collectionDAO.getName())))
         .orElseGet(() -> notFound().build());
+  }
+
+  /**
+   * @return associated collections and unassociated collections for a book that belong to user
+   */
+  @GetMapping("/book")
+  public LinkedHashSet<CollectionBookJson> getCollectionsForBook(
+      JwtAuthenticationToken authenticationToken, @RequestParam String isbn) {
+    var userId = AuthUtils.getUserId(authenticationToken).orElseThrow(
+        () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid user id")
+    );
+
+    return collectionsService.getCollectionsForBook(userId, isbn);
+  }
+
+  @PutMapping("/book/update")
+  public Set<CollectionBookJson> updateCollectionsForBook(
+      JwtAuthenticationToken jwtAuthenticationToken,
+      @RequestBody CollectionBookRootJson collectionsData) {
+
+    var userId = AuthUtils.getUserId(jwtAuthenticationToken).orElseThrow(
+        () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid user id")
+    );
+
+    return collectionsService.updateCollectionsForBook(userId, collectionsData,
+        collectionsData.book().isbn());
   }
 
   @PostMapping
