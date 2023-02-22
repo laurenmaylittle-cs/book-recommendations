@@ -59,7 +59,7 @@ export async function getUserCollections(token, isbn) {
 }
 
 export async function saveUserCollections(token, collectionsAndBook) {
-  const url = "/api/private/bookshelf/collections/book/update"
+  const url = "/api/private/bookshelf/collections/book"
 
   return (await axios.put(url, collectionsAndBook, {
     headers: {
