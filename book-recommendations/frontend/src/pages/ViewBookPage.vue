@@ -34,6 +34,9 @@
           {{ errorMessage }}
         </p>
       </v-row>
+      <v-row>
+        <p>{{ displayRecommendations }}</p>
+      </v-row>
       <v-row
         v-if="!isLoading && isValidISBN"
         class="pb-0 pt-0 align-center"
@@ -113,6 +116,7 @@ import {getBookInfo, exportData} from "@/api/view-book";
 import AverageRatings from "@/components/viewbook/AverageRatings";
 import UserRatings from "@/components/viewbook/UserRatings";
 import AboutBook from "@/components/viewbook/AboutBook";
+import {getRecs} from "@/api/personalize";
 
 export default {
   name: 'ViewBook',
@@ -127,18 +131,23 @@ export default {
       bookData: '',
       isLoading: true,
       isValidISBN: '',
-      isbn: this.$route.params.isbn
+      isbn: this.$route.params.isbn,
+      recommendedIsbns: ''
     }
   },
   computed: {
     errorMessage() {
       return "No results found for ISBN: " + this.isbn
+    },
+    displayRecommendations() {
+      return this.recommendedIsbns.toString();
     }
   },
   async mounted() {
     if (this.validIsbn(this.isbn)) {
       await this.getBookData();
       this.isValidISBN = this.bookData !== null;
+      await this.getRecommendations();
       if (this.bookData !== null && this.$auth.isAuthenticated) {
         await this.postData();
       }
@@ -173,6 +182,9 @@ export default {
         isbn: this.isbn
       }
       await exportData(bookData, token)
+    },
+    async getRecommendations() {
+      this.recommendedIsbns = await getRecs(this.isbn);
     }
   }
 }
