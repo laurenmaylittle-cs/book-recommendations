@@ -53,10 +53,6 @@
                       </v-icon>
                       Create a new collection
                     </v-btn>
-                    <!--                    <a-->
-                    <!--                      href="#"-->
-                    <!--                      @click.prevent="showInput = true"-->
-                    <!--                    >Create a new collection</a>-->
                   </template>
                   <template v-else>
                     <v-form
@@ -70,7 +66,7 @@
                         :append-outer-icon="shouldCreateCollection ? 'mdi-plus' : 'mdi-close-circle'"
                         clear-icon="mdi-close-circle"
                         clearable
-                        :rules="collectionNameValidation"
+                        :rules="collectionValidationRules"
                         @click:append-outer="shouldCreateCollection ? createCollection() : clear()"
                         @click:clear="clear"
                         @keydown.enter="createCollection"
@@ -109,7 +105,7 @@
               <v-btn
                 color="secondary"
                 text
-                @click="clearDialog"
+                @click="clearDialogAndResetState"
               >
                 Cancel
               </v-btn>
@@ -122,9 +118,9 @@
 </template>
 
 <script>
-import axios from "axios";
 import {generatePastelColors} from "@/util/util";
-import {EventBus} from "@/event-bus";
+import {getUserCollections, saveUserCollections} from "@/api/view-book";
+import {mapGetters} from "vuex";
 
 export default {
   name: "BookCollections",
@@ -143,29 +139,24 @@ export default {
     collectionSaveInProgress: false,
     colors: [],
     collectionsLoaded: false,
-    collectionNameValidation: [
-      v => !!v || 'Collection name is required',
-      v => (v && v.length <= 15) || 'Collection name must be less than 15 characters'
-    ]
   }),
   computed: {
     collectionButtonText() {
-      if (this.collectionsMap.filter(x => x.enabled === true).length > 0) {
-        return 'Edit collections';
-      } else {
-        return 'Add book to collections';
-      }
+      return this.isEnabledInACollection
+        ? "Edit collections"
+        : "Add book to collections";
     },
     isEnabledInACollection() {
-      return this.collectionsMap.filter(x => x.enabled === true).length > 0
+      return this.collectionsMap.filter((x) => x.enabled === true).length > 0;
     },
     isCollectionsChanged() {
+      //deep compare of the two
       return JSON.stringify(this.collectionsToUpdate) !== JSON.stringify(this.collectionsMap);
     },
     shouldCreateCollection() {
       return this.newCollectionName.length > 0;
     },
-
+    ...mapGetters(['collectionValidationRules'])
   },
   async mounted() {
     await this.getRelatedCollections();
@@ -177,82 +168,41 @@ export default {
       if (!this.$refs.form.validate()) {
         return;
       }
-      this.collectionsToUpdate.push(
-        {id: -(this.collectionsToUpdate.length + 1), name: this.newCollectionName, enabled: false});
-      this.newCollectionName = '';
+      //negative id to indicate that this is a new collection
+      this.collectionsToUpdate.push({
+        id: -(this.collectionsToUpdate.length + 1),
+        name: this.newCollectionName,
+        enabled: false,
+      });
+      this.newCollectionName = "";
       this.showInput = false;
     },
     async getRelatedCollections() {
       const token = await this.$auth.getTokenSilently();
-      const url = "/api/private/bookshelf/collections/book";
-      const params = new URLSearchParams();
-      params.append("isbn", this.bookData.isbn);
+      const userCollections = await getUserCollections(token, this.bookData.isbn);
 
-      const result = await axios.get(url, {
-        params: params,
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      const sortedCollections = result.data.sort((a, b) => {
-        if (a.name < b.name) {
-          return -1;
-        }
-        if (a.name > b.name) {
-          return 1;
-        }
-        return 0;
-      });
-
-      this.collectionsMap = sortedCollections;
+      this.collectionsMap = userCollections.sort((a, b) => a.name.localeCompare(b.name));
       this._computeCollectionColors();
-      this.collectionsToUpdate = JSON.parse(JSON.stringify(sortedCollections));
+      this.collectionsToUpdate = this._createDeepCopyOfCollections();
     },
     async saveCollection() {
       this.collectionSaveInProgress = true;
       const token = await this.$auth.getTokenSilently();
-      const url = "/api/private/bookshelf/collections/book/update"
-
-      // const body = [
-      //   ...this.collectionsToUpdate
-      // ]
-      const book = {
-        title: this.bookData.title,
-        author: this.bookData.authors.join(', '),
-        thumbnail: this.bookData.imageLinks.thumbnail,
-        isbn: this.bookData.isbn,
-      }
-
-      const body = {
+      const collectionsAndBook = {
         collections: this.collectionsToUpdate,
-        book: book
-      }
-      const result = await axios.put(url, body, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+        book: this.bookData,
+      };
+      const savedCollections = await saveUserCollections(token, collectionsAndBook);
 
-      const sortedCollections = result.data.sort((a, b) => {
-        if (a.name < b.name) {
-          return -1;
-        }
-        if (a.name > b.name) {
-          return 1;
-        }
-        return 0;
-      });
-
-      this.collectionsMap = sortedCollections;
+      this.collectionsMap = savedCollections.sort((a, b) => a.name.localeCompare(b.name));
       this._computeCollectionColors();
-      this.collectionsToUpdate = JSON.parse(JSON.stringify(sortedCollections));
+      this.collectionsToUpdate = this._createDeepCopyOfCollections();
       this.collectionSaveInProgress = false;
       this.clearDialog();
     },
-    _computeCollectionColors() {
-      generatePastelColors(this.colors, this.collectionsMap.length, {min: 50, max: 60},
-        {min: 80, max: 90})
+    clearDialogAndResetState() {
+      this.collectionsToUpdate = this._createDeepCopyOfCollections();
+      this.clearDialog();
     },
     clearDialog() {
       this.dialog = false;
@@ -261,7 +211,14 @@ export default {
     clear() {
       this.newCollectionName = '';
       this.showInput = false;
-    }
+    },
+    _computeCollectionColors() {
+      generatePastelColors(this.colors, this.collectionsMap.length, {min: 50, max: 60},
+        {min: 80, max: 90})
+    },
+    _createDeepCopyOfCollections() {
+      return JSON.parse(JSON.stringify(this.collectionsMap));
+    },
   }
 }
 </script>

@@ -1,5 +1,6 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
+import static java.lang.String.join;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toCollection;
 
@@ -65,9 +66,9 @@ class CollectionsService {
     if (bookOptional.isEmpty()) {
       var bookJson = collectionBookRootJson.book();
       book.setIsbn(bookJson.isbn());
-      book.setAuthor(bookJson.author());
+      book.setAuthor(join(", ", bookJson.authors()));
       book.setTitle(bookJson.title());
-      book.setThumbnail(bookJson.thumbnail());
+      book.setThumbnail(bookJson.imageLinks().thumbnail());
       book = bookDAORepository.save(book);
     }
 
