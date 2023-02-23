@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.bestreads.bookrecommendations.auth0.Auth0Service;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -22,6 +23,22 @@ class UsersControllerTest {
   @MockBean
   private Auth0Service auth0Service;
 
+  @MockBean
+  private UsersService usersService;
+
+  private List<FollowersFollowing> followersFollowings;
+  private static final String FOLLOWER_EMAIL = "lml@kent";
+  private static final String FOLLOWING_EMAIL = "rm@kent";
+
+  @BeforeEach
+  void setUp() {
+    var followers = new FollowersFollowing();
+    followers.setFollowerEmail(FOLLOWER_EMAIL);
+    followers.setFollowingEmail(FOLLOWING_EMAIL);
+
+    followersFollowings = List.of(followers);
+  }
+
   @Test
   @WithMockUser
   void searchUsers() throws Exception {
@@ -32,7 +49,8 @@ class UsersControllerTest {
                 "lml@kent.ac.uk",
                 true,
                 "lauren",
-                "https://google.com")
+                "https://google.com",
+                followersFollowings)
         )
     );
 
