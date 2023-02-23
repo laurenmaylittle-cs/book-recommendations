@@ -66,7 +66,7 @@ export default {
     },
     async emitViewBook() {
       await this.$router.push({name: 'book', params: {isbn: this.isbn}});
-      EventBus.$emit('view-book-home', {
+      EventBus.$emit('view-book-other', {
         isbn: this.isbn,
         title: this.bookTitle,
         authors: this.authors,

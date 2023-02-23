@@ -126,10 +126,10 @@ export default {
   },
   async activated() {
     //view-book - from search results
-    //view-book-home - from home page
+    //view-book-other - from any other origin (home, collections - will perform a get request to get this data with isbn and title)
     //search-triggered - search by isbn
     EventBus.$on('view-book', this.populateBookData);
-    EventBus.$on(['view-book-home', 'search-triggered'], this.getBookData);
+    EventBus.$on(['view-book-other', 'search-triggered'], this.getBookData);
 
     await this.$nextTick();
 
@@ -143,7 +143,7 @@ export default {
     this.bookData = null;
     this.isLoading = true;
     this.viewBookEmitted = false;
-    EventBus.$off(['search-triggered', 'view-book', 'view-book-home']);
+    EventBus.$off(['search-triggered', 'view-book', 'view-book-other']);
   },
   methods: {
     populateBookData(bookData) {

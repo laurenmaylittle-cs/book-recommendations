@@ -64,8 +64,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-
 import {getFollowersAndFollowing} from "@/api/profile";
 import FollowersFollowing from "@/components/profile/FollowersFollowing";
 

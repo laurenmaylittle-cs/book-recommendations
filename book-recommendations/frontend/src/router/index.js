@@ -9,7 +9,6 @@ import FindFriendsPage from "@/pages/FindFriendsPage";
 import BookShelfPage from "@/pages/BookshelfPage"
 import BookshelfBooksPage from "@/pages/BookshelfBooksPage";
 
-
 Vue.use(VueRouter)
 
 const routes = [
@@ -52,7 +51,7 @@ const routes = [
     beforeEnter: authGuard
   },
   {
-    path: '/bookshelf/:collectionId',
+    path: '/bookshelf/books',
     name: 'bookshelfBooksPage',
     component: BookshelfBooksPage,
     beforeEnter: authGuard
