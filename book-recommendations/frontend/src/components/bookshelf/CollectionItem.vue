@@ -12,8 +12,11 @@
         height="150"
         width="200"
       >
+        <div>
+          <v-checkbox />
+        </div>
         <div
-          class="d-flex flex-column align-center justify-center fill-height text-h6"
+          class="d-flex align-center justify-center text-h6"
         >
           {{ collectionName }}
         </div>
@@ -34,6 +37,11 @@ export default {
       type: String,
       default: "#26c6da",
     },
+  },
+  data() {
+    return {
+      selected: false,
+    };
   },
   computed: {
     getOffSet() {
@@ -59,6 +67,15 @@ export default {
     getHoverEffect(hover) {
       return hover ? "white" : this.collectionColor;
     },
+    changeSelected() {
+      if (this.selected) {
+        this.selected = false;
+        this.$emit("unselected", this.id);
+      } else {
+        this.selected = true;
+        this.$emit("selected", this.id);
+      }
+    }
   }
 }
 </script>

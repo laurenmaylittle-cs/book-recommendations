@@ -13,10 +13,27 @@
             color="background"
             min-height="200"
           >
-            <create-collection-modal
-              ref="createModal"
-              @collection-created="getNewCollection"
-            />
+            <v-row>
+              <v-col
+                cols="3"
+              >
+                <create-collection-modal
+                  ref="createModal"
+                  @collection-created="getNewCollection"
+                />
+              </v-col>
+              <v-col>
+                <v-btn
+                  v-if="isAnyCollectionSelected"
+                  color="#DC143C"
+                  class="ma-3 white--text"
+                  @click="deleteCollection"
+                >
+                  Delete collection
+                </v-btn>
+              </v-col>
+            </v-row>
+
             <v-row
               v-if="isLoading"
               class="justify-center"
@@ -35,6 +52,8 @@
                 :collection-name="collection.name"
                 :collection-color="colors[index]"
                 @click.native="goToCollection(collection.id)"
+                @selected="collectionSelected"
+                @unselected="collectionUnselected"
               />
             </v-row>
           </v-sheet>
@@ -67,6 +86,8 @@ export default {
     collections: [],
     colors: [],
     isLoading: true,
+    collectionsSelected: [],
+    isAnyCollectionSelected: false
   }),
   computed: {
     isAPhone() {
@@ -110,6 +131,18 @@ export default {
     goToCollection(collectionId) {
       this.$router.push({name: 'individualBookshelf', params: {collectionId: collectionId}}).catch(() => {
       })
+    },
+    checkIfCollectionSelected() {
+
+    },
+    deleteCollection() {
+
+    },
+    collectionSelected(collectionId) {
+
+    },
+    collectionUnselected(collectionId) {
+
     }
   }
 }
