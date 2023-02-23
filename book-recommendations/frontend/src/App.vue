@@ -11,7 +11,7 @@
       <v-container fluid>
         <keep-alive
           :key="$route.fullPath"
-          :max="3"
+          :max="2"
         >
           <router-view />
         </keep-alive>

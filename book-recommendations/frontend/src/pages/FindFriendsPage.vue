@@ -104,7 +104,6 @@ export default {
       this.isAFollowerOfUser = false
       const indx = this.userList.findIndex(user => user.email === this.$auth.user.email);
       this.userList.splice(indx, 1);
-      console.log(this.userList)
     },
     async follow(userToFollow) {
       const token = await this.$auth.getTokenSilently();

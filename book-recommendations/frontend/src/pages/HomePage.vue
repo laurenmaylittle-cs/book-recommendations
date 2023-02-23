@@ -48,10 +48,11 @@ export default {
       return this.categories.filter(category => this.selectedCategories.includes(category.list_id));
     },
   },
-  activated() {
-    EventBus.$on("refresh-homepage", () => {
+  async activated() {
+    EventBus.$on("refresh-homepage", async () => {
+      await this.$nextTick()
       this.$refs.bestSellerFilter.reset();
-      this.setUpBestSellers();
+      await this.setUpBestSellers();
     });
   },
   deactivated() {
