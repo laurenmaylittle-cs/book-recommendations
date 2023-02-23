@@ -80,12 +80,15 @@ export default {
     },
     async emitViewBook() {
       await this.$router.push({name: 'book'});
-
-      if (this.origin === 'search') {
-        EventBus.$emit('view-book-search', this.bookData);
-      } else if (this.origin === 'other') {
-        EventBus.$emit('view-book-other', this.bookData);
+      switch (this.origin) {
+        case 'search':
+          EventBus.$emit('view-book', this.bookData);
+          break;
+        case 'other':
+          EventBus.$emit('view-book-other', this.bookData);
+          break;
       }
+
     }
   }
 }
