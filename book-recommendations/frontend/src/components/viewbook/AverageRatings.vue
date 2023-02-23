@@ -10,6 +10,7 @@
       >
         Based on <a
           :href="reviewsUrl"
+          target="_blank"
         >{{ ratingsCount }}
           ratings</a>
       </p>
@@ -34,7 +35,7 @@ export default {
     id: {type: String, required: true}
   },
   data: () => ({
-    bookRating: '',
+    bookRating: 0,
     reviewsUrl: ''
   }),
   mounted() {

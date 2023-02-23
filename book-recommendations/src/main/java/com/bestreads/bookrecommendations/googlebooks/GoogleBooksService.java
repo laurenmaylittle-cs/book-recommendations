@@ -51,11 +51,11 @@ public class GoogleBooksService {
     return sendHttpRequest(getGetHttpRequest(uri));
   }
 
-  public HttpResponse<String> searchVolumeByIsbn(String searchTerm, int startIndex,
+  public HttpResponse<String> searchVolumeByIsbn(String isbn, int startIndex,
       int maxResults) {
     var uri = "%s/volumes?q=isbn:%s&startIndex=%s&maxResults=%s&key=%s".formatted(
         googleBooksApiUri,
-        searchTerm,
+        isbn,
         startIndex,
         maxResults,
         apiKey
@@ -63,13 +63,15 @@ public class GoogleBooksService {
     return sendHttpRequest(getGetHttpRequest(uri));
   }
 
-  public HttpResponse<String> getVolumeByIsbn(String isbn, int maxResults) {
-    var uri = "%s/volumes/?q=isbn:%s&maxResults=%s&key=%s".formatted(
+  public HttpResponse<String> searchVolumeByTitleAndAuthors(String title, String authors) {
+    var uri = "%s/volumes?q=%s+inauthor:%s&maxResults=%s&key=%s".formatted(
         googleBooksApiUri,
-        isbn,
-        maxResults,
+        title,
+        authors,
+        1,
         apiKey
     );
+
     return sendHttpRequest(getGetHttpRequest(uri));
   }
 

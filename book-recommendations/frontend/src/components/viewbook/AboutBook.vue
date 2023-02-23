@@ -99,7 +99,7 @@ export default {
     publishedDate: {type: String, required: true},
     originalDescription: {type: String, required: true},
     pages: {type: Number, required: true},
-    publisher: {type: String, required: true}
+    publisher: {type: String, required: false, default: "N/A"}
   },
   data: () => ({
     categories: '',

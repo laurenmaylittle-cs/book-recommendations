@@ -15,15 +15,12 @@
           </v-icon>
         </v-btn>
       </template>
-      <v-list>
-        <v-list-item @click="updateSearchBar('title')">
-          Title
-        </v-list-item>
-        <v-list-item @click="updateSearchBar('author')">
-          Author
-        </v-list-item>
-        <v-list-item @click="updateSearchBar('isbn')">
-          ISBN
+      <v-list
+        v-for="filter in queryFilters"
+        :key="filter.value"
+      >
+        <v-list-item @click="selectedQueryFilter = filter">
+          {{ filter.displayText }}
         </v-list-item>
       </v-list>
     </v-menu>
@@ -42,8 +39,7 @@
     <v-btn
       text
       :style="{ 'background-color': '#46648c', 'color': 'white' }"
-      class="pa-0"
-      @click.native="loadSearch(queryTerm)"
+      @click="loadSearch(queryTerm)"
     >
       <v-icon>mdi-magnify</v-icon>
     </v-btn>
@@ -51,6 +47,8 @@
 </template>
 
 <script>
+import {EventBus} from "@/event-bus";
+
 export default {
   name: "SearchBar",
   props: {
@@ -63,17 +61,14 @@ export default {
     queryTerm: "",
     selectedQueryFilter: {displayText: 'Title', value: 'title'},
     queryFilters: [
-      {displayText: 'ISBN', value: 'isbn'},
+      {displayText: 'Title', value: 'title'},
       {displayText: 'Author', value: 'author'},
-      {displayText: 'Title', value: 'title'}
+      {displayText: 'ISBN', value: 'isbn'},
     ],
   }),
   computed: {
     getSearchTypeDescription() {
-      if (this.selectedQueryFilter.value === "isbn") {
-        return `Search by ${this.selectedQueryFilter.displayText}`;
-      }
-      return `Search by ${this.selectedQueryFilter.value}`;
+      return `Search by ${this.selectedQueryFilter.displayText}`;
     },
     numberOfColsToTake() {
       if (this.$vuetify.breakpoint.xs) {
@@ -83,26 +78,24 @@ export default {
     }
   },
   methods: {
-    loadSearch() {
-      if (this.selectedQueryFilter.value !== 'isbn') {
-        this.$router.push({
-          name: 'search',
-          params: {searchType: this.selectedQueryFilter.value, searchTerm: this.queryTerm}
-        }).catch(() => {
-        })
+    async loadSearch() {
+      const routeName = this.selectedQueryFilter.value === 'isbn' ? 'book' : 'search';
+      const emitSearchEvent = () => {
+        // Remove hyphens and spaces from ISBN
+        if (this.selectedQueryFilter.value === 'isbn') {
+          this.queryTerm = this.queryTerm.replace(/[-\s]+/g, "");
+        }
+        EventBus.$emit('search-triggered', {
+          searchType: this.selectedQueryFilter.value,
+          searchTerm: this.queryTerm
+        });
+        this.queryTerm = '';
+      };
+      if (this.$route.name !== routeName) {
+        await this.$router.push({name: routeName});
+        emitSearchEvent();
       } else {
-        this.$router.push({name: 'book', params: {isbn: this.queryTerm}}).catch(() => {
-        })
-      }
-      window.location.reload()
-    },
-    updateSearchBar(selectedQuery) {
-      if (selectedQuery === "isbn") {
-        this.selectedQueryFilter = this.queryFilters[0];
-      } else if (selectedQuery === "author") {
-        this.selectedQueryFilter = this.queryFilters[1];
-      } else {
-        this.selectedQueryFilter = this.queryFilters[2];
+        emitSearchEvent();
       }
     }
   }

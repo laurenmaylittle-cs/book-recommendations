@@ -1,10 +1,13 @@
 import axios from "axios";
 
-export async function getBookInfo(isbn) {
-  return await axios('/api/public/book?isbn=' + isbn)
-  .then(response => {
-    return response.data;
-  });
+export async function getBookInfo(isbn, title, authors) {
+  const url = "/api/public/book";
+  const params = new URLSearchParams();
+  params.append("isbn", isbn);
+  params.append("title", title);
+  params.append("authors", authors);
+
+  return (await axios.get(url, {params: params})).data;
 }
 
 export async function getUserRating(email, isbn, token) {
@@ -36,14 +39,6 @@ export async function updateUserRating(email, isbn, rating, token) {
     method: 'PUT',
     url: '/api/private/update-user-rating?isbn=' + isbn + '&email=' + email
       + '&rating=' + rating,
-    headers: {
-      authorization: `Bearer ${token}`,
-    }
-  })
-}
-
-export async function exportData(bookData, token) {
-  await axios.post("/api/private/book-data", bookData, {
     headers: {
       authorization: `Bearer ${token}`,
     }
