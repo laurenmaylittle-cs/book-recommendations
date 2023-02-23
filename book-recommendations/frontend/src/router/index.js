@@ -7,6 +7,8 @@ import SearchView from "@/views/SearchView";
 import HomePage from "@/pages/HomePage";
 import FindFriendsPage from "@/pages/FindFriendsPage";
 import BookShelfPage from "@/pages/BookshelfPage"
+import BookshelfBooksPage from "@/pages/BookshelfBooksPage";
+
 
 Vue.use(VueRouter)
 
@@ -47,6 +49,12 @@ const routes = [
     path: '/bookshelf',
     name: 'bookshelf',
     component: BookShelfPage,
+    beforeEnter: authGuard
+  },
+  {
+    path: '/bookshelf/:collectionId',
+    name: 'bookshelfBooksPage',
+    component: BookshelfBooksPage,
     beforeEnter: authGuard
   }
 ]
