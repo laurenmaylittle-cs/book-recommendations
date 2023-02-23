@@ -16,7 +16,6 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("/api")
 public class AwsPersonalizeController {
-
     private final AwsPersonalizeService awsPersonalizeService;
     private PersonalizeClient personalizeClient;
     private PersonalizeRuntimeClient personalizeRuntimeClient;
@@ -42,5 +41,9 @@ public class AwsPersonalizeController {
     public ArrayList<String> getRecs(@Param("isbn") String isbn) {
         return awsPersonalizeService.getRecs(this.personalizeRuntimeClient,campaignArn, isbn);
     }
+
+
+
+
 
 }
