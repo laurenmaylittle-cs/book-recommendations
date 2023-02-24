@@ -25,6 +25,7 @@
         :key="book.isbn"
       >
         <book-details
+          origin="search"
           :authors="checkForMultipleAuthors(book.authors)"
           :title="book.title"
           :published-date="book.publishedDate"

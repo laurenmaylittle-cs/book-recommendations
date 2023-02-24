@@ -70,6 +70,74 @@
           heading="Average rating"
           :ratings-count="bookData.ratingsCount ? parseInt(bookData.ratingsCount) : 0"
         />
+        <user-ratings
+          :isbn="
+            isbn.toString()"
+        />
+      </v-col>
+      <v-col class="ma-0">
+        <view-book-thumbnail :thumbnail="bookData.imageLinks.thumbnail" />
+      </v-col>
+    </v-row>
+    <v-row
+      v-if="!isLoading && bookData !== null"
+      class="pt-0 ma-0 align-center"
+    >
+      <about-book
+        :category="concatDetails(bookData.categories)"
+        :published-date="bookData.publishedDate"
+        :original-description="bookData.description"
+        :pages="bookData.pageCount"
+        :publisher="bookData.publisher"
+      />
+      v-if="!isLoading && bookData !== null"
+      class="pb-0 pt-0 align-center"
+    >
+      <v-col class="ml-4 pt-4">
+        <!-- TODO BES-70 show all authors and genres depending on the data returned from the API -->
+        <h1
+          v-if="bookData.title"
+          class="mt-0"
+        >
+          {{ bookData.title }}
+        </h1>
+        <div
+          v-if="bookData.authors"
+        >
+          <div
+            v-for="(author, index) in bookData.authors"
+            :key="index"
+          >
+            <h2 v-if="index === 0 && bookData.authors.length === 1">
+              By
+              <a @click="emitAuthorSearch(author)">
+                {{ author }}
+              </a>
+            </h2>
+            <h2 v-else-if="index === 0">
+              By
+              <a @click="emitAuthorSearch(author)">
+                {{ author }},
+              </a>
+            </h2>
+            <h2 v-else-if="index === bookData.authors.length -1">
+              <a @click="emitAuthorSearch(author)">
+                {{ author }}
+              </a>
+            </h2>
+            <h2 v-else>
+              <a @click="emitAuthorSearch(author)">
+                {{ author }},
+              </a>
+            </h2>
+          </div>
+        </div>
+        <average-ratings
+          :id="bookData.id"
+          :rating="bookData.averageRating ? parseInt(bookData.averageRating) : 0"
+          heading="Average rating"
+          :ratings-count="bookData.ratingsCount ? parseInt(bookData.ratingsCount) : 0"
+        />
         <template v-if="$auth.isAuthenticated">
           <template v-if="!ratingsLoaded && !collectionsLoaded">
             <v-progress-circular
@@ -146,10 +214,10 @@ export default {
   },
   async activated() {
     //view-book - from search results
-    //view-book-home - from home page
+    //view-book-other - from any other origin (home, collections - will perform a get request to get this data with isbn and title)
     //search-triggered - search by isbn
     EventBus.$on('view-book', this.populateBookData);
-    EventBus.$on(['view-book-home', 'search-triggered'], this.getBookData);
+    EventBus.$on(['view-book-other', 'search-triggered'], this.getBookData);
 
     await this.$nextTick();
 
@@ -165,7 +233,7 @@ export default {
     this.viewBookEmitted = false;
     this.collectionsLoaded = false;
     this.ratingsLoaded = false;
-    EventBus.$off(['search-triggered', 'view-book', 'view-book-home']);
+    EventBus.$off(['search-triggered', 'view-book', 'view-book-other']);
   },
   methods: {
     populateBookData(bookData) {

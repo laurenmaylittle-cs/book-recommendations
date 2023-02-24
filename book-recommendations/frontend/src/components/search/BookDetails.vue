@@ -50,6 +50,10 @@ export default {
       type: String,
       required: true
     },
+    origin: {
+      type: String, // from which page the book is being viewed (effect how the book data is displayed on view book)
+      required: true // either 'search' or 'other'
+    },
     bookData: {
       type: Object,
       required: true
@@ -76,7 +80,15 @@ export default {
     },
     async emitViewBook() {
       await this.$router.push({name: 'book'});
-      EventBus.$emit('view-book', this.bookData);
+      switch (this.origin) {
+        case 'search':
+          EventBus.$emit('view-book', this.bookData);
+          break;
+        case 'other':
+          EventBus.$emit('view-book-other', this.bookData);
+          break;
+      }
+
     }
   }
 }

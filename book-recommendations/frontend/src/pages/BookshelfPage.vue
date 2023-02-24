@@ -34,6 +34,7 @@
                 :key="collection.id"
                 :collection-name="collection.name"
                 :collection-color="colors[index]"
+                @click.native="goToCollection(collection.id)"
               />
             </v-row>
           </v-sheet>
@@ -58,6 +59,7 @@ import CreateCollectionModal from "@/components/bookshelf/CreateCollectionModal.
 import CollectionItem from "@/components/bookshelf/CollectionItem.vue";
 import {getCollection, getCollectionsForUser} from "@/api/bookshelf";
 import {generatePastelColors} from "@/util/util";
+import {EventBus} from "@/event-bus";
 
 export default {
   name: "CollectionsPage",
@@ -106,6 +108,10 @@ export default {
       generatePastelColors(this.colors, this.collections.length, {min: 50, max: 60},
         {min: 80, max: 90})
     },
+    async goToCollection(collectionId) {
+      await this.$router.push({name: 'bookshelfBooksPage'});
+      EventBus.$emit('load-collection-books', collectionId);
+    }
   }
 }
 </script>
