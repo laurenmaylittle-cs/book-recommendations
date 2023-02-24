@@ -6,12 +6,11 @@ import axios from "axios"
  * @param {string} token Access token to the API
  */
 export async function getBooksInCollection(collectionId, token) {
-  const result = await axios.get(
-    `/api/private/bookshelf/singleBookshelf?bookshelfId=${collectionId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  const result = await axios.get(`/api/private/bookshelf/singleBookshelf?bookshelfId=${collectionId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return result.data;
 }
 

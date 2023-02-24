@@ -4,28 +4,34 @@
     color="#46648c"
     dark
   >
-    <div class="d-flex align-center">
+    <div class="d-flex align-center ma-0">
       <v-hover v-slot="{ hover }">
         <v-btn
-          href="/home"
           text
-          :style="{ ...getHoverEffect(hover) }"
+          :style="{ ...getHoverEffect(hover), boxShadow: 'none' }"
+          @click="redirectToHomePage"
         >
           <v-icon>mdi-book-open-page-variant</v-icon>
-          <span class="mr-2">{{ serviceName }}</span>
+          {{ serviceName }}
         </v-btn>
       </v-hover>
     </div>
+    <v-spacer />
     <search-bar :search-term="searchTerm" />
     <v-spacer />
-    <v-btn
-      text
-      color="white"
-      href="/bookshelf"
+    <router-link
+      to="/bookshelf"
+      custom
+      :style="{ ...getHoverEffect(), boxShadow: 'none'}"
     >
-      <v-icon>mdi-bookshelf</v-icon>
-    </v-btn>
-    <!--    TODO BES-36 do proper implementation of profile link, just placeholder to demo AuthGuard page authentication-->
+      <template #default="{ navigate }">
+        <v-btn @click="navigate">
+          <v-icon>mdi-bookshelf</v-icon>
+        </v-btn>
+      </template>
+    </router-link>
+    <!-- TODO BES-36 do proper implementation of profile link, just placeholder to demo AuthGuard page
+    authentication-->
     <div v-if="!$auth.loading">
       <!-- show login when not authenticated -->
       <button
@@ -67,6 +73,7 @@
 
 <script>
 import SearchBar from '@/components/search/SearchBar'
+import {EventBus} from "@/event-bus";
 
 export default {
   name: 'NavBar',
@@ -86,10 +93,16 @@ export default {
     getHoverEffect(hover) {
       return {'background-color': hover ? 'white' : '#46648c', 'color': hover ? '#46648c' : 'white'}
     },
+    async redirectToHomePage() {
+      const isOnHomePage = this.$router.currentRoute.name === 'homePage';
+      if (!isOnHomePage) {
+        await this.$router.push({name: 'homePage'});
+      }
+      EventBus.$emit('refresh-homepage');
+    },
     login() {
       this.$auth.loginWithRedirect();
     },
-    // Log the user out
     logout() {
       this.$auth.logout({
         returnTo: window.location.origin
@@ -106,5 +119,9 @@ export default {
 
 /deep/ .v-input__control {
   margin-top: 25px;
+}
+
+.v-btn {
+  box-shadow: none;
 }
 </style>

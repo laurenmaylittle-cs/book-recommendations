@@ -17,10 +17,10 @@ public class SingleCollectionController {
 
   private final CollectionsService collectionsService;
 
-  @Autowired
-  public SingleCollectionController(CollectionsService collectionsService) {
-    this.collectionsService = collectionsService;
-  }
+    @Autowired
+    public SingleCollectionController(CollectionsService collectionsService) {
+        this.collectionsService = collectionsService;
+    }
 
   @GetMapping
   public SingleCollection getBooksInCollection(JwtAuthenticationToken authenticationToken,

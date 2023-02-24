@@ -74,15 +74,17 @@
     </v-row>
     <v-row no-gutters>
       <v-col
-        v-for="book in collectionBooks.booksInCollection"
+        v-for="book in collectionBooks"
         :key="book.title"
       >
         <book-details
+          origin="other"
           :author="book.author"
           :title="book.title"
           :thumbnail="book.thumbnail"
           :isbn="book.isbn"
           :published-date="book.publishedDate"
+          :book-data="book"
         />
       </v-col>
     </v-row>
@@ -91,15 +93,18 @@
 <script>
 import BookDetails from "@/components/search/BookDetails";
 import {getBooksInCollection, updateCollectionName} from "@/api/bookshelfBooks";
+import {EventBus} from "@/event-bus";
 
 export default {
   name: "CollectionBooksPage",
   components: {BookDetails},
   data: function () {
     return {
-      collectionId: this.$route.params.collectionId,
+      collectionId: "",
       isLoading: true,
+      previousBookData: null,
       collectionBooks: [],
+      loadCollectionBooksEmitted: false,
       collectionNameValidation: [
         v => !!v || 'Collection name required',
         v => (v && v.length <= 16) || 'Collection name must be less than 16 characters'
@@ -108,15 +113,31 @@ export default {
       collectionName: ''
     }
   },
-  async mounted() {
-    await this.getBooksInCollection();
-    this.isLoading = false;
-    this.collectionName = this.collectionBooks.collectionName
+  async activated() {
+    EventBus.$on("load-collection-books", this.getBooksInCollection);
+
+    await this.$nextTick()
+
+    if (this.loadCollectionBooksEmitted === false) {
+      this.collectionBooks = this.previousBookData;
+      this.isLoading = false;
+    }
+  },
+  deactivated() {
+    this.collectionId = "";
+    this.isLoading = true;
+    this.loadCollectionBooksEmitted = false;
+    this.previousBookData = this.collectionBooks;
+    this.collectionBooks = [];
+    EventBus.$off("load-collection-books");
   },
   methods: {
-    async getBooksInCollection() {
+    async getBooksInCollection(collectionId) {
+      this.loadCollectionBooksEmitted = true;
+      this.collectionId = collectionId;
       this.collectionBooks = await getBooksInCollection(this.collectionId,
         await this.$auth.getTokenSilently())
+      this.isLoading = false;
     },
     checkForMultipleAuthors(authors) {
       if (authors === undefined || authors === null) {
