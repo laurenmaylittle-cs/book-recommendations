@@ -14,6 +14,7 @@
         :key="collection.id"
         :color="collectionColors[index]"
         class="ma-2"
+        @click="navigateToCollection(collection)"
       >
         {{ collection.name }}
       </v-chip>
@@ -119,6 +120,7 @@
 import {generatePastelColors} from "@/util/util";
 import {getUserCollections, saveUserCollections} from "@/api/view-book";
 import {mapGetters} from "vuex";
+import {EventBus} from "@/event-bus";
 
 export default {
   name: "BookCollections",
@@ -195,6 +197,11 @@ export default {
       this.collectionsToUpdate = this._createDeepCopyOfCollections();
       this.collectionSaveInProgress = false;
       this.clearDialog();
+    },
+    async navigateToCollection(collection) {
+      await this.$router.push({name: 'bookshelfBooksPage'});
+      console.log(collection.id);
+      EventBus.$emit('load-collection-books', collection.id);
     },
     clearDialogAndResetState() {
       this.collectionsToUpdate = this._createDeepCopyOfCollections();

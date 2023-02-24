@@ -67,11 +67,3 @@ export async function saveUserCollections(token, collectionsAndBook) {
     }
   })).data;
 }
-
-export async function exportData(bookData, token) {
-  await axios.post("/api/private/book-data", bookData, {
-    headers: {
-      authorization: `Bearer ${token}`,
-    }
-  })
-}

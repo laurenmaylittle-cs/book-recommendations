@@ -1,8 +1,13 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "books")
@@ -24,6 +29,16 @@ class BookDAO implements Serializable {
   private String isbn;
 
   private String genre;
+
+  public BookDAO() {
+  }
+
+  public BookDAO(String title, String author, String thumbnail, String isbn) {
+    this.title = title;
+    this.author = author;
+    this.thumbnail = thumbnail;
+    this.isbn = isbn;
+  }
 
   public String getIsbn() {
     return isbn;

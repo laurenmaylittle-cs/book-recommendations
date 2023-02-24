@@ -97,10 +97,11 @@ public class CollectionsBookService {
 
   private CollectionDAO updateCollectionDAO(CollectionDAO collectionDAO,
       List<CollectionBookJson> collectionBookJsons, BookDAO book) {
-    var record = collectionBookJsons.stream()
+    //find the collectionBookJson that matches the collectionDAO
+    var collectionBook = collectionBookJsons.stream()
         .filter(cb -> Objects.equals(cb.id(), collectionDAO.getId()))
         .findFirst();
-    var enabled = record.map(CollectionBookJson::enabled).orElse(false);
+    var enabled = collectionBook.map(CollectionBookJson::enabled).orElse(false);
     if (enabled) {
       collectionDAO.getBookDaos().add(book);
     } else {
