@@ -1,8 +1,13 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "books")
@@ -24,6 +29,8 @@ class BookDAO implements Serializable {
   private String isbn;
 
   private String genre;
+
+  private String publisher;
 
   public String getIsbn() {
     return isbn;
@@ -81,16 +88,24 @@ class BookDAO implements Serializable {
     this.genre = genre;
   }
 
+
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     BookDAO bookDAO = (BookDAO) o;
-    return Objects.equals(id, bookDAO.id) && Objects.equals(title, bookDAO.title) && Objects.equals(author, bookDAO.author) && Objects.equals(thumbnail, bookDAO.thumbnail) && Objects.equals(publishedDate, bookDAO.publishedDate) && Objects.equals(isbn, bookDAO.isbn) && Objects.equals(genre, bookDAO.genre);
+    return id.equals(bookDAO.id) && title.equals(bookDAO.title) && author.equals(bookDAO.author)
+        && thumbnail.equals(bookDAO.thumbnail) && publishedDate.equals(bookDAO.publishedDate)
+        && isbn.equals(bookDAO.isbn) && genre.equals(bookDAO.genre) && publisher.equals(
+        bookDAO.publisher);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, title, author, thumbnail, publishedDate, isbn, genre);
+    return Objects.hash(id, title, author, thumbnail, publishedDate, isbn, genre, publisher);
   }
 }
