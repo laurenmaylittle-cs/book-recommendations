@@ -74,7 +74,7 @@
     </v-row>
     <v-row no-gutters>
       <v-col
-        v-for="book in collectionBooks"
+        v-for="book in collectionBooks.booksInCollection"
         :key="book.title"
       >
         <book-details
@@ -103,7 +103,7 @@ export default {
       collectionId: "",
       isLoading: true,
       previousBookData: null,
-      collectionBooks: [],
+      collectionBooks: {},
       loadCollectionBooksEmitted: false,
       collectionNameValidation: [
         v => !!v || 'Collection name required',
