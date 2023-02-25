@@ -1,4 +1,4 @@
-package com.bestreads.bookrecommendations.bookshelf;
+package com.bestreads.bookrecommendations.book;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "books")
-class BookDAO implements Serializable {
+public class BookDAO implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
