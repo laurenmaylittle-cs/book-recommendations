@@ -5,5 +5,4 @@ import java.util.List;
 
 record CollectionBookRootJson(List<CollectionBookJson> collections, Book book) {
 
-
 }

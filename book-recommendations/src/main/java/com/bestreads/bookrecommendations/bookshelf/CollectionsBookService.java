@@ -18,14 +18,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class CollectionsBookService {
+class CollectionsBookService {
 
   private final CollectionsRepository collectionsRepository;
 
   private final BookDAORepository bookDAORepository;
 
   @Autowired
-  public CollectionsBookService(CollectionsRepository collectionsRepository,
+  CollectionsBookService(CollectionsRepository collectionsRepository,
       BookDAORepository bookDAORepository) {
     this.collectionsRepository = collectionsRepository;
     this.bookDAORepository = bookDAORepository;
@@ -40,7 +40,7 @@ public class CollectionsBookService {
   }
 
   @Transactional
-  public Set<CollectionBookJson> updateCollectionsForBook(String userId,
+  Set<CollectionBookJson> updateCollectionsForBook(String userId,
       CollectionBookRootJson collectionBookRootJson, String isbn) {
     var book = bookDAORepository.findBookDAOByIsbn(isbn)
         .orElseGet(() -> createNewBookDAOFromBook(collectionBookRootJson.book()));
