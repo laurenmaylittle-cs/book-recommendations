@@ -19,7 +19,7 @@
         {{ collection.name }}
       </v-chip>
     </template>
-    <v-col>
+    <v-col v-if="collectionsLoaded">
       <v-btn
         color="primary"
         @click="dialog = true"
@@ -138,6 +138,7 @@ export default {
     collectionsToUpdate: [],
     collectionSaveInProgress: false,
     collectionColors: [],
+    collectionsLoaded: false,
   }),
   computed: {
     collectionButtonText() {
@@ -182,6 +183,7 @@ export default {
       this.collectionsMap = userCollections.sort((a, b) => a.name.localeCompare(b.name));
       this._computeCollectionColors();
       this.collectionsToUpdate = this._createDeepCopyOfCollections();
+      this.collectionsLoaded = true;
     },
     async saveCollection() {
       this.collectionSaveInProgress = true;
