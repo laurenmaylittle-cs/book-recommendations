@@ -76,12 +76,14 @@ class CollectionsBookService {
   private BookDAO createNewBookDAOFromBook(Book book) {
     var newBook = new BookDAO();
     newBook.setIsbn(book.isbn());
-    newBook.setAuthor(String.join(", ", book.authors()));
+    newBook.setAuthor(book.authors() == null || book.authors().isEmpty() ? ""
+        : String.join(", ", book.authors()));
     newBook.setTitle(book.title());
     newBook.setThumbnail(book.imageLinks().thumbnail());
-    newBook.setGenre(book.categories().isEmpty() ? "" : book.categories().get(0));
-    newBook.setPublisher(book.publisher());
-    newBook.setPublishedDate(book.publishedDate());
+    newBook.setGenre(
+        book.categories() == null || book.categories().isEmpty() ? "" : book.categories().get(0));
+    newBook.setPublisher(book.publisher() == null ? "" : book.publisher());
+    newBook.setPublishedDate(book.publishedDate() == null ? "" : book.publishedDate());
     return bookDAORepository.save(newBook);
   }
 
