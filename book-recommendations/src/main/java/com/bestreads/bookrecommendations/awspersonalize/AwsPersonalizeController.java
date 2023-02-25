@@ -1,5 +1,8 @@
 package com.bestreads.bookrecommendations.awspersonalize;
 
+import com.bestreads.bookrecommendations.bookshelf.BookDAO;
+import java.util.List;
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
@@ -10,40 +13,35 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.personalize.PersonalizeClient;
 import software.amazon.awssdk.services.personalizeruntime.PersonalizeRuntimeClient;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-
 @RestController
 @RequestMapping("/api")
 public class AwsPersonalizeController {
-    private final AwsPersonalizeService awsPersonalizeService;
-    private PersonalizeClient personalizeClient;
-    private PersonalizeRuntimeClient personalizeRuntimeClient;
-    @Value("${AWS_CAMPAIGN_ARN}")
-    private String campaignArn;
-    @Value("${AWS_REGION}")
-    private Region region;
 
-    @PostConstruct
-    private void initialiseAmazon() {
-        this.personalizeClient = PersonalizeClient.builder()
-                .region(region)
-                .build();
-        this.personalizeRuntimeClient = PersonalizeRuntimeClient.builder()
-                .region(region)
-                .build();
-    }
+  private final AwsPersonalizeService awsPersonalizeService;
+  private PersonalizeClient personalizeClient;
+  private PersonalizeRuntimeClient personalizeRuntimeClient;
+  @Value("${AWS_CAMPAIGN_ARN}")
+  private String campaignArn;
+  @Value("${AWS_REGION}")
+  private Region region;
 
-    @Autowired
-    public AwsPersonalizeController (AwsPersonalizeService awsPersonalizeService) {this.awsPersonalizeService = awsPersonalizeService;}
+  @PostConstruct
+  private void initialiseAmazon() {
+    this.personalizeClient = PersonalizeClient.builder()
+        .region(region)
+        .build();
+    this.personalizeRuntimeClient = PersonalizeRuntimeClient.builder()
+        .region(region)
+        .build();
+  }
 
-    @GetMapping("/public/book/get-recs")
-    public ArrayList<String> getRecs(@Param("isbn") String isbn) {
-        return awsPersonalizeService.getRecs(this.personalizeRuntimeClient,campaignArn, isbn);
-    }
+  @Autowired
+  public AwsPersonalizeController(AwsPersonalizeService awsPersonalizeService) {
+    this.awsPersonalizeService = awsPersonalizeService;
+  }
 
-
-
-
-
+  @GetMapping("/public/book/get-recs")
+  public List<BookDAO> getRecs(@Param("isbn") String isbn) {
+    return awsPersonalizeService.getRecs(this.personalizeRuntimeClient, campaignArn, isbn);
+  }
 }
