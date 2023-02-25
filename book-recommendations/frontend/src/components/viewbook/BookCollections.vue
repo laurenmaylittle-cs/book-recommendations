@@ -63,7 +63,7 @@
                     <v-text-field
                       v-model="newCollectionName"
                       label="Collection name"
-                      :append-outer-icon="shouldCreateCollection ? 'mdi-plus' : 'mdi-close-circle'"
+                      :append-outer-icon="shouldCreateCollection ? 'mdi-plus-circle' : 'mdi-close-circle'"
                       clear-icon="mdi-close-circle"
                       clearable
                       :rules="collectionValidationRules"
