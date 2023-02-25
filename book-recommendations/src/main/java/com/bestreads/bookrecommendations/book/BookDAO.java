@@ -102,6 +102,9 @@ public class BookDAO implements Serializable {
     this.genre = genre;
   }
 
+  public void setPublisher(String publisher) {
+    this.publisher = publisher;
+  }
 
   @Override
   public boolean equals(Object o) {
