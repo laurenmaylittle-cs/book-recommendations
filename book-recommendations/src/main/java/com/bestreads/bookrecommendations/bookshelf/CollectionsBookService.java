@@ -79,6 +79,9 @@ public class CollectionsBookService {
     newBook.setAuthor(String.join(", ", book.authors()));
     newBook.setTitle(book.title());
     newBook.setThumbnail(book.imageLinks().thumbnail());
+    newBook.setGenre(book.categories().isEmpty() ? "" : book.categories().get(0));
+    newBook.setPublisher(book.publisher());
+    newBook.setPublishedDate(book.publishedDate());
     return bookDAORepository.save(newBook);
   }
 
