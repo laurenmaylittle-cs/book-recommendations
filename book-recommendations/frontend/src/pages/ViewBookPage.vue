@@ -70,6 +70,16 @@
           heading="Average rating"
           :ratings-count="bookData.ratingsCount ? parseInt(bookData.ratingsCount) : 0"
         />
+        <template v-if="!$auth.isAuthenticated">
+          <v-alert
+            outlined
+            type="info"
+            :width="$vuetify.breakpoint.xs ? '100%' : '75%'"
+          >
+            Log in to add your own ratings and manage collections
+          </v-alert>
+        </template>
+
         <template v-if="$auth.isAuthenticated">
           <template v-if="!ratingsLoaded && !collectionsLoaded">
             <v-progress-circular
@@ -91,9 +101,7 @@
           />
         </template>
       </v-col>
-      <v-col class="ma-0">
-        <view-book-thumbnail :thumbnail="bookData.imageLinks.thumbnail" />
-      </v-col>
+      <view-book-thumbnail :thumbnail="bookData.imageLinks.thumbnail" />
     </v-row>
     <v-row
       v-if="!isLoading && bookData !== null"
@@ -161,7 +169,7 @@ export default {
   deactivated() {
     this.previousBookData = this.bookData;
     this.bookData = null;
-    this.isLoading = true;
+    this.isLoading = false;
     this.viewBookEmitted = false;
     this.collectionsLoaded = false;
     this.ratingsLoaded = false;

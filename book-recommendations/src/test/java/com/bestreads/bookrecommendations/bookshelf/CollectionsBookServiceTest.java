@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import com.bestreads.bookrecommendations.book.Book;
 import com.bestreads.bookrecommendations.book.BookDAO;
+import com.bestreads.bookrecommendations.book.BookDAORepository;
 import com.bestreads.bookrecommendations.book.ImageLinks;
 import java.util.Arrays;
 import java.util.Collections;

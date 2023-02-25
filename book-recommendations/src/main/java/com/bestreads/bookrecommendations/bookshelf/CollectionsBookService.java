@@ -7,6 +7,7 @@ import static java.util.stream.Stream.concat;
 
 import com.bestreads.bookrecommendations.book.Book;
 import com.bestreads.bookrecommendations.book.BookDAO;
+import com.bestreads.bookrecommendations.book.BookDAORepository;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
