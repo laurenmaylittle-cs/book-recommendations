@@ -140,7 +140,7 @@ export default {
     return {
       bookData: null,
       isbn: "",
-      isLoading: true,
+      isLoading: false,
       previousBookData: null,
       viewBookEmitted: false,
       ratingsLoaded: false,
