@@ -32,10 +32,10 @@ class CollectionDAO {
       inverseJoinColumns = @JoinColumn(name = "isbn", referencedColumnName = "isbn"))
   private Set<BookDAO> bookDAOS = new LinkedHashSet<>();
 
-  public CollectionDAO() {
+  CollectionDAO() {
   }
 
-  public CollectionDAO(String name, String userId, Set<BookDAO> bookDAOS) {
+  CollectionDAO(String name, String userId, Set<BookDAO> bookDAOS) {
     this.name = name;
     this.userId = userId;
     this.bookDAOS = bookDAOS;
