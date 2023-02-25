@@ -7,7 +7,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.bestreads.bookrecommendations.book.Book;
+import com.bestreads.bookrecommendations.book.BookDAO;
 import com.bestreads.bookrecommendations.book.ImageLinks;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -118,12 +120,19 @@ class CollectionsBookServiceTest {
     String isbn = "9783161484100";
 
     Book book = new Book(
-        "Test Book",
-        List.of("Test Author"),
-        "Test publisher",
-        "Description",
-        new ImageLinks("thumbnail_url", "small_url"),
-        "9783161484100"
+        "1",
+        "The Hitchhiker's Guide to the Galaxy",
+        Arrays.asList("Douglas Adams"),
+        "Pan Books",
+        "1979-10-12",
+        "A comedy sci-fi novel by Douglas Adams about Arthur Dent's escape from Earth.",
+        180,
+        Arrays.asList("Science Fiction", "Humor"),
+        new ImageLinks("https://tinyurl.com/2x4j7v6y", "https://tinyurl.com/3f8z5w9a"),
+        "en",
+        4,
+        12345,
+        isbn
     );
 
     CollectionDAO existingCollection = new CollectionDAO(
@@ -137,10 +146,13 @@ class CollectionsBookServiceTest {
         "New Collection",
         userId,
         Set.of(new BookDAO(
-            isbn,
             book.title(),
             String.join(", ", book.authors()),
-            book.imageLinks().thumbnail()
+            book.imageLinks().thumbnail(),
+            book.publishedDate(),
+            book.isbn(),
+            book.categories().toString(),
+            book.publisher()
         ))
     );
 

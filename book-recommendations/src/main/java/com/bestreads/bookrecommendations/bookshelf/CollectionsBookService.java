@@ -6,6 +6,7 @@ import static java.util.stream.Collectors.toSet;
 import static java.util.stream.Stream.concat;
 
 import com.bestreads.bookrecommendations.book.Book;
+import com.bestreads.bookrecommendations.book.BookDAO;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;

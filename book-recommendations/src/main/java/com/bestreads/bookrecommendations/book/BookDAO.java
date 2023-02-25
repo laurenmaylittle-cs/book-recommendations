@@ -35,11 +35,15 @@ public class BookDAO implements Serializable {
   public BookDAO() {
   }
 
-  public BookDAO(String title, String author, String thumbnail, String isbn) {
+  public BookDAO(String title, String author, String thumbnail, String publishedDate, String isbn,
+      String genre, String publisher) {
     this.title = title;
     this.author = author;
     this.thumbnail = thumbnail;
+    this.publishedDate = publishedDate;
     this.isbn = isbn;
+    this.genre = genre;
+    this.publisher = publisher;
   }
 
   public String getIsbn() {
