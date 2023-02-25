@@ -1,26 +1,34 @@
 <template>
   <div>
-    <v-card>
-      <v-card-actions class="justify-center mb-0 pt-6">
-        <a @click="emitViewBook">
-          <v-img
-            class="rounded mb-0"
-            :lazy-src="thumbnail"
-            height="192px"
-            width="128px"
-            :src="thumbnail"
-          />
-        </a>
-      </v-card-actions>
-      <v-card-text class="mt-0">
-        <div class="text-subtitle-2 text--primary mt-0">
-          {{ truncateText(title, 30) }}
-        </div>
-        <div class="text-subtitle-2 font-italic font-size-small">
-          {{ getTruncatedAuthor }}
-        </div>
-      </v-card-text>
-    </v-card>
+    <v-hover
+      v-slot="{ hover }"
+      ref="hoverEffectRef"
+    >
+      <v-card
+        :color="getHoverEffect(hover)"
+        outlined
+      >
+        <v-card-actions class="justify-center mb-0 pt-4">
+          <a @click="emitViewBook">
+            <v-img
+              class="rounded mb-0"
+              :lazy-src="thumbnail"
+              height="192px"
+              width="128px"
+              :src="thumbnail"
+            />
+          </a>
+        </v-card-actions>
+        <v-card-text class="mt-0 ">
+          <div class="text-subtitle-2 text--primary mt-0">
+            {{ truncateText(title, 30) }}
+          </div>
+          <div class="text-subtitle-2 font-italic font-size-small">
+            {{ getTruncatedAuthor }}
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-hover>
   </div>
 </template>
 
@@ -64,7 +72,7 @@ export default {
       if (this.authors === "") {
         return this.formatDate()
       }
-      return `${this.truncateText(this.authors, 50)} - ${this.formatDate()}`
+      return `${this.truncateText(this.authors, 30)} - ${this.formatDate()}`
     }
   },
   methods: {
@@ -88,7 +96,9 @@ export default {
           EventBus.$emit('view-book-other', this.bookData);
           break;
       }
-
+    },
+    getHoverEffect(hover) {
+      return hover ? "blue-grey lighten-4" : "#FFFFFF";
     }
   }
 }
