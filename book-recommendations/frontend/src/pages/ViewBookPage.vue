@@ -34,9 +34,6 @@
           {{ errorMessage }}
         </p>
       </v-row>
-      <v-row>
-        <p>{{ displayRecommendations }}</p>
-      </v-row>
       <v-row
         v-if="!isLoading && isValidISBN"
         class="pb-0 pt-0 align-center"
@@ -112,6 +109,12 @@
           :publisher="bookData.publisher"
         />
       </v-row>
+      <v-row v-if="!isLoading && isValidISBN">
+        <book-category-carousel
+          best-seller-category="You may also like"
+          :books="recommendedIsbns"
+        />
+      </v-row>
     </v-row>
   </v-container>
 </template>
@@ -123,10 +126,12 @@ import AverageRatings from "@/components/viewbook/AverageRatings";
 import UserRatings from "@/components/viewbook/UserRatings";
 import AboutBook from "@/components/viewbook/AboutBook";
 import {getRecs} from "@/api/personalize";
+import BookCategoryCarousel from "@/components/home/BookCategoryCarousel";
 
 export default {
   name: 'ViewBook',
   components: {
+    BookCategoryCarousel,
     AboutBook,
     UserRatings,
     AverageRatings,

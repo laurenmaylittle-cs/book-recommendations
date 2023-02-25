@@ -21,7 +21,7 @@
               <book-item
                 v-if="(+index + i) < books.length"
                 :key="i"
-                :book-image-link="books[+index + i].imageLinks.thumbnail"
+                :book-image-link="bookImage(books[+index + i])"
                 :book-title="books[+index + i].title"
                 :isbn="books[+index + i].isbn"
               />
@@ -61,6 +61,14 @@ export default {
         return 2
       }
       return 1;
+    }
+  },
+  methods: {
+    bookImage(book) {
+      if (book.thumbnail === null || book.thumbnail === undefined) {
+        return book.imageLinks.thumbnail;
+      }
+      return book.thumbnail;
     }
   }
 }
