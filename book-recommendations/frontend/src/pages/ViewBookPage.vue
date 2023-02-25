@@ -140,7 +140,7 @@ export default {
     return {
       bookData: null,
       isbn: "",
-      isLoading: false,
+      isLoading: true,
       previousBookData: null,
       viewBookEmitted: false,
       ratingsLoaded: false,
@@ -169,7 +169,7 @@ export default {
   deactivated() {
     this.previousBookData = this.bookData;
     this.bookData = null;
-    this.isLoading = false;
+    this.isLoading = true;
     this.viewBookEmitted = false;
     this.collectionsLoaded = false;
     this.ratingsLoaded = false;
