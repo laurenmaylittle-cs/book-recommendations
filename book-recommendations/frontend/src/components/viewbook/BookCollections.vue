@@ -200,7 +200,6 @@ export default {
     },
     async navigateToCollection(collection) {
       await this.$router.push({name: 'bookshelfBooksPage'});
-      console.log(collection.id);
       EventBus.$emit('load-collection-books', collection.id);
     },
     clearDialogAndResetState() {
