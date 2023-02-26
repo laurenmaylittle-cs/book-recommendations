@@ -100,9 +100,8 @@ export default {
       return `There are no results for ${this.searchTerm}`
     },
   },
-  async activated() {
+  activated() {
     EventBus.$on('search-triggered', this.performSearch);
-    await this.$nextTick();
     this._updatePageTitle();
   },
   deactivated() {
