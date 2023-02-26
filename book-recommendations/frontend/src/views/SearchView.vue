@@ -100,8 +100,10 @@ export default {
       return `There are no results for ${this.searchTerm}`
     },
   },
-  activated() {
+  async activated() {
     EventBus.$on('search-triggered', this.performSearch);
+    await this.$nextTick();
+    this._updatePageTitle();
   },
   deactivated() {
     EventBus.$off('search-triggered')
@@ -109,6 +111,7 @@ export default {
   methods: {
     async performSearch(queryDetails) {
       this._resetAndUpdateSearchData(queryDetails);
+      this._updatePageTitle();
       this.isLoading = true;
 
       if (queryDetails.searchType === "title") {
@@ -125,6 +128,9 @@ export default {
       this.nextSearchResults = [];
       this.searchTerm = queryDetails.searchTerm;
       this.searchType = queryDetails.searchType;
+    },
+    _updatePageTitle() {
+      document.title = `Search results for ${this.searchTerm}`;
     },
     async searchByAuthor(author, startIndex) {
       this.searchResults = await searchByAuthor(author, startIndex)
