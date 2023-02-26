@@ -7,7 +7,6 @@ import com.bestreads.bookrecommendations.book.BookDAORepository;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +16,7 @@ class CollectionsService {
   private final CollectionsRepository collectionsRepository;
 
   @Autowired
-  CollectionsService(CollectionsRepository collectionsRepository, JdbcTemplate jdbcTemplate,
+  CollectionsService(CollectionsRepository collectionsRepository,
       BookDAORepository bookDAORepository) {
     this.collectionsRepository = collectionsRepository;
   }
