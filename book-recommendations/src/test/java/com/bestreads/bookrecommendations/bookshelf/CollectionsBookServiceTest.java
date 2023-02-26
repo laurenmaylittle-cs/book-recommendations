@@ -166,10 +166,10 @@ class CollectionsBookServiceTest {
     );
 
     // Set up mock behavior
-    when(bookDAORepository.findBookDAOByIsbn(isbn)).thenReturn(Optional.empty());
+    when(bookDAORepository.findByIsbn(isbn)).thenReturn(Optional.empty());
 
     Set<CollectionDAO> existingCollections = Set.of(existingCollection);
-    when(collectionsRepository.findAllCollectionsByUser(userId)).thenReturn(existingCollections);
+    when(collectionsRepository.findAllCollectionByUserId(userId)).thenReturn(existingCollections);
 
     when(bookDAORepository.save(any())).thenAnswer(invocation -> {
       Object argument = invocation.getArgument(0);
@@ -200,7 +200,7 @@ class CollectionsBookServiceTest {
     ArgumentCaptor<BookDAO> bookArg = ArgumentCaptor.forClass(BookDAO.class);
     ArgumentCaptor<Set<CollectionDAO>> collectionArg = ArgumentCaptor.forClass(Set.class);
 
-    verify(bookDAORepository).findBookDAOByIsbn(isbn);
+    verify(bookDAORepository).findByIsbn(isbn);
     verify(bookDAORepository).save(bookArg.capture());
     verify(collectionsRepository).saveAll(collectionArg.capture());
 

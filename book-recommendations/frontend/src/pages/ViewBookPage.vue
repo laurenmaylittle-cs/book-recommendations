@@ -95,6 +95,7 @@
             @user-rating-loaded="ratingsLoaded = true"
           />
           <book-collections
+            v-if="isIsbnValid"
             :book-isbn="isbn.toString()"
             :book-data="bookData"
             @collections-loaded="collectionsLoaded = true"
@@ -151,6 +152,9 @@ export default {
     errorMessage() {
       return "No results found for ISBN: " + this.isbn
     },
+    isIsbnValid() {
+      return this.isbn ? (this.isbn.length === 10 || this.isbn.length === 13) : false
+    }
   },
   async activated() {
     //view-book - from search results
@@ -189,7 +193,7 @@ export default {
       this.isLoading = true;
       this.viewBookEmitted = true;
       this.isbn = queryData.isbn || queryData.searchTerm; //when coming from SearchBar, isbn is added to searchTerm property
-      if (!this.validateIsbn(this.isbn)) {
+      if (!this.isIsbnValid) {
         this.bookData = null;
         this.isLoading = false;
         return;
@@ -200,9 +204,6 @@ export default {
       } catch (error) {
         this.isLoading = false;
       }
-    },
-    validateIsbn(isbn) {
-      return isbn.length === 10 || isbn.length === 13;
     },
     async emitAuthorSearch(author) {
       await this.$router.push({name: 'search'});

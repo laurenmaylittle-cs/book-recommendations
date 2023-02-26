@@ -27,10 +27,5 @@ interface CollectionsRepository extends CrudRepository<CollectionDAO, Long> {
         not exists (select 1 from c.bookDAOS b where b.isbn = ?2)""")
   List<CollectionProjection> findUnassociatedCollectionsForIsbn(String userId, String isbn);
 
-
-  @Query(value = """
-      select c from CollectionDAO c 
-       where c.userId = ?1
-      """)
-  Set<CollectionDAO> findAllCollectionsByUser(String userId);
+  Set<CollectionDAO> findAllCollectionByUserId(String userId);
 }

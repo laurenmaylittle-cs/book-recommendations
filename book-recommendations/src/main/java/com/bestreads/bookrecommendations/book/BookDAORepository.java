@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface BookDAORepository extends CrudRepository<BookDAO, Long> {
 
-  Optional<BookDAO> findBookDAOByIsbn(String isbn);
+  Optional<BookDAO> findByIsbn(String isbn);
 
 }

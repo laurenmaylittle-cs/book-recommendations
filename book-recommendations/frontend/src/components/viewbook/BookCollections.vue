@@ -4,7 +4,7 @@
     color="transparent"
   >
     <v-subheader v-if="isEnabledInACollection">
-      Book in following collections:
+      Book is in the following collections:
     </v-subheader>
     <template
       v-for="(collection, index) in collectionsMap"
