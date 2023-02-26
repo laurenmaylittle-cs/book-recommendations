@@ -3,7 +3,6 @@ package com.bestreads.bookrecommendations.bookshelf;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toCollection;
 
-import com.bestreads.bookrecommendations.book.BookDAORepository;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,7 @@ class CollectionsService {
   private final CollectionsRepository collectionsRepository;
 
   @Autowired
-  CollectionsService(CollectionsRepository collectionsRepository,
-      BookDAORepository bookDAORepository) {
+  CollectionsService(CollectionsRepository collectionsRepository) {
     this.collectionsRepository = collectionsRepository;
   }
 
