@@ -1,6 +1,7 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
 import static java.util.Comparator.comparing;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.Stream.concat;
@@ -76,14 +77,13 @@ class CollectionsBookService {
   private BookDAO createNewBookDAOFromBook(Book book) {
     var newBook = new BookDAO();
     newBook.setIsbn(book.isbn());
-    newBook.setAuthor(book.authors() == null || book.authors().isEmpty() ? ""
-        : String.join(", ", book.authors()));
+    newBook.setAuthor(
+        ofNullable(book.authors()).map(a -> String.join(", ", a)).orElse(""));
     newBook.setTitle(book.title());
     newBook.setThumbnail(book.imageLinks().thumbnail());
-    newBook.setGenre(
-        book.categories() == null || book.categories().isEmpty() ? "" : book.categories().get(0));
-    newBook.setPublisher(book.publisher() == null ? "" : book.publisher());
-    newBook.setPublishedDate(book.publishedDate() == null ? "" : book.publishedDate());
+    newBook.setGenre(ofNullable(book.categories()).map(c -> c.get(0)).orElse(""));
+    newBook.setPublisher(ofNullable(book.publisher()).orElse(""));
+    newBook.setPublishedDate(ofNullable(book.publishedDate()).orElse(""));
     return bookDAORepository.save(newBook);
   }
 
