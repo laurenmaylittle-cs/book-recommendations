@@ -41,6 +41,9 @@ public class AwsPersonalizeController {
   @Value("${AWS_BOOKS_DATASET_ARN}")
   private String booksDatasetArn;
 
+  @Value(("${AWS_USERS_DATASET_ARN}"))
+  private String usersDatasetArn;
+
   @Autowired
   public AwsPersonalizeController(AwsPersonalizeService awsPersonalizeService) {
     this.awsPersonalizeService = awsPersonalizeService;

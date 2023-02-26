@@ -145,4 +145,33 @@ class AwsPersonalizeService {
       System.out.println(e.awsErrorDetails().errorMessage());
     }
   }
+
+  public void putUsers(PersonalizeEventsClient personalizeEventsClient,
+                             String datasetArn, String userId, String userName,
+                             String userEmail, String userVerified) {
+
+    ArrayList<User> users = new ArrayList<>();
+
+    try {
+      User user1 = User.builder()
+              .userId(userId)
+              .properties(String.format("{\"%1$s\": \"%2$s\",\"%3$s\": \"%4$s\",\"%5$s\": \"%6$s\"}",
+                      "userName", userName,
+                      "userEmail", userEmail,
+                      "userVerified", userVerified))
+              .build();
+
+      users.add(user1);
+
+      PutUsersRequest putUsersRequest = PutUsersRequest.builder()
+              .datasetArn(datasetArn)
+              .build();
+
+      int responseCode = personalizeEventsClient.putUsers(putUsersRequest).sdkHttpResponse().statusCode();
+      System.out.println("Response code: " + responseCode);
+
+    } catch (PersonalizeEventsException e) {
+      System.out.println(e.awsErrorDetails().errorMessage());
+    }
+  }
 }
