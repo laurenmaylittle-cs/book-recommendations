@@ -1,12 +1,18 @@
 package com.bestreads.bookrecommendations.awspersonalize;
 
 import com.bestreads.bookrecommendations.bookshelf.BookDAO;
+
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
+import software.amazon.awssdk.services.personalizeevents.PersonalizeEventsClient;
+import software.amazon.awssdk.services.personalizeevents.model.Event;
+import software.amazon.awssdk.services.personalizeevents.model.PersonalizeEventsException;
+import software.amazon.awssdk.services.personalizeevents.model.PutEventsRequest;
 import software.amazon.awssdk.services.personalizeruntime.PersonalizeRuntimeClient;
 import software.amazon.awssdk.services.personalizeruntime.model.GetRecommendationsRequest;
 import software.amazon.awssdk.services.personalizeruntime.model.GetRecommendationsResponse;
@@ -78,5 +84,35 @@ class AwsPersonalizeService {
       System.err.println(e.awsErrorDetails().errorMessage());
     }
     return isbns;
+  }
+
+  public void putEvents(PersonalizeEventsClient personalizeEventsClient,
+                               String trackingId,
+                               String sessionId,
+                               String userId,
+                               String itemId) {
+
+    try {
+      Event event = Event.builder()
+              .sentAt(Instant.ofEpochMilli(System.currentTimeMillis() + 10 * 60 * 1000))
+              .itemId(itemId)
+              .eventType("CLICK")
+              .build();
+
+      PutEventsRequest putEventsRequest = PutEventsRequest.builder()
+              .trackingId(trackingId)
+              .userId(userId)
+              .sessionId(sessionId)
+              .eventList(event)
+              .build();
+
+      int responseCode = personalizeEventsClient.putEvents(putEventsRequest)
+              .sdkHttpResponse()
+              .statusCode();
+      System.out.println("Response code: " + responseCode);
+
+    } catch (PersonalizeEventsException e) {
+      System.out.println(e.awsErrorDetails().errorMessage());
+    }
   }
 }

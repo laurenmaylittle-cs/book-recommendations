@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.personalize.PersonalizeClient;
+import software.amazon.awssdk.services.personalizeevents.PersonalizeEventsClient;
 import software.amazon.awssdk.services.personalizeruntime.PersonalizeRuntimeClient;
 
 import static java.lang.String.join;
@@ -26,11 +27,20 @@ public class AwsPersonalizeController {
   private final AwsPersonalizeService awsPersonalizeService;
   private PersonalizeClient personalizeClient;
   private PersonalizeRuntimeClient personalizeRuntimeClient;
+  private PersonalizeEventsClient personalizeEventsClient;
+
+  @Value("${AWS_EVENT_TRACKER_ID}")
+  private String awsEventTrackerId;
+
   @Value("${AWS_CAMPAIGN_ARN}")
   private String campaignArn;
   @Value("${AWS_REGION}")
   private Region region;
 
+  @Autowired
+  public AwsPersonalizeController(AwsPersonalizeService awsPersonalizeService) {
+    this.awsPersonalizeService = awsPersonalizeService;
+  }
   @PostConstruct
   private void initialiseAmazon() {
     this.personalizeClient = PersonalizeClient.builder()
@@ -39,11 +49,9 @@ public class AwsPersonalizeController {
     this.personalizeRuntimeClient = PersonalizeRuntimeClient.builder()
         .region(region)
         .build();
-  }
-
-  @Autowired
-  public AwsPersonalizeController(AwsPersonalizeService awsPersonalizeService) {
-    this.awsPersonalizeService = awsPersonalizeService;
+    this.personalizeEventsClient = PersonalizeEventsClient.builder()
+            .region(region)
+            .build();
   }
 
   @GetMapping("/public/book/get-recs")
@@ -52,7 +60,7 @@ public class AwsPersonalizeController {
   }
 
   @PostMapping("/private/book")
-  public void addBookToDb(JwtAuthenticationToken jwtAuthenticationToken, @RequestBody Book book) {
+  public void addBook(JwtAuthenticationToken jwtAuthenticationToken, @RequestBody Book book) {
     var userId = AuthUtils.getUserId(jwtAuthenticationToken).orElseThrow(() -> {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user ID found in token");
     });
@@ -60,5 +68,6 @@ public class AwsPersonalizeController {
     var categories = join("/", book.categories());
 
     awsPersonalizeService.addBookToDb(book.isbn(), book.title(), authors, categories, book.publisher(), book.imageLinks().thumbnail());
+    awsPersonalizeService.putEvents(this.personalizeEventsClient, awsEventTrackerId, userId, userId, book.isbn());
   }
 }
