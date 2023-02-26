@@ -118,7 +118,8 @@
 
 <script>
 import ViewBookThumbnail from "@/components/viewbook/ViewBookThumbnail";
-import {exportData, getBookInfo} from "@/api/view-book";
+import {getBookInfo} from "@/api/view-book";
+import {exportData} from "@/api/personalize";
 import AverageRatings from "@/components/viewbook/AverageRatings";
 import UserRatings from "@/components/viewbook/UserRatings";
 import AboutBook from "@/components/viewbook/AboutBook";

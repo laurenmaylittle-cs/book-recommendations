@@ -42,10 +42,4 @@ export async function updateUserRating(email, isbn, rating, token) {
   })
 }
 
-export async function exportData(bookData, token) {
-  return await axios.post("/api/private/book", bookData, {
-    headers: {
-      authorization: `Bearer ${token}`,
-    }
-  })
-}
+
