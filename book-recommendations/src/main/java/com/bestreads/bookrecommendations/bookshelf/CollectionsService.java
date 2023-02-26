@@ -5,10 +5,8 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 class CollectionsService {
@@ -39,11 +37,8 @@ class CollectionsService {
     return collectionsRepository.save(collection);
   }
 
-  CollectionBookProjection findByIdAndUser(Long id, String userId) {
-    return collectionsRepository.findByIdAndUserId(id, userId)
-        .orElseThrow(() -> {
-          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No collection found");
-        });
+  Optional<CollectionBookProjection> findByIdAndUser(Long id, String userId) {
+    return collectionsRepository.findByIdAndUserId(id, userId);
   }
 
   @Transactional

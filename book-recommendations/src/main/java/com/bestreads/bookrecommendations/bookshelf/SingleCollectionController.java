@@ -17,10 +17,10 @@ public class SingleCollectionController {
 
   private final CollectionsService collectionsService;
 
-    @Autowired
-    public SingleCollectionController(CollectionsService collectionsService) {
-        this.collectionsService = collectionsService;
-    }
+  @Autowired
+  public SingleCollectionController(CollectionsService collectionsService) {
+    this.collectionsService = collectionsService;
+  }
 
   @GetMapping
   public SingleCollection getBooksInCollection(JwtAuthenticationToken authenticationToken,
@@ -29,7 +29,11 @@ public class SingleCollectionController {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user ID found in token");
     });
 
-    var collectionDetails = collectionsService.findByIdAndUser(bookshelfId, userId);
+    var collectionDetails = collectionsService.findByIdAndUser(bookshelfId, userId)
+        .orElseThrow(() -> {
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No collection found");
+        });
+    ;
 
     var booksInCollection = collectionDetails.getBookDAOS()
         .stream()

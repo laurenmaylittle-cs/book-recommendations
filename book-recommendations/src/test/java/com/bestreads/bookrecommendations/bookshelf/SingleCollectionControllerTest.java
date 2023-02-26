@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -89,7 +90,7 @@ class SingleCollectionControllerTest {
   void getBooksInCollection() throws Exception {
 
     when(collectionsService.findByIdAndUser(anyLong(), any()))
-        .thenReturn(collectionBookProjection);
+        .thenReturn(Optional.of(collectionBookProjection));
     var expectedJson = """
         {
             "collectionName": "CollectionName",
@@ -118,7 +119,7 @@ class SingleCollectionControllerTest {
   void getBooksInCollection_whenNoBooksInCollection() throws Exception {
 
     when(collectionsService.findByIdAndUser(anyLong(), any()))
-        .thenReturn(emptyCollectionBookProjection);
+        .thenReturn(Optional.of(emptyCollectionBookProjection));
     var expectedJson = """
         {
         }

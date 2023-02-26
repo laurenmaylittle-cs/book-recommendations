@@ -163,7 +163,6 @@ export default {
       let token = await this.$auth.getTokenSilently();
 
       this.collectionBooks.collectionName = this.collectionName
-      console.log("in method")
       await updateCollectionName(this.collectionId, token, this.collectionName)
       this.dialog = false;
       this.collectionUpdateInProgress = true;
