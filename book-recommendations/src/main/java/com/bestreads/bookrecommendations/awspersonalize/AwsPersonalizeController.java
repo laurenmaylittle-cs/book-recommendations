@@ -34,8 +34,12 @@ public class AwsPersonalizeController {
 
   @Value("${AWS_CAMPAIGN_ARN}")
   private String campaignArn;
+
   @Value("${AWS_REGION}")
   private Region region;
+
+  @Value("${AWS_BOOKS_DATASET_ARN}")
+  private String booksDatasetArn;
 
   @Autowired
   public AwsPersonalizeController(AwsPersonalizeService awsPersonalizeService) {
@@ -69,5 +73,6 @@ public class AwsPersonalizeController {
 
     awsPersonalizeService.addBookToDb(book.isbn(), book.title(), authors, categories, book.publisher(), book.imageLinks().thumbnail());
     awsPersonalizeService.putEvents(this.personalizeEventsClient, awsEventTrackerId, userId, userId, book.isbn());
+    awsPersonalizeService.putItems(this.personalizeEventsClient, booksDatasetArn, book.isbn(), book.title(), authors, categories, book.publisher(), book.imageLinks().thumbnail());
   }
 }

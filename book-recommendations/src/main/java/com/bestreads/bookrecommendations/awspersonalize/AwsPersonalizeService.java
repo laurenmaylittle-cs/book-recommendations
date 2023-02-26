@@ -10,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
 import software.amazon.awssdk.services.personalizeevents.PersonalizeEventsClient;
-import software.amazon.awssdk.services.personalizeevents.model.Event;
-import software.amazon.awssdk.services.personalizeevents.model.PersonalizeEventsException;
-import software.amazon.awssdk.services.personalizeevents.model.PutEventsRequest;
+import software.amazon.awssdk.services.personalizeevents.model.*;
 import software.amazon.awssdk.services.personalizeruntime.PersonalizeRuntimeClient;
 import software.amazon.awssdk.services.personalizeruntime.model.GetRecommendationsRequest;
 import software.amazon.awssdk.services.personalizeruntime.model.GetRecommendationsResponse;
@@ -109,7 +107,39 @@ class AwsPersonalizeService {
       int responseCode = personalizeEventsClient.putEvents(putEventsRequest)
               .sdkHttpResponse()
               .statusCode();
-      System.out.println("Response code: " + responseCode);
+      System.out.println("EVENTS - Response code: " + responseCode);
+
+    } catch (PersonalizeEventsException e) {
+      System.out.println(e.awsErrorDetails().errorMessage());
+    }
+  }
+
+  public void putItems(PersonalizeEventsClient personalizeEventsClient,
+                             String datasetArn, String isbn, String title, String author, String genre,
+                            String publisher, String thumbnail) {
+
+    ArrayList<Item> items = new ArrayList<>();
+
+    try {
+      Item item1 = Item.builder()
+              .itemId(isbn)
+              .properties(String.format("{\"%1$s\": \"%2$s\"},{\"%3$s\": \"%4$s\"},{\"%5$s\": \"%6$s\"},{\"%7$s\": \"%8$s\"},{\"%9$s\": \"%10$s\"}",
+                      "itemName", title,
+                      "itemAuthor", author,
+                      "itemGenre", genre,
+                      "itemPublisher", publisher,
+                      "itemThumbnail", thumbnail))
+              .build();
+
+      items.add(item1);
+
+      PutItemsRequest putItemsRequest = PutItemsRequest.builder()
+              .datasetArn(datasetArn)
+              .items(items)
+              .build();
+
+      int responseCode = personalizeEventsClient.putItems(putItemsRequest).sdkHttpResponse().statusCode();
+      System.out.println("ITEMS - Response code: " + responseCode);
 
     } catch (PersonalizeEventsException e) {
       System.out.println(e.awsErrorDetails().errorMessage());
