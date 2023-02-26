@@ -34,7 +34,10 @@ class AwsPersonalizeService {
     book.setThumbnail(thumbnail);
     book.setPublisher(publisher);
 
-    bookEntityRepository.save(book);
+    var currentBook = bookEntityRepository.findByIsbn(isbn);
+    if (currentBook.isEmpty()) {
+      bookEntityRepository.save(book);
+    }
   }
 
   public List<BookDAO> getRecs(PersonalizeRuntimeClient personalizeRuntimeClient,
