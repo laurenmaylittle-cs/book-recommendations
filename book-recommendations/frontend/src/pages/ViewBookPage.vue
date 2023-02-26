@@ -76,7 +76,10 @@
             type="info"
             :width="$vuetify.breakpoint.xs ? '100%' : '75%'"
           >
-            Log in to add your own ratings and manage collections
+            <a @click="$auth.loginWithRedirect()">
+              Log in
+            </a>
+            to add your own ratings and manage collections
           </v-alert>
         </template>
 
