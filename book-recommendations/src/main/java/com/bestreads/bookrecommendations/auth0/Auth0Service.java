@@ -2,6 +2,7 @@ package com.bestreads.bookrecommendations.auth0;
 
 import com.bestreads.bookrecommendations.users.FollowersFollowingService;
 import com.bestreads.bookrecommendations.users.User;
+import com.bestreads.bookrecommendations.utils.SearchTermUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -44,7 +45,8 @@ public class Auth0Service {
   }
 
   public List<User> searchUsersByName(String name) {
-    String uri = "%s/users?q=name:*%s*".formatted(auth0ApiUri, name);
+
+    String uri = "%s/users?q=name:*%s*".formatted(auth0ApiUri, SearchTermUtils.encodeURLTerm(name));
 
     apiKey = getAuthToken();
 
