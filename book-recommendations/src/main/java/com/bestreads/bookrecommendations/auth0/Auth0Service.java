@@ -16,8 +16,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -90,16 +88,17 @@ public class Auth0Service {
       throw new RuntimeException(e);
     }
   }
+
   public List<User> searchById(String userId) {
     if (userId.isEmpty()) {
       return Collections.emptyList();
     }
     StringBuilder uri = new StringBuilder(
-            "%s/users?q=user_id:%s".formatted(auth0ApiUri, userId));
+        "%s/users/%s".formatted(auth0ApiUri, userId));
 
     uri = new StringBuilder(
-            "%s&fields=email,name,email_verified,picture&search_engine=v2&included_total=true&include_fields=true".formatted(
-                    uri.toString()));
+        "%s&fields=email,name,email_verified,picture&search_engine=v2&included_total=true&include_fields=true".formatted(
+            uri.toString()));
 
     apiKey = getAuthToken();
 
@@ -107,7 +106,7 @@ public class Auth0Service {
 
     try {
       var httpResponse = HttpClient.newHttpClient()
-              .send(httpRequest, HttpResponse.BodyHandlers.ofString());
+          .send(httpRequest, HttpResponse.BodyHandlers.ofString());
       return extractFromHttpResponse(httpResponse, false);
     } catch (IOException | InterruptedException e) {
       throw new RuntimeException(e);
