@@ -2,14 +2,15 @@
   <div>
     <v-card
       :class="{ 'selected': selected }"
-      @click="changeSelected"
+      @click="emitViewBook"
     >
       <div
         v-if="selectable"
         style="margin: 0px"
         class="d-flex flex-column align-end"
       >
-        <v-checkbox />
+        <!--@click.stop stops the emitViewBook event from happening within the checkbox-->
+        <v-checkbox @click.stop="changeSelected()" />
       </div>
       <v-card-actions class="justify-center mb-0 pt-6">
         <a @click="emitViewBook">

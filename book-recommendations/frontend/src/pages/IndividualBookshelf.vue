@@ -1,16 +1,22 @@
 <template>
   <v-container>
     <v-btn
-      v-if="isAnyBookSelected"
+      v-model="editFlag"
+      color="secondary"
+      class="ma-7 white--text"
+      @click="editBookshelf"
+    >
+      Edit
+    </v-btn>
+    <v-btn
+      v-if="editFlag"
+      :disabled="!isAnyBookSelected"
       color="#DC143C"
       class="ma-7 white--text"
       @click="deleteBooks"
     >
       Delete from bookshelf
     </v-btn>
-    <v-checkbox
-      v-model="marvanFlag"
-    />
     <v-row
       v-if="isLoading"
       class="justify-center pt-10"
@@ -35,7 +41,7 @@
           :isbn="book.isbn"
           :published-date="book.publishedDate"
           :book-data="book"
-          :selectable="marvanFlag"
+          :selectable="editFlag"
           @selected="bookSelected"
           @unselected="bookUnselected"
         />
@@ -54,13 +60,14 @@ export default {
   data: function () {
     return {
       collectionId: "",
+      previousCollectionId: "",
       isLoading: true,
       previousBookData: null,
       loadCollectionBooksEmitted: false,
       collectionBooks: [],
       booksSelected: [],
       isAnyBookSelected: false,
-      marvanFlag: false
+      editFlag: false
     }
   },
   async activated() {
@@ -69,11 +76,14 @@ export default {
     await this.$nextTick()
 
     if (this.loadCollectionBooksEmitted === false) {
+      this.collectionId = this.previousCollectionId;
       this.collectionBooks = this.previousBookData;
       this.isLoading = false;
     }
   },
   deactivated() {
+    this.editFlag = false;
+    this.previousCollectionId = this.collectionId;
     this.collectionId = "";
     this.isLoading = true;
     this.loadCollectionBooksEmitted = false;
@@ -87,8 +97,10 @@ export default {
     async getBooksInCollection(collectionId) {
       this.loadCollectionBooksEmitted = true;
       this.collectionId = collectionId;
-      this.collectionBooks = await getBooksInCollection(this.collectionId,
-        await this.$auth.getTokenSilently())
+      this.collectionBooks = await getBooksInCollection(
+        this.collectionId,
+        await this.$auth.getTokenSilently()
+      )
       this.isLoading = false;
     },
     checkForMultipleAuthors(authors) {
@@ -103,13 +115,11 @@ export default {
     bookSelected(isbn) {
       this.booksSelected.push(isbn);
       this.checkIfBooksSelected();
-      console.log(this.booksSelected.toString());
     },
     bookUnselected(isbn) {
       const index = this.booksSelected.indexOf(isbn);
       if (index !== -1) {
         this.booksSelected.splice(index, 1);
-        console.log(this.booksSelected.toString());
       }
       this.checkIfBooksSelected();
     },
@@ -118,11 +128,13 @@ export default {
     },
     async deleteBooks() {
       const deleteBooksParams = new URLSearchParams({bookshelfId: this.collectionId, bookIds: this.booksSelected});
-      console.log(deleteBooksParams.toString())
       await deleteBooksInCollection(deleteBooksParams, await this.$auth.getTokenSilently());
       this.booksSelected = []
       this.checkIfBooksSelected();
       await this.getBooksInCollection(this.collectionId);
+    },
+    editBookshelf() {
+      this.editFlag = !this.editFlag;
     }
   }
 }
