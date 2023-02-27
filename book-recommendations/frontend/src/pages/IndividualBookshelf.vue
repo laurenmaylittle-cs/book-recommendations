@@ -15,7 +15,7 @@
       class="ma-7 white--text"
       @click="openDeleteDialog"
     >
-      Delete from bookshelf
+      Remove from collection
     </v-btn>
     <v-dialog
       v-model="deleteDialog"
@@ -26,6 +26,13 @@
         <v-form
           @submit="deleteBooks"
         >
+          <v-card-title>
+            Remove from collection
+          </v-card-title>
+          <v-card-text>
+            Are you sure you want to remove the following books? <br> <br>
+            {{ checkForMultipleAuthors(booksSelectedITitle) }}
+          </v-card-text>
           <v-card-actions>
             <v-btn
               color="#DC143C"
@@ -93,7 +100,8 @@ export default {
       previousBookData: null,
       loadCollectionBooksEmitted: false,
       collectionBooks: [],
-      booksSelected: [],
+      booksSelectedIsbn: [],
+      booksSelectedITitle: [],
       isAnyBookSelected: false,
       editFlag: false,
       deleteDialog: false
@@ -118,7 +126,8 @@ export default {
     this.loadCollectionBooksEmitted = false;
     this.previousBookData = this.collectionBooks;
     this.collectionBooks = [];
-    this.booksSelected = [];
+    this.booksSelectedIsbn = [];
+    this.booksSelectedITitle = [];
     this.checkIfBooksSelected();
     EventBus.$off("load-collection-books");
   },
@@ -141,26 +150,34 @@ export default {
         return index === 0 ? curr : `${acc}, ${curr}`;
       }, '')
     },
-    bookSelected(isbn) {
-      this.booksSelected.push(isbn);
+    bookSelected(isbn, title) {
+      this.booksSelectedIsbn.push(isbn);
+      this.booksSelectedITitle.push(title);
       this.checkIfBooksSelected();
     },
-    bookUnselected(isbn) {
-      const index = this.booksSelected.indexOf(isbn);
-      if (index !== -1) {
-        this.booksSelected.splice(index, 1);
+    bookUnselected(isbn, title) {
+      const indexIsbn = this.booksSelectedIsbn.indexOf(isbn);
+      if (indexIsbn !== -1) {
+        this.booksSelectedIsbn.splice(indexIsbn, 1);
       }
+
+      const indexTitle = this.booksSelectedITitle.indexOf(title);
+      if (indexTitle !== -1) {
+        this.booksSelectedITitle.splice(indexTitle, 1);
+      }
+
       this.checkIfBooksSelected();
     },
     checkIfBooksSelected() {
-      this.isAnyBookSelected = this.booksSelected.length > 0;
+      this.isAnyBookSelected = this.booksSelectedIsbn.length > 0;
     },
     async deleteBooks() {
-      const deleteBooksParams = new URLSearchParams({bookshelfId: this.collectionId, bookIds: this.booksSelected});
+      const deleteBooksParams = new URLSearchParams({bookshelfId: this.collectionId, bookIds: this.booksSelectedIsbn});
       await deleteBooksInCollection(deleteBooksParams, await this.$auth.getTokenSilently());
-      this.booksSelected = []
+      this.booksSelectedIsbn = []
       this.checkIfBooksSelected();
       await this.getBooksInCollection(this.collectionId);
+      this.deleteDialog = false
     },
     editBookshelf() {
       this.editFlag = !this.editFlag;

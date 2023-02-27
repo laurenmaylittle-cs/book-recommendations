@@ -115,10 +115,10 @@ export default {
       if (this.selectable) {
         if (this.selected) {
           this.selected = false;
-          this.$emit("unselected", this.isbn);
+          this.$emit("unselected", this.isbn, this.title);
         } else {
           this.selected = true;
-          this.$emit("selected", this.isbn);
+          this.$emit("selected", this.isbn, this.title);
         }
       }
     }
