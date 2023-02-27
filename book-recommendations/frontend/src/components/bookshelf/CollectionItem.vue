@@ -5,6 +5,7 @@
   >
     <v-hover
       v-slot="{ hover}"
+      ref="hoverEffectRef"
     >
       <v-sheet
         :color="getHoverEffect(hover)"
@@ -54,6 +55,9 @@ export default {
 
       return breakpointValues[breakpoint] || 5;
     }
+  },
+  deactivated() {
+    this.$refs.hoverEffectRef._data.isActive = false;
   },
   methods: {
     getHoverEffect(hover) {

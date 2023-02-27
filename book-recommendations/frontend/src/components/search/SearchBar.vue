@@ -1,26 +1,45 @@
 <template>
   <div class="div_center d-flex align-center">
-    <v-select
-      v-model="selectedQueryFilter"
-      class="ml-3"
-      style="width: 90px"
-      :items="queryFilters"
-      item-text="displayText"
-      item-value="value"
-      return-object
-      single-line
-    />
-    <v-text-field
-      v-model="queryTerm"
-      :label="getSearchTypeDescription"
-      clearable
-      type="String"
-      @keyup.enter="loadSearch(queryTerm)"
-    />
+    <v-menu
+      left
+      bottom
+    >
+      <template #activator="{ on, attrs }">
+        <v-btn
+          icon
+          v-bind="attrs"
+          v-on="on"
+        >
+          <v-icon>
+            mdi-filter-menu-outline
+          </v-icon>
+        </v-btn>
+      </template>
+      <v-list
+        v-for="filter in queryFilters"
+        :key="filter.value"
+      >
+        <v-list-item @click="selectedQueryFilter = filter">
+          {{ filter.displayText }}
+        </v-list-item>
+      </v-list>
+    </v-menu>
+    <v-col
+      :cols="numberOfColsToTake"
+      class="pa-0"
+    >
+      <v-text-field
+        v-model="queryTerm"
+        :label="getSearchTypeDescription"
+        clearable
+        type="String"
+        @keyup.enter="loadSearch(queryTerm)"
+      />
+    </v-col>
     <v-btn
       text
       :style="{ 'background-color': '#46648c', 'color': 'white' }"
-      @click.native="loadSearch(queryTerm)"
+      @click="loadSearch(queryTerm)"
     >
       <v-icon>mdi-magnify</v-icon>
     </v-btn>
@@ -28,6 +47,8 @@
 </template>
 
 <script>
+import {EventBus} from "@/event-bus";
+
 export default {
   name: "SearchBar",
   props: {
@@ -38,32 +59,49 @@ export default {
   },
   data: () => ({
     queryTerm: "",
-    selectedQueryFilter: { displayText: 'Title', value: 'title'},
+    selectedQueryFilter: {displayText: 'Title', value: 'title'},
     queryFilters: [
       {displayText: 'Title', value: 'title'},
       {displayText: 'Author', value: 'author'},
-      {displayText: 'ISBN', value: 'isbn'}
+      {displayText: 'ISBN', value: 'isbn'},
     ],
   }),
   computed: {
     getSearchTypeDescription() {
       return `Search by ${this.selectedQueryFilter.displayText}`;
+    },
+    numberOfColsToTake() {
+      if (this.$vuetify.breakpoint.xs) {
+        return 6;
+      }
+      return 9;
     }
   },
   methods: {
-    loadSearch() {
-      if (this.selectedQueryFilter.value !== 'isbn') {
-        this.$router.push({name: 'search', params: {searchType: this.selectedQueryFilter.value , searchTerm: this.queryTerm}}).catch(() => {
-        })
+    async loadSearch() {
+      const routeName = this.selectedQueryFilter.value === 'isbn' ? 'book' : 'search';
+      const emitSearchEvent = () => {
+        // Remove hyphens and spaces from ISBN
+        if (this.selectedQueryFilter.value === 'isbn') {
+          this.queryTerm = this.queryTerm.replace(/[-\s]+/g, "");
+        }
+        EventBus.$emit('search-triggered', {
+          searchType: this.selectedQueryFilter.value,
+          searchTerm: this.queryTerm
+        });
+        this.queryTerm = '';
+      };
+      if (this.$route.name !== routeName) {
+        await this.$router.push({name: routeName});
+        emitSearchEvent();
       } else {
-        this.$router.push({name: 'book', params: {isbn: this.queryTerm}}).catch(() => {
-        })
+        emitSearchEvent();
       }
-      window.location.reload()
     }
   }
 }
 </script>
+
 <style scoped>
 .div_center {
   display: table;

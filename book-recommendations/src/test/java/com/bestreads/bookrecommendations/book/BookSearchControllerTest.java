@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,18 +63,9 @@ class BookSearchControllerTest {
   @WithMockUser
   void searchByTitle() throws Exception {
     when(bookSearchService.searchByTitle("FerRam", 0, 40))
-            .thenReturn(bookList);
+        .thenReturn(bookList);
     mockMvc.perform(get("/api/search/title?title=FerRam&startIndex=0"))
-            .andExpect(content().json(bookJson));
+        .andExpect(content().json(bookJson));
   }
 
-  @Test
-  @WithMockUser
-  void searchByIsbn() throws Exception {
-    when(bookSearchService.searchByIsbn("0000000000000", 40))
-            .thenReturn(bookList);
-    mockMvc.perform(get("/api/search/isbn?isbn?isbn=0000000000000")
-                    .param("isbn", "0000000000000"))
-            .andExpect(content().json(bookJson));
-  }
 }

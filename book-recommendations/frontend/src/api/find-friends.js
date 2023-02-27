@@ -10,3 +10,27 @@ export async function getUsersSearch(name, token) {
     return response.data;
   });
 }
+
+export async function followUser(currentUserEmail, userToFollow, token) {
+  return await axios({
+    method: 'POST',
+    url: '/api/private/users/follow?currentUser=' + currentUserEmail
+      + '&userToFollow='
+      + userToFollow,
+    headers: {
+      authorization: `Bearer ${token}`,
+    }
+  })
+}
+
+export async function unfollowUser(currentUserEmail, userToUnfollow, token) {
+  return await axios({
+    method: 'POST',
+    url: '/api/private/users/unfollow?currentUser=' + currentUserEmail
+      + '&userToUnfollow='
+      + userToUnfollow,
+    headers: {
+      authorization: `Bearer ${token}`,
+    }
+  })
+}

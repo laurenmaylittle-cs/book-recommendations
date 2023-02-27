@@ -19,21 +19,12 @@ const routes = [
     component: HomePage,
   },
   {
-    path: '/book/:isbn',
+    path: '/book',
     name: 'book',
     component: ViewBookPage,
-    props: true
   },
   {
-    path: '/default-about-vue',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  },
-  {
-    path: '/search/:searchType/:searchTerm',
+    path: '/search',
     name: 'search',
     component: SearchView
   },
@@ -61,7 +52,7 @@ const routes = [
     beforeEnter: authGuard
   },
   {
-    path: '/bookshelf/:collectionId',
+    path: '/bookshelf/books',
     name: 'individualBookshelf',
     component: IndividualBookshelf,
     beforeEnter: authGuard

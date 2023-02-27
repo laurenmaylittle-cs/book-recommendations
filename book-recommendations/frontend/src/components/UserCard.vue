@@ -66,7 +66,7 @@ export default {
     name: {type: String, required: true},
     email: {type: String, required: true},
     picture: {type: String, required: true},
-    followingList: {type: Array, required: true},
+    followingList: {type: Array, required: true}
   },
   data: () => ({
     isFollowing: false
@@ -96,4 +96,5 @@ export default {
 </script>
 
 <style scoped>
+
 </style>
