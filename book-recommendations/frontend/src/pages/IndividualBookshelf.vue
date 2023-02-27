@@ -2,8 +2,8 @@
   <v-container>
     <v-btn
       v-model="editFlag"
-      color="secondary"
-      class="ma-7 white--text"
+      color="primary"
+      class="ma-7"
       @click="editBookshelf"
     >
       Edit
@@ -11,12 +11,40 @@
     <v-btn
       v-if="editFlag"
       :disabled="!isAnyBookSelected"
-      color="#DC143C"
+      color="secondary"
       class="ma-7 white--text"
-      @click="deleteBooks"
+      @click="openDeleteDialog"
     >
       Delete from bookshelf
     </v-btn>
+    <v-dialog
+      v-model="deleteDialog"
+      max-width="400"
+      @click:outside="closeDeleteDialog"
+    >
+      <v-card>
+        <v-form
+          @submit="deleteBooks"
+        >
+          <v-card-actions>
+            <v-btn
+              color="#DC143C"
+              class="ma-7 white--text"
+              @click="deleteBooks"
+            >
+              Remove from collection
+            </v-btn>
+            <v-btn
+              color="secondary"
+              text
+              @click="closeDeleteDialog"
+            >
+              Cancel
+            </v-btn>
+          </v-card-actions>
+        </v-form>
+      </v-card>
+    </v-dialog>
     <v-row
       v-if="isLoading"
       class="justify-center pt-10"
@@ -67,7 +95,8 @@ export default {
       collectionBooks: [],
       booksSelected: [],
       isAnyBookSelected: false,
-      editFlag: false
+      editFlag: false,
+      deleteDialog: false
     }
   },
   async activated() {
@@ -135,6 +164,12 @@ export default {
     },
     editBookshelf() {
       this.editFlag = !this.editFlag;
+    },
+    openDeleteDialog() {
+      this.deleteDialog = true;
+    },
+    closeDeleteDialog() {
+      this.deleteDialog = false;
     }
   }
 }
