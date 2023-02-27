@@ -185,8 +185,8 @@ export default {
       });
     },
     updateDocumentTitle() {
-      document.title = this.bookData.title ? `${this.bookData.title} - Book Details`
-        : `Book Details`;
+      document.title = this.bookData.title ?? `Book Details`;
+      document.title += this.bookData?.authors ? ` by ${this.bookData.authors}` : '';
     },
     concatDetails(details) {
       if (!details) {
