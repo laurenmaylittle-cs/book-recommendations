@@ -16,13 +16,5 @@ export async function exportData(bookData, token) {
   });
 }
 
-export async function addUser(userData, token) {
-  return await axios.post("/api/private/book", userData, {
-    headers: {
-      authorization: `Bearer ${token}`,
-    }
-  });
-}
-
 
 
