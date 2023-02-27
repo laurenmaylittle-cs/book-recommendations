@@ -70,7 +70,6 @@ class AwsPersonalizeService {
       List<PredictedItem> items = recommendationsResponse.itemList();
 
       for (PredictedItem item : items) {
-        System.out.println("Item Id is : " + item.itemId());
         isbns.add(item.itemId());
       }
 
