@@ -15,7 +15,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.personalize.PersonalizeClient;
 import software.amazon.awssdk.services.personalizeevents.PersonalizeEventsClient;
 import software.amazon.awssdk.services.personalizeruntime.PersonalizeRuntimeClient;
 
@@ -27,7 +26,6 @@ public class AwsPersonalizeController {
 
   private final AwsPersonalizeService awsPersonalizeService;
   private final Auth0Service auth0Service;
-  private PersonalizeClient personalizeClient;
   private PersonalizeRuntimeClient personalizeRuntimeClient;
   private PersonalizeEventsClient personalizeEventsClient;
 
@@ -53,9 +51,6 @@ public class AwsPersonalizeController {
   }
   @PostConstruct
   private void initialiseAmazon() {
-    this.personalizeClient = PersonalizeClient.builder()
-        .region(region)
-        .build();
     this.personalizeRuntimeClient = PersonalizeRuntimeClient.builder()
         .region(region)
         .build();
