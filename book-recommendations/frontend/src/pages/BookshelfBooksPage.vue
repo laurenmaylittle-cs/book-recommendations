@@ -17,11 +17,13 @@
         :key="book.title"
       >
         <book-details
+          origin="other"
           :author="book.author"
           :title="book.title"
           :thumbnail="book.thumbnail"
           :isbn="book.isbn"
           :published-date="book.publishedDate"
+          :book-data="book"
         />
       </v-col>
     </v-row>
@@ -30,25 +32,45 @@
 <script>
 import BookDetails from "@/components/search/BookDetails";
 import {getBooksInCollection} from "@/api/bookshelfBooks";
+import {EventBus} from "@/event-bus";
 
 export default {
   name: "CollectionBooksPage",
   components: {BookDetails},
   data: function () {
     return {
-      collectionId: this.$route.params.collectionId,
+      collectionId: "",
       isLoading: true,
-      collectionBooks: []
+      previousBookData: null,
+      collectionBooks: [],
+      loadCollectionBooksEmitted: false,
     }
   },
-  async mounted() {
-    await this.getBooksInCollection();
-    this.isLoading = false;
+  async activated() {
+    EventBus.$on("load-collection-books", this.getBooksInCollection);
+
+    await this.$nextTick()
+
+    if (this.loadCollectionBooksEmitted === false) {
+      this.collectionBooks = this.previousBookData;
+      this.isLoading = false;
+    }
+  },
+  deactivated() {
+    this.collectionId = "";
+    this.isLoading = true;
+    this.loadCollectionBooksEmitted = false;
+    this.previousBookData = this.collectionBooks;
+    this.collectionBooks = [];
+    EventBus.$off("load-collection-books");
   },
   methods: {
-    async getBooksInCollection() {
+    async getBooksInCollection(collectionId) {
+      this.loadCollectionBooksEmitted = true;
+      this.collectionId = collectionId;
       this.collectionBooks = await getBooksInCollection(this.collectionId,
         await this.$auth.getTokenSilently())
+      this.isLoading = false;
     },
     checkForMultipleAuthors(authors) {
       if (authors === undefined || authors === null) {

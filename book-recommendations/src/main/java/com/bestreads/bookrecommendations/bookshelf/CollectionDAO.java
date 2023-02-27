@@ -1,5 +1,6 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
+import com.bestreads.bookrecommendations.book.BookDAO;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.Column;

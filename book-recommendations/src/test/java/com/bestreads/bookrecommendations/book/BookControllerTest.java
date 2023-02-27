@@ -1,10 +1,13 @@
 package com.bestreads.bookrecommendations.book;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
+import java.util.Objects;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +51,8 @@ class BookControllerTest {
           """;
 
   String ISBN = "9780297859406";
+  String bookTitle = "Gone Girl";
+  String bookAuthor = "Gillian Flynn";
 
   @BeforeAll
   static void setUp() {
@@ -73,10 +78,31 @@ class BookControllerTest {
   @Test
   @WithMockUser
   void getBookInfo() throws Exception {
-    when(bookSearchService.getBookByIsbn(ISBN)).thenReturn(book);
+    when(bookSearchService.getBookData(ISBN, bookTitle, bookAuthor)).thenReturn(book);
     mockMvc.perform(
             get("/api/public/book")
-                .param("isbn", ISBN))
+                .param("isbn", ISBN)
+                .param("title", bookTitle)
+                .param("authors", bookAuthor))
         .andExpect(content().json(bookJson));
+  }
+
+  @Test
+  @WithMockUser
+  void getBookInfo_throws400WhenBookNotFound() throws Exception {
+    when(bookSearchService.getBookData(ISBN, bookTitle, bookAuthor)).thenThrow(
+        IllegalArgumentException.class);
+    mockMvc.perform(
+            get("/api/public/book")
+                .param("isbn", ISBN)
+                .param("title", bookTitle)
+                .param("authors", bookAuthor))
+        .andExpect(status().is4xxClientError())
+        .andExpect(result -> assertEquals(
+            "400 BAD_REQUEST \"Book not found for given ISBN %s and title %s\"".formatted(ISBN,
+                bookTitle),
+            Objects.requireNonNull(result.getResolvedException()).getMessage()));
+
+    ;
   }
 }

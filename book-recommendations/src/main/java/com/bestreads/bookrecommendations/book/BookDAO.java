@@ -1,4 +1,4 @@
-package com.bestreads.bookrecommendations.bookshelf;
+package com.bestreads.bookrecommendations.book;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -88,12 +88,12 @@ public class BookDAO implements Serializable {
     this.genre = genre;
   }
 
-  public String getPublisher() {
-    return publisher;
-  }
-
   public void setPublisher(String publisher) {
     this.publisher = publisher;
+  }
+
+  public String getPublisher() {
+    return publisher;
   }
 
   @Override
@@ -105,10 +105,9 @@ public class BookDAO implements Serializable {
       return false;
     }
     BookDAO bookDAO = (BookDAO) o;
-    return Objects.equals(id, bookDAO.id) && Objects.equals(title, bookDAO.title) && Objects.equals(
-        author, bookDAO.author) && Objects.equals(thumbnail, bookDAO.thumbnail) && Objects.equals(
-        publishedDate, bookDAO.publishedDate) && Objects.equals(isbn, bookDAO.isbn)
-        && Objects.equals(genre, bookDAO.genre) && publisher.equals(
+    return id.equals(bookDAO.id) && title.equals(bookDAO.title) && author.equals(bookDAO.author)
+        && thumbnail.equals(bookDAO.thumbnail) && publishedDate.equals(bookDAO.publishedDate)
+        && isbn.equals(bookDAO.isbn) && genre.equals(bookDAO.genre) && publisher.equals(
         bookDAO.publisher);
   }
 

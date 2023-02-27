@@ -1,10 +1,10 @@
 <template>
   <v-col>
-    <router-link
-      :to="{ name: 'book', params: {isbn:isbn}}"
-      style="text-decoration: none"
-    >
-      <v-hover v-slot="{ hover }">
+    <a @click="emitViewBook">
+      <v-hover
+        v-slot="{ hover }"
+        ref="hoverEffectRef"
+      >
         <v-sheet
           :color="getHoverEffect(hover)"
           class="d-flex flex-column align-center justify-center"
@@ -22,12 +22,13 @@
           </div>
         </v-sheet>
       </v-hover>
-    </router-link>
+    </a>
   </v-col>
 </template>
 
 <script>
 import {titleCase} from "title-case";
+import {EventBus} from "@/event-bus";
 
 export default {
   name: "BookItem",
@@ -36,6 +37,11 @@ export default {
       type: String,
       required: true,
       default: "Unavailable",
+    },
+    authors: {
+      type: Array,
+      required: true,
+      default: () => [],
     },
     bookTitle: {
       type: String,
@@ -47,6 +53,10 @@ export default {
       required: true
     }
   },
+  deactivated() {
+    //clear the hover effect when navigating away from the page
+    this.$refs.hoverEffectRef._data.isActive = false;
+  },
   methods: {
     getUpdatedTitle(title) {
       return titleCase(title.toLowerCase());
@@ -54,6 +64,14 @@ export default {
     getHoverEffect(hover) {
       return hover ? "blue-grey lighten-4" : "transparent";
     },
+    async emitViewBook() {
+      await this.$router.push({name: 'book', params: {isbn: this.isbn}});
+      EventBus.$emit('view-book-other', {
+        isbn: this.isbn,
+        title: this.bookTitle,
+        authors: this.authors,
+      })
+    }
   }
 }
 </script>
