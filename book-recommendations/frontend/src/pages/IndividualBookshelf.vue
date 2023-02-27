@@ -8,6 +8,9 @@
     >
       Delete from bookshelf
     </v-btn>
+    <v-checkbox
+      v-model="marvanFlag"
+    />
     <v-row
       v-if="isLoading"
       class="justify-center pt-10"
@@ -25,12 +28,14 @@
         :key="book.title"
       >
         <book-details
+          origin="other"
           :author="book.author"
           :title="book.title"
           :thumbnail="book.thumbnail"
           :isbn="book.isbn"
           :published-date="book.publishedDate"
-          :selectable="true"
+          :book-data="book"
+          :selectable="marvanFlag"
           @selected="bookSelected"
           @unselected="bookUnselected"
         />
@@ -41,27 +46,50 @@
 <script>
 import BookDetails from "@/components/search/BookDetails";
 import {deleteBooksInCollection, getBooksInCollection} from "@/api/bookshelfBooks";
+import {EventBus} from "@/event-bus";
 
 export default {
   name: "IndividualBookshelf",
   components: {BookDetails},
   data: function () {
     return {
-      collectionId: this.$route.params.collectionId,
+      collectionId: "",
       isLoading: true,
+      previousBookData: null,
+      loadCollectionBooksEmitted: false,
       collectionBooks: [],
       booksSelected: [],
-      isAnyBookSelected: false
+      isAnyBookSelected: false,
+      marvanFlag: false
     }
   },
-  async mounted() {
-    await this.getBooksInCollection();
-    this.isLoading = false;
+  async activated() {
+    EventBus.$on("load-collection-books", this.getBooksInCollection);
+
+    await this.$nextTick()
+
+    if (this.loadCollectionBooksEmitted === false) {
+      this.collectionBooks = this.previousBookData;
+      this.isLoading = false;
+    }
+  },
+  deactivated() {
+    this.collectionId = "";
+    this.isLoading = true;
+    this.loadCollectionBooksEmitted = false;
+    this.previousBookData = this.collectionBooks;
+    this.collectionBooks = [];
+    this.booksSelected = [];
+    this.checkIfBooksSelected();
+    EventBus.$off("load-collection-books");
   },
   methods: {
-    async getBooksInCollection() {
+    async getBooksInCollection(collectionId) {
+      this.loadCollectionBooksEmitted = true;
+      this.collectionId = collectionId;
       this.collectionBooks = await getBooksInCollection(this.collectionId,
         await this.$auth.getTokenSilently())
+      this.isLoading = false;
     },
     checkForMultipleAuthors(authors) {
       if (!authors || authors.length === 0) {
@@ -90,10 +118,11 @@ export default {
     },
     async deleteBooks() {
       const deleteBooksParams = new URLSearchParams({bookshelfId: this.collectionId, bookIds: this.booksSelected});
+      console.log(deleteBooksParams.toString())
       await deleteBooksInCollection(deleteBooksParams, await this.$auth.getTokenSilently());
       this.booksSelected = []
       this.checkIfBooksSelected();
-      await this.getBooksInCollection();
+      await this.getBooksInCollection(this.collectionId);
     }
   }
 }

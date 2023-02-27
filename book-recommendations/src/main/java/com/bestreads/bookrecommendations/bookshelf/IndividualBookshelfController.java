@@ -1,5 +1,6 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
+import com.bestreads.bookrecommendations.book.BookDAO;
 import com.bestreads.bookrecommendations.utils.AuthUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;

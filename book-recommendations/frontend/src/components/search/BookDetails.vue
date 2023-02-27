@@ -4,6 +4,13 @@
       :class="{ 'selected': selected }"
       @click="changeSelected"
     >
+      <div
+        v-if="selected"
+        style="margin: 0px"
+        class="d-flex flex-column align-end"
+      >
+        <v-checkbox />
+      </div>
       <v-card-actions class="justify-center mb-0 pt-6">
         <a @click="emitViewBook">
           <v-img
