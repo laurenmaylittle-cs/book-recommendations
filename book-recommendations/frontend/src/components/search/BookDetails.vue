@@ -5,7 +5,7 @@
       @click="changeSelected"
     >
       <div
-        v-if="selected"
+        v-if="selectable"
         style="margin: 0px"
         class="d-flex flex-column align-end"
       >
