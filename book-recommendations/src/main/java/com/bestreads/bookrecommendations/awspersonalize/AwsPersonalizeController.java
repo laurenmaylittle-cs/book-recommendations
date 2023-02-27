@@ -1,5 +1,6 @@
 package com.bestreads.bookrecommendations.awspersonalize;
 
+import com.bestreads.bookrecommendations.auth0.Auth0Service;
 import com.bestreads.bookrecommendations.book.Book;
 import com.bestreads.bookrecommendations.bookshelf.BookDAO;
 import java.util.List;
@@ -25,6 +26,7 @@ import static java.lang.String.join;
 public class AwsPersonalizeController {
 
   private final AwsPersonalizeService awsPersonalizeService;
+  private final Auth0Service auth0Service;
   private PersonalizeClient personalizeClient;
   private PersonalizeRuntimeClient personalizeRuntimeClient;
   private PersonalizeEventsClient personalizeEventsClient;
@@ -45,8 +47,9 @@ public class AwsPersonalizeController {
   private String usersDatasetArn;
 
   @Autowired
-  public AwsPersonalizeController(AwsPersonalizeService awsPersonalizeService) {
+  public AwsPersonalizeController(AwsPersonalizeService awsPersonalizeService, Auth0Service auth0Service) {
     this.awsPersonalizeService = awsPersonalizeService;
+    this.auth0Service = auth0Service;
   }
   @PostConstruct
   private void initialiseAmazon() {
@@ -71,11 +74,19 @@ public class AwsPersonalizeController {
     var userId = AuthUtils.getUserId(jwtAuthenticationToken).orElseThrow(() -> {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user ID found in token");
     });
+    var trimmedId = userId.substring(userId.indexOf("|") + 1);
+    var user = auth0Service.searchById(trimmedId);
+    System.out.println("USER INFO:");
+    System.out.println(user);
+
     var authors = join("/", book.authors());
     var categories = join("/", book.categories());
 
+    //Adds book to our database
     awsPersonalizeService.addBookToDb(book.isbn(), book.title(), authors, categories, book.publisher(), book.imageLinks().thumbnail());
+    //Updates interaction for recommendations
     awsPersonalizeService.putEvents(this.personalizeEventsClient, awsEventTrackerId, userId, userId, book.isbn());
+    //Updates books for recommendations
     awsPersonalizeService.putItems(this.personalizeEventsClient, booksDatasetArn, book.isbn(), book.title(), authors, categories, book.publisher(), book.imageLinks().thumbnail());
   }
 }
