@@ -96,7 +96,7 @@
 
 <script>
 import ViewBookThumbnail from "@/components/viewbook/ViewBookThumbnail";
-import {getBookInfo} from "@/api/view-book";
+import {exportData, getBookInfo} from "@/api/view-book";
 import AverageRatings from "@/components/viewbook/AverageRatings";
 import UserRatings from "@/components/viewbook/UserRatings";
 import AboutBook from "@/components/viewbook/AboutBook";
@@ -151,11 +151,13 @@ export default {
     EventBus.$off(['search-triggered', 'view-book', 'view-book-other']);
   },
   methods: {
-    populateBookData(bookData) {
+    async populateBookData(bookData) {
       this.viewBookEmitted = true;
       if (bookData) {
         this.bookData = bookData;
         this.isbn = bookData.isbn;
+        await this.postData();
+        await this.getRecommendations();
       }
 
       this.isLoading = false;
@@ -172,6 +174,8 @@ export default {
       try {
         this.bookData = await getBookInfo(this.isbn, queryData.title, queryData.authors);
         this.isLoading = false;
+        await this.postData();
+        await this.getRecommendations();
       } catch (error) {
         this.isLoading = false;
       }

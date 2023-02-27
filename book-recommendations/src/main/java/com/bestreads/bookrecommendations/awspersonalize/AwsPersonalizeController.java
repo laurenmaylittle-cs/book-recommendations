@@ -1,10 +1,9 @@
 package com.bestreads.bookrecommendations.awspersonalize;
 
 import com.bestreads.bookrecommendations.book.Book;
-import com.bestreads.bookrecommendations.bookshelf.BookDAO;
-import java.util.List;
 import javax.annotation.PostConstruct;
 
+import com.bestreads.bookrecommendations.book.BookDAO;
 import com.bestreads.bookrecommendations.utils.AuthUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +15,8 @@ import org.springframework.web.server.ResponseStatusException;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.personalize.PersonalizeClient;
 import software.amazon.awssdk.services.personalizeruntime.PersonalizeRuntimeClient;
+
+import java.util.List;
 
 import static java.lang.String.join;
 
@@ -59,6 +60,8 @@ public class AwsPersonalizeController {
     var authors = join("/", book.authors());
     var categories = join("/", book.categories());
 
-    awsPersonalizeService.addBookToDb(book.isbn(), book.title(), authors, categories, book.publisher(), book.imageLinks().thumbnail());
+    if (!book.isbn().isEmpty()) {
+      awsPersonalizeService.addBookToDb(book.isbn(), book.title(), authors, categories, book.publisher(), book.imageLinks().thumbnail());
+    }
   }
 }

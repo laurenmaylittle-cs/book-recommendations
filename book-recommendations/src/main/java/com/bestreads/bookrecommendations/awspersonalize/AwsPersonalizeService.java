@@ -1,9 +1,10 @@
 package com.bestreads.bookrecommendations.awspersonalize;
 
-import com.bestreads.bookrecommendations.bookshelf.BookDAO;
 import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
+
+import com.bestreads.bookrecommendations.book.BookDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.awscore.exception.AwsServiceException;

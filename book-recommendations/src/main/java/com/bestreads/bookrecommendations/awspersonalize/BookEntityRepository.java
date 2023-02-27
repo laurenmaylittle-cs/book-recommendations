@@ -1,7 +1,8 @@
 package com.bestreads.bookrecommendations.awspersonalize;
 
-import com.bestreads.bookrecommendations.bookshelf.BookDAO;
 import java.util.Optional;
+
+import com.bestreads.bookrecommendations.book.BookDAO;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
