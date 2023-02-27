@@ -83,7 +83,7 @@
           </v-alert>
         </template>
 
-        <template v-if="$auth.isAuthenticated">
+        <template v-if="$auth.isAuthenticated && isIsbnValid">
           <template v-if="!ratingsLoaded && !collectionsLoaded">
             <v-progress-circular
               :size="30"
@@ -98,7 +98,6 @@
             @user-rating-loaded="ratingsLoaded = true"
           />
           <book-collections
-            v-if="isIsbnValid"
             :book-isbn="isbn.toString()"
             :book-data="bookData"
             @collections-loaded="collectionsLoaded = true"
