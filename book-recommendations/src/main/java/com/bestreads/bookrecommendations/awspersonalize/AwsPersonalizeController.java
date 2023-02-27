@@ -74,19 +74,24 @@ public class AwsPersonalizeController {
     var userId = AuthUtils.getUserId(jwtAuthenticationToken).orElseThrow(() -> {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user ID found in token");
     });
-    var trimmedId = userId.substring(userId.indexOf("|") + 1);
-    var user = auth0Service.searchById(trimmedId);
-    System.out.println("USER INFO:");
-    System.out.println(user);
+    var formattedId = userId.replace("|", "%7C");
+    var userData = auth0Service.searchById(formattedId);
 
     var authors = join("/", book.authors());
     var categories = join("/", book.categories());
 
     //Adds book to our database
     awsPersonalizeService.addBookToDb(book.isbn(), book.title(), authors, categories, book.publisher(), book.imageLinks().thumbnail());
-    //Updates interaction for recommendations
+
+    //Updates interactions for recommendations
     awsPersonalizeService.putEvents(this.personalizeEventsClient, awsEventTrackerId, userId, userId, book.isbn());
+
     //Updates books for recommendations
     awsPersonalizeService.putItems(this.personalizeEventsClient, booksDatasetArn, book.isbn(), book.title(), authors, categories, book.publisher(), book.imageLinks().thumbnail());
+
+    //Updates users for recommendations
+    if (userData != null) {
+      awsPersonalizeService.putUsers(this.personalizeEventsClient, usersDatasetArn, userId, userData.name(), userData.email(), String.valueOf(userData.emailVerified()).toUpperCase());
+    }
   }
 }

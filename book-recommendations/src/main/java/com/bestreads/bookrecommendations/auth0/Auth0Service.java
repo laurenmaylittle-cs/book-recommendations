@@ -89,16 +89,12 @@ public class Auth0Service {
     }
   }
 
-  public List<User> searchById(String userId) {
+  public User searchById(String userId) {
     if (userId.isEmpty()) {
-      return Collections.emptyList();
+      return null;
     }
     StringBuilder uri = new StringBuilder(
         "%s/users/%s".formatted(auth0ApiUri, userId));
-
-    uri = new StringBuilder(
-        "%s&fields=email,name,email_verified,picture&search_engine=v2&included_total=true&include_fields=true".formatted(
-            uri.toString()));
 
     apiKey = getAuthToken();
 
@@ -107,7 +103,7 @@ public class Auth0Service {
     try {
       var httpResponse = HttpClient.newHttpClient()
           .send(httpRequest, HttpResponse.BodyHandlers.ofString());
-      return extractFromHttpResponse(httpResponse, false);
+      return extractFromHttpResponse(httpResponse, false).get(0);
     } catch (IOException | InterruptedException e) {
       throw new RuntimeException(e);
     }
@@ -144,6 +140,7 @@ public class Auth0Service {
   private ObjectMapper getObjectMapper() {
     var objectMapper = new ObjectMapper();
     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
     return objectMapper;
   }
 
