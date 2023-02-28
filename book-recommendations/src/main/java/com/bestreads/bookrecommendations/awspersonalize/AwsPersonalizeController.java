@@ -32,10 +32,10 @@ public class AwsPersonalizeController {
 
   @GetMapping("/public/book/recommendations")
   public List<BookDAO> getRecs(@Param("isbn") String isbn) {
-    return awsPersonalizeService.getRecs(isbn);
+    return awsPersonalizeService.getRecommendations(isbn);
   }
 
-  @PostMapping("/private/book")
+  @PostMapping("/private/book/add-book")
   public void addBookToDb(JwtAuthenticationToken jwtAuthenticationToken, @RequestBody Book book) {
     var userId = AuthUtils.getUserId(jwtAuthenticationToken).orElseThrow(() -> {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user ID found in token");

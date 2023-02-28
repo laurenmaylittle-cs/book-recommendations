@@ -9,7 +9,7 @@ export async function getRecs(isbn) {
 }
 
 export async function exportData(bookData, token) {
-  return await axios.post("/api/private/book", bookData, {
+  return await axios.post("/api/private/book/add-book", bookData, {
     headers: {
       authorization: `Bearer ${token}`,
     }

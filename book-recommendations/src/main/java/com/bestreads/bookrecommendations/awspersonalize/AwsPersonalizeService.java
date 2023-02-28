@@ -44,7 +44,7 @@ class AwsPersonalizeService {
     }
   }
 
-  public List<BookDAO> getRecs(String itemId) {
+  public List<BookDAO> getRecommendations(String itemId) {
     var isbns = getListOfIsbns(itemId);
     var books = new ArrayList<BookDAO>();
 
@@ -75,7 +75,7 @@ class AwsPersonalizeService {
       }
 
     } catch (AwsServiceException e) {
-      System.err.println(e.awsErrorDetails().errorMessage());
+      throw new IllegalArgumentException("Invalid ISBN provided");
     }
     return isbns;
   }
