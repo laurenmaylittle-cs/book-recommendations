@@ -192,7 +192,7 @@ export default {
     editBookshelf() {
       this.editFlag = !this.editFlag;
       if (this.editFlag) {
-        this.editBtnText = "Cancel";
+        this.editBtnText = "Done";
       } else {
         this.editBtnText = "Edit";
       }
