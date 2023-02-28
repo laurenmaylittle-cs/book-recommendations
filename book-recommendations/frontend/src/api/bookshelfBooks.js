@@ -15,10 +15,12 @@ export async function getBooksInCollection(collectionId, token) {
 }
 
 export async function deleteBooksInCollection(deleteBooksParams, token) {
-  await axios.post(`/api/private/bookshelf/books/delete`,
-    deleteBooksParams, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const result = await axios.delete(
+    `/api/private/bookshelf/books/delete`,
+    {
+      data: deleteBooksParams,
+      headers: {Authorization: `Bearer ${token}`}
+    }
+  );
+  return result.data;
 }

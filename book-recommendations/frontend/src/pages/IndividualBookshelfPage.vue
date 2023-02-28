@@ -90,7 +90,7 @@ import {deleteBooksInCollection, getBooksInCollection} from "@/api/bookshelfBook
 import {EventBus} from "@/event-bus";
 
 export default {
-  name: "IndividualBookshelf",
+  name: "IndividualBookshelfPage",
   components: {BookDetails},
   data: function () {
     return {
@@ -131,6 +131,7 @@ export default {
     this.collectionBooks = [];
     this.booksSelectedIsbn = [];
     this.booksSelectedITitle = [];
+    this.editBtnText = "Edit"
     this.checkIfBooksSelected();
     EventBus.$off("load-collection-books");
   },
@@ -180,16 +181,12 @@ export default {
       this.isAnyBookSelected = this.booksSelectedIsbn.length > 0;
     },
     async deleteBooks() {
-      console.log("delete books method");
-      console.log(this.collectionId);
       const deleteBooksParams = new URLSearchParams(
         {bookshelfId: this.collectionId, bookIds: this.booksSelectedIsbn});
-      console.log(deleteBooksParams.toString())
-      await deleteBooksInCollection(deleteBooksParams, await this.$auth.getTokenSilently());
+      this.collectionBooks = await deleteBooksInCollection(deleteBooksParams, await this.$auth.getTokenSilently());
       this.booksSelectedIsbn = [];
       this.booksSelectedITitle = [];
       this.checkIfBooksSelected();
-      await this.getBooksInCollection();
       this.closeDeleteDialog();
     },
     editBookshelf() {

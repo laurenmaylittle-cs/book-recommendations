@@ -114,13 +114,8 @@ export default {
     },
     changeSelected() {
       if (this.selectable) {
-        if (this.selected) {
-          this.selected = false;
-          this.$emit("unselected", this.isbn, this.title);
-        } else {
-          this.selected = true;
-          this.$emit("selected", this.isbn, this.title);
-        }
+        this.selected = !this.selected;
+        this.$emit(this.selected ? "selected" : "unselected", this.isbn, this.title);
       }
     }
   }

@@ -24,26 +24,21 @@ public class IndividualBookshelfController {
     @GetMapping
     public List<BookDAO> getBooksInCollection(JwtAuthenticationToken authenticationToken,
                                               @Param("bookshelfId") Long bookshelfId) {
-        var userId = getUserIdOrBadRequest(authenticationToken);
+        var userId = AuthUtils.getUserIdOrBadRequest(authenticationToken);
 
         return collectionsService.getBooksInCollectionByIdAndUserOrBadRequest(bookshelfId, userId);
     }
 
-    @PostMapping("/delete")
-    public void deleteBookInCollection(JwtAuthenticationToken authenticationToken,
+    @DeleteMapping("/delete")
+    public List<BookDAO> deleteBookInCollection(JwtAuthenticationToken authenticationToken,
                                        @RequestParam Long bookshelfId,
                                        @RequestParam List<Long> bookIds) {
-        var userId = getUserIdOrBadRequest(authenticationToken);
+        var userId = AuthUtils.getUserIdOrBadRequest(authenticationToken);
         if (!collectionsService.collectionBelongsToUser(userId, bookshelfId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No collection for user found");
         }
 
         collectionsService.deleteBooksFromCollection(bookshelfId, bookIds);
-    }
-
-    private String getUserIdOrBadRequest(JwtAuthenticationToken authenticationToken) {
-        return AuthUtils.getUserId(authenticationToken).orElseThrow(() -> {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user ID found in token");
-        });
+        return collectionsService.getBooksInCollectionByIdAndUserOrBadRequest(bookshelfId, userId);
     }
 }
