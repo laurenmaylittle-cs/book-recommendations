@@ -149,7 +149,7 @@ export default {
       viewBookEmitted: false,
       ratingsLoaded: false,
       collectionsLoaded: false,
-      recommendedIsbns: []
+      recommendations: []
     }
   },
   computed: {
@@ -158,10 +158,7 @@ export default {
     },
     isIsbnValid() {
       return this.isbn ? (this.isbn.length === 10 || this.isbn.length === 13) : false
-    }
-    displayRecommendations() {
-      return this.recommendedIsbns;
-    }
+    },
   },
   async activated() {
     //view-book - from search results
@@ -194,9 +191,9 @@ export default {
         this.bookData = bookData;
         this.updateDocumentTitle();
         this.isbn = bookData.isbn;
-        if (await this.checkIsAwsEnabled()) {
-          await this.postData();
+        if (await this.isAwsEnabledAndIsbnValid()) {
           await this.getRecommendations();
+          await this.postDataIfAuthenticated();
         }
       }
       this.isLoading = false;
@@ -214,9 +211,9 @@ export default {
         this.bookData = await getBookInfo(this.isbn, queryData.title, queryData.authors);
         this.updateDocumentTitle();
         this.isLoading = false;
-        if (await this.checkIsAwsEnabled()) {
-          await this.postData();
+        if (await this.isAwsEnabledAndIsbnValid()) {
           await this.getRecommendations();
+          await this.postDataIfAuthenticated();
         }
       } catch (error) {
         this.isLoading = false;
@@ -243,16 +240,18 @@ export default {
       return details.toString();
     },
     async getRecommendations() {
-      this.recommendedIsbns = await getRecs(this.isbn);
+      this.recommendations = await getRecs(this.isbn);
     },
-    async postData() {
-      const token = await this.$auth.getTokenSilently();
-      await exportData(this.bookData, token)
+    async postDataIfAuthenticated() {
+      if (this.$auth.isAuthenticated) {
+        const token = await this.$auth.getTokenSilently();
+        await exportData(this.bookData, token)
+      }
     },
-    async checkIsAwsEnabled() {
+    async isAwsEnabledAndIsbnValid() {
       const token = await this.$auth.getTokenSilently();
-      return await isAwsEnabled(token)
-    }
+      return await isAwsEnabled(token) && this.isIsbnValid;
+    },
   }
 }
 </script>

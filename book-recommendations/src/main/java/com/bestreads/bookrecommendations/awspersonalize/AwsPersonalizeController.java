@@ -3,15 +3,18 @@ package com.bestreads.bookrecommendations.awspersonalize;
 import com.bestreads.bookrecommendations.book.Book;
 import com.bestreads.bookrecommendations.book.BookDAO;
 import com.bestreads.bookrecommendations.utils.AuthUtils;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -27,7 +30,7 @@ public class AwsPersonalizeController {
     this.awsPersonalizeService = awsPersonalizeService;
   }
 
-  @GetMapping("/public/book/get-recommendations")
+  @GetMapping("/public/book/recommendations")
   public List<BookDAO> getRecs(@Param("isbn") String isbn) {
     return awsPersonalizeService.getRecs(isbn);
   }
@@ -43,8 +46,8 @@ public class AwsPersonalizeController {
     }
   }
 
-  @GetMapping("/private/book/is-aws-enabled")
+  @GetMapping("/public/book/personalise-status")
   public boolean isAwsEnabled() {
-    return awsEnabled;
+    return this.awsEnabled;
   }
 }
