@@ -1,7 +1,6 @@
 <template>
   <div>
     <v-card
-      :class="{ 'selected': selected }"
       @click="emitViewBook"
     >
       <div
@@ -9,7 +8,10 @@
         style="height:10px; display: flex; justify-content: flex-end"
       >
         <!--@click.stop stops the emitViewBook event from happening within the checkbox-->
-        <v-checkbox @click.stop="changeSelected()" />
+        <v-checkbox
+          :value="selected"
+          @click.stop="changeSelected()"
+        />
       </div>
       <v-card-actions class="justify-center mb-0 pt-6">
         <a @click="emitViewBook">
@@ -136,9 +138,5 @@ div {
 /deep/ .v-card {
   width: 250px;
   height: 350px;
-}
-.selected {
-  /* !important to make sure that style take precedence and is not override by scoped styles */
-  background-color: Khaki !important;
 }
 </style>
