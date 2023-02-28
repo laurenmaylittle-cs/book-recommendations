@@ -96,12 +96,12 @@
 
 <script>
 import ViewBookThumbnail from "@/components/viewbook/ViewBookThumbnail";
-import {exportData, getBookInfo} from "@/api/view-book";
+import {getBookInfo} from "@/api/view-book";
 import AverageRatings from "@/components/viewbook/AverageRatings";
 import UserRatings from "@/components/viewbook/UserRatings";
 import AboutBook from "@/components/viewbook/AboutBook";
 import {EventBus} from "@/event-bus";
-import {getRecs} from "@/api/personalize";
+import {getRecs, exportData, isAwsEnabled} from "@/api/personalize";
 
 export default {
   name: 'ViewBook',
@@ -156,10 +156,11 @@ export default {
       if (bookData) {
         this.bookData = bookData;
         this.isbn = bookData.isbn;
-        await this.postData();
-        await this.getRecommendations();
+        if (await this.checkIsAwsEnabled()) {
+          await this.postData();
+          await this.getRecommendations();
+        }
       }
-
       this.isLoading = false;
     },
     async getBookData(queryData) {
@@ -174,8 +175,10 @@ export default {
       try {
         this.bookData = await getBookInfo(this.isbn, queryData.title, queryData.authors);
         this.isLoading = false;
-        await this.postData();
-        await this.getRecommendations();
+        if (await this.checkIsAwsEnabled()) {
+          await this.postData();
+          await this.getRecommendations();
+        }
       } catch (error) {
         this.isLoading = false;
       }
@@ -205,6 +208,10 @@ export default {
     async postData() {
       const token = await this.$auth.getTokenSilently();
       await exportData(this.bookData, token)
+    },
+    async checkIsAwsEnabled() {
+      const token = await this.$auth.getTokenSilently();
+      return await isAwsEnabled(token)
     }
   }
 }

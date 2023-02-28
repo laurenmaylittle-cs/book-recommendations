@@ -4,6 +4,7 @@ import com.bestreads.bookrecommendations.book.Book;
 import com.bestreads.bookrecommendations.book.BookDAO;
 import com.bestreads.bookrecommendations.utils.AuthUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -17,6 +18,9 @@ import java.util.List;
 public class AwsPersonalizeController {
 
   private final AwsPersonalizeService awsPersonalizeService;
+
+  @Value("${AWS_IS_ENABLED}")
+  private boolean awsEnabled;
 
   @Autowired
   public AwsPersonalizeController(AwsPersonalizeService awsPersonalizeService) {
@@ -37,5 +41,10 @@ public class AwsPersonalizeController {
     if (!book.isbn().isEmpty()) {
       awsPersonalizeService.addBookToDb(book);
     }
+  }
+
+  @GetMapping("/private/book/is-aws-enabled")
+  public boolean isAwsEnabled() {
+    return awsEnabled;
   }
 }
