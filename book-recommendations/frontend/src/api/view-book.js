@@ -45,4 +45,25 @@ export async function updateUserRating(email, isbn, rating, token) {
   })
 }
 
+export async function getUserCollections(token, isbn) {
+  const url = "/api/private/bookshelf/collections/book";
+  const params = new URLSearchParams();
+  params.append("isbn", isbn);
 
+  return (await axios.get(url, {
+    params: params,
+    headers: {
+      authorization: `Bearer ${token}`,
+    }
+  })).data;
+}
+
+export async function saveUserCollections(token, collectionsAndBook) {
+  const url = "/api/private/bookshelf/collections/book"
+
+  return (await axios.put(url, collectionsAndBook, {
+    headers: {
+      authorization: `Bearer ${token}`,
+    }
+  })).data;
+}

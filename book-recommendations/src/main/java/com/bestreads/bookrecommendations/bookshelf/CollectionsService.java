@@ -1,9 +1,10 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
-import java.util.Comparator;
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toCollection;
+
 import java.util.LinkedHashSet;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +22,8 @@ class CollectionsService {
   LinkedHashSet<CollectionJson> getCollections(String userId) {
     return collectionsRepository.findByUserId(userId)
         .stream().map(x -> new CollectionJson(x.getId(), x.getName()))
-        .sorted(Comparator.comparing(CollectionJson::name))
-        .collect(Collectors.toCollection(LinkedHashSet::new));
+        .sorted(comparing(CollectionJson::name))
+        .collect(toCollection(LinkedHashSet::new));
   }
 
   Optional<CollectionDAO> getCollectionById(Long collectionId) {
