@@ -95,6 +95,7 @@ export default {
   data: function () {
     return {
       collectionId: "",
+      collectionTitle: "",
       previousCollectionId: "",
       isLoading: true,
       previousBookData: null,
@@ -115,6 +116,7 @@ export default {
     if (this.loadCollectionBooksEmitted === false) {
       this.collectionId = this.previousCollectionId;
       this.collectionBooks = this.previousBookData;
+      this.updatePageTitle();
       this.isLoading = false;
     }
   },
@@ -132,9 +134,11 @@ export default {
     EventBus.$off("load-collection-books");
   },
   methods: {
-    async getBooksInCollection(collectionId) {
+    async getBooksInCollection(collectionData) {
+      this.collectionTitle = collectionData.collectionName;
+      this.updatePageTitle();
       this.loadCollectionBooksEmitted = true;
-      this.collectionId = collectionId;
+      this.collectionId = collectionData.collectionId;
       this.collectionBooks = await getBooksInCollection(
         this.collectionId,
         await this.$auth.getTokenSilently()
@@ -187,7 +191,10 @@ export default {
     },
     closeDeleteDialog() {
       this.deleteDialog = false;
-    }
+    },
+    updatePageTitle() {
+      document.title = `${this.collectionTitle} - Books`
+    },
   }
 }
 </script>
