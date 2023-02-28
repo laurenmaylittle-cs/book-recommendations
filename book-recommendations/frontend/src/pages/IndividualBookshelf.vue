@@ -111,7 +111,7 @@ export default {
   async activated() {
     EventBus.$on("load-collection-books", this.entryMethod);
 
-    await this.$nextTick()
+    await this.$nextTick() //asynchronous (return earlier)
 
     if (this.loadCollectionBooksEmitted === false) {
       this.collectionId = this.previousCollectionId;
@@ -135,15 +135,11 @@ export default {
   },
   methods: {
     async entryMethod(collectionData) {
-      console.log("entry method")
-      console.log(collectionData.collectionId)
+      this.loadCollectionBooksEmitted = true;
       this.collectionTitle = collectionData.collectionName;
       this.collectionId = collectionData.collectionId;
-      console.log("assigned collectionId");
-      console.log(this.collectionId);
       this.updatePageTitle();
       await this.getBooksInCollection()
-      this.loadCollectionBooksEmitted = true;
     },
     async getBooksInCollection() {
       this.collectionBooks = await getBooksInCollection(
@@ -185,7 +181,8 @@ export default {
     async deleteBooks() {
       console.log("delete books method");
       console.log(this.collectionId);
-      const deleteBooksParams = new URLSearchParams({bookshelfId: this.collectionId, bookIds: this.booksSelectedIsbn});
+      const deleteBooksParams = new URLSearchParams(
+        {bookshelfId: this.collectionId, bookIds: this.booksSelectedIsbn});
       console.log(deleteBooksParams.toString())
       await deleteBooksInCollection(deleteBooksParams, await this.$auth.getTokenSilently());
       this.booksSelectedIsbn = [];
