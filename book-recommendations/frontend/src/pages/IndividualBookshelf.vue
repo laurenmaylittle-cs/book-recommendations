@@ -139,6 +139,8 @@ export default {
       console.log(collectionData.collectionId)
       this.collectionTitle = collectionData.collectionName;
       this.collectionId = collectionData.collectionId;
+      console.log("assigned collectionId");
+      console.log(this.collectionId);
       this.updatePageTitle();
       await this.getBooksInCollection()
       this.loadCollectionBooksEmitted = true;
@@ -181,6 +183,8 @@ export default {
       this.isAnyBookSelected = this.booksSelectedIsbn.length > 0;
     },
     async deleteBooks() {
+      console.log("delete books method");
+      console.log(this.collectionId);
       const deleteBooksParams = new URLSearchParams({bookshelfId: this.collectionId, bookIds: this.booksSelectedIsbn});
       console.log(deleteBooksParams.toString())
       await deleteBooksInCollection(deleteBooksParams, await this.$auth.getTokenSilently());
