@@ -7,10 +7,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Comparator;
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toCollection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,8 +30,8 @@ class CollectionsService {
   LinkedHashSet<CollectionJson> getCollections(String userId) {
     return collectionsRepository.findByUserId(userId)
         .stream().map(x -> new CollectionJson(x.getId(), x.getName()))
-        .sorted(Comparator.comparing(CollectionJson::name))
-        .collect(Collectors.toCollection(LinkedHashSet::new));
+        .sorted(comparing(CollectionJson::name))
+        .collect(toCollection(LinkedHashSet::new));
   }
 
   Optional<CollectionDAO> getCollectionById(Long collectionId) {

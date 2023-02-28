@@ -110,7 +110,10 @@ export default {
     },
     async goToCollection(collectionId) {
       await this.$router.push({name: 'individualBookshelf'});
-      EventBus.$emit('load-collection-books', collectionId);
+      EventBus.$emit('load-collection-books', {
+        collectionId: collectionId,
+        collectionName: this.collections.find(collection => collection.id === collectionId).name
+      });
     }
   }
 }
