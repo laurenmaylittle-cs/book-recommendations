@@ -202,7 +202,10 @@ export default {
     },
     async navigateToCollection(collection) {
       await this.$router.push({name: 'bookshelfBooksPage'});
-      EventBus.$emit('load-collection-books', collection.id);
+      EventBus.$emit('load-collection-books', {
+        collectionId: collection.id,
+        collectionName: collection.name
+      });
     },
     clearDialogAndResetState() {
       this.collectionsToUpdate = this._createDeepCopyOfCollections();
