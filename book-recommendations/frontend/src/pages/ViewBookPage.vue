@@ -118,7 +118,7 @@ export default {
       isLoading: true,
       previousBookData: null,
       viewBookEmitted: false,
-      recommendedIsbns: ''
+      recommendedIsbns: []
     }
   },
   computed: {

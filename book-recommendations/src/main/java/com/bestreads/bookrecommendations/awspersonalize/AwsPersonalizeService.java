@@ -4,47 +4,59 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
 
+import com.bestreads.bookrecommendations.book.Book;
 import com.bestreads.bookrecommendations.book.BookDAO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
+import software.amazon.awssdk.services.personalize.PersonalizeClient;
 import software.amazon.awssdk.services.personalizeruntime.PersonalizeRuntimeClient;
 import software.amazon.awssdk.services.personalizeruntime.model.GetRecommendationsRequest;
 import software.amazon.awssdk.services.personalizeruntime.model.GetRecommendationsResponse;
 import software.amazon.awssdk.services.personalizeruntime.model.PredictedItem;
+
+import static java.lang.String.join;
 
 
 @Service
 class AwsPersonalizeService {
 
   private final BookEntityRepository bookEntityRepository;
+  private final PersonalizeClient personalizeClient;
+  private final PersonalizeRuntimeClient personalizeRuntimeClient;
+
+  @Value("${AWS_CAMPAIGN_ARN}")
+  private String campaignArn;
 
   @Autowired
-  AwsPersonalizeService(BookEntityRepository bookEntityRepository) {
+  AwsPersonalizeService(BookEntityRepository bookEntityRepository, PersonalizeClient personalizeClient, PersonalizeRuntimeClient personalizeRuntimeClient) {
     this.bookEntityRepository = bookEntityRepository;
+    this.personalizeClient = personalizeClient;
+    this.personalizeRuntimeClient = personalizeRuntimeClient;
   }
 
   @Transactional
-  public void addBookToDb(String isbn, String title, String author, String genre,
-      String publisher, String thumbnail) {
-    var book = new BookDAO();
-    book.setTitle(title);
-    book.setIsbn(isbn);
-    book.setAuthor(author);
-    book.setGenre(genre);
-    book.setThumbnail(thumbnail);
-    book.setPublisher(publisher);
+  public void addBookToDb(Book bookToAdd) {
+    var authors = join("/", bookToAdd.authors());
+    var genres = join("/", bookToAdd.categories());
 
-    var currentBook = bookEntityRepository.findByIsbn(isbn);
+    var book = new BookDAO();
+    book.setTitle(bookToAdd.title());
+    book.setIsbn(bookToAdd.isbn());
+    book.setAuthor(authors);
+    book.setGenre(genres);
+    book.setThumbnail(bookToAdd.imageLinks().thumbnail());
+    book.setPublisher(bookToAdd.publisher());
+
+    var currentBook = bookEntityRepository.findByIsbn(bookToAdd.isbn());
     if (currentBook.isEmpty()) {
       bookEntityRepository.save(book);
     }
   }
 
-  public List<BookDAO> getRecs(PersonalizeRuntimeClient personalizeRuntimeClient,
-      String campaignArn,
-      String itemId) {
-    var isbns = getListOfIsbns(personalizeRuntimeClient, campaignArn, itemId);
+  public List<BookDAO> getRecs(String itemId) {
+    var isbns = getListOfIsbns(itemId);
     var books = new ArrayList<BookDAO>();
 
     for (String isbn : isbns) {
@@ -57,8 +69,7 @@ class AwsPersonalizeService {
     return books;
   }
 
-  private List<String> getListOfIsbns(PersonalizeRuntimeClient personalizeRuntimeClient,
-      String campaignArn, String itemId) {
+  private List<String> getListOfIsbns(String itemId) {
     var isbns = new ArrayList<String>();
     try {
       GetRecommendationsRequest recommendationsRequest = GetRecommendationsRequest.builder()
