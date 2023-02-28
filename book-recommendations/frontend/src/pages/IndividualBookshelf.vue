@@ -6,7 +6,7 @@
       class="ma-7"
       @click="editBookshelf"
     >
-      Edit
+      {{ editBtnText }}
     </v-btn>
     <v-btn
       v-if="editFlag"
@@ -105,7 +105,8 @@ export default {
       booksSelectedITitle: [],
       isAnyBookSelected: false,
       editFlag: false,
-      deleteDialog: false
+      deleteDialog: false,
+      editBtnText: "Edit"
     }
   },
   async activated() {
@@ -193,6 +194,12 @@ export default {
     },
     editBookshelf() {
       this.editFlag = !this.editFlag;
+      if (this.editFlag) {
+        this.editBtnText = "Cancel";
+      } else {
+        this.editBtnText = "Edit";
+      }
+
     },
     openDeleteDialog() {
       this.deleteDialog = true;
