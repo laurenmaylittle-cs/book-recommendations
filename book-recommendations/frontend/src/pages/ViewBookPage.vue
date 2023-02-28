@@ -70,14 +70,41 @@
           heading="Average rating"
           :ratings-count="bookData.ratingsCount ? parseInt(bookData.ratingsCount) : 0"
         />
-        <user-ratings
-          :isbn="
-            isbn.toString()"
-        />
+        <template v-if="!$auth.isAuthenticated">
+          <v-alert
+            outlined
+            type="info"
+            :width="$vuetify.breakpoint.xs ? '100%' : '75%'"
+          >
+            <a @click="$auth.loginWithRedirect()">
+              Log in
+            </a>
+            to add your own ratings and manage collections
+          </v-alert>
+        </template>
+
+        <template v-if="$auth.isAuthenticated && isIsbnValid">
+          <template v-if="!ratingsLoaded && !collectionsLoaded">
+            <v-progress-circular
+              :size="30"
+              :width="7"
+              color="secondary"
+              indeterminate
+            />
+          </template>
+          <user-ratings
+            :isbn="
+              isbn.toString()"
+            @user-rating-loaded="ratingsLoaded = true"
+          />
+          <book-collections
+            :book-isbn="isbn.toString()"
+            :book-data="bookData"
+            @collections-loaded="collectionsLoaded = true"
+          />
+        </template>
       </v-col>
-      <v-col class="ma-0">
-        <view-book-thumbnail :thumbnail="bookData.imageLinks.thumbnail" />
-      </v-col>
+      <view-book-thumbnail :thumbnail="bookData.imageLinks.thumbnail" />
     </v-row>
     <v-row
       v-if="!isLoading && bookData !== null"
@@ -101,10 +128,12 @@ import AverageRatings from "@/components/viewbook/AverageRatings";
 import UserRatings from "@/components/viewbook/UserRatings";
 import AboutBook from "@/components/viewbook/AboutBook";
 import {EventBus} from "@/event-bus";
+import BookCollections from "@/components/viewbook/BookCollections.vue";
 
 export default {
   name: 'ViewBook',
   components: {
+    BookCollections,
     AboutBook,
     UserRatings,
     AverageRatings,
@@ -117,12 +146,17 @@ export default {
       isLoading: true,
       previousBookData: null,
       viewBookEmitted: false,
+      ratingsLoaded: false,
+      collectionsLoaded: false,
     }
   },
   computed: {
     errorMessage() {
       return "No results found for ISBN: " + this.isbn
     },
+    isIsbnValid() {
+      return this.isbn ? (this.isbn.length === 10 || this.isbn.length === 13) : false
+    }
   },
   async activated() {
     //view-book - from search results
@@ -144,6 +178,8 @@ export default {
     this.bookData = null;
     this.isLoading = true;
     this.viewBookEmitted = false;
+    this.collectionsLoaded = false;
+    this.ratingsLoaded = false;
     EventBus.$off(['search-triggered', 'view-book', 'view-book-other']);
   },
   methods: {
@@ -161,7 +197,7 @@ export default {
       this.isLoading = true;
       this.viewBookEmitted = true;
       this.isbn = queryData.isbn || queryData.searchTerm; //when coming from SearchBar, isbn is added to searchTerm property
-      if (!this.validateIsbn(this.isbn)) {
+      if (!this.isIsbnValid) {
         this.bookData = null;
         this.isLoading = false;
         return;
@@ -173,9 +209,6 @@ export default {
       } catch (error) {
         this.isLoading = false;
       }
-    },
-    validateIsbn(isbn) {
-      return isbn.length === 10 || isbn.length === 13;
     },
     async emitAuthorSearch(author) {
       await this.$router.push({name: 'search'});

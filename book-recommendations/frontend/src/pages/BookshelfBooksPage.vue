@@ -15,6 +15,7 @@
       <v-col
         v-for="book in collectionBooks"
         :key="book.title"
+        :cols="getNumberOfColumns"
       >
         <book-details
           origin="other"
@@ -45,6 +46,20 @@ export default {
       previousBookData: null,
       collectionBooks: [],
       loadCollectionBooksEmitted: false,
+    }
+  },
+  computed: {
+    getNumberOfColumns() {
+      const breakpointValues = {
+        xl: 2,
+        lg: 3,
+        md: 4,
+        xs: 12
+      };
+      const breakpoint = Object.keys(breakpointValues).find(
+        breakpoint => this.$vuetify.breakpoint[breakpoint]);
+
+      return breakpointValues[breakpoint] || 5;
     }
   },
   async activated() {

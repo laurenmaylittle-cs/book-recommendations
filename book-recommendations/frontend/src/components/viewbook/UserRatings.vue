@@ -1,5 +1,5 @@
 <template>
-  <v-container v-if="$auth.isAuthenticated && $auth.user !== undefined">
+  <v-container v-if="!isLoading && $auth.isAuthenticated && $auth.user !== undefined">
     <div
       v-if="hasRating"
       class="ma-0"
@@ -144,6 +144,8 @@ export default {
     if (this.bookRating !== null && this.bookRating !== "") {
       this.hasRating = true
     }
+    this.isLoading = false
+    this.$emit('user-rating-loaded')
   },
   methods: {
     async getRatingsData() {
