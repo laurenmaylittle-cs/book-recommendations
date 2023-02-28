@@ -136,6 +136,7 @@ export default {
     if (this.viewBookEmitted === false) {
       this.bookData = this.previousBookData;
       this.isLoading = false;
+      this.updateDocumentTitle();
     }
   },
   deactivated() {
@@ -150,6 +151,7 @@ export default {
       this.viewBookEmitted = true;
       if (bookData) {
         this.bookData = bookData;
+        this.updateDocumentTitle();
         this.isbn = bookData.isbn;
       }
 
@@ -166,6 +168,7 @@ export default {
       }
       try {
         this.bookData = await getBookInfo(this.isbn, queryData.title, queryData.authors);
+        this.updateDocumentTitle();
         this.isLoading = false;
       } catch (error) {
         this.isLoading = false;
@@ -180,6 +183,10 @@ export default {
         searchType: 'author',
         searchTerm: author
       });
+    },
+    updateDocumentTitle() {
+      document.title = this.bookData.title ?? `Book Details`;
+      document.title += this.bookData?.authors ? ` by ${this.bookData.authors}` : '';
     },
     concatDetails(details) {
       if (!details) {

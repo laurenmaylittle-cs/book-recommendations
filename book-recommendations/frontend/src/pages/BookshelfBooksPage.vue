@@ -40,6 +40,7 @@ export default {
   data: function () {
     return {
       collectionId: "",
+      collectionTitle: "",
       isLoading: true,
       previousBookData: null,
       collectionBooks: [],
@@ -53,6 +54,7 @@ export default {
 
     if (this.loadCollectionBooksEmitted === false) {
       this.collectionBooks = this.previousBookData;
+      this.updatePageTitle();
       this.isLoading = false;
     }
   },
@@ -65,9 +67,11 @@ export default {
     EventBus.$off("load-collection-books");
   },
   methods: {
-    async getBooksInCollection(collectionId) {
+    async getBooksInCollection(collectionData) {
+      this.collectionTitle = collectionData.collectionName;
+      this.updatePageTitle();
       this.loadCollectionBooksEmitted = true;
-      this.collectionId = collectionId;
+      this.collectionId = collectionData.collectionId;
       this.collectionBooks = await getBooksInCollection(this.collectionId,
         await this.$auth.getTokenSilently())
       this.isLoading = false;
@@ -81,7 +85,10 @@ export default {
         authorList === "" ? authorList = authors[i] : authorList = authorList + ", " + authors[i]
       }
       return authorList
-    }
+    },
+    updatePageTitle() {
+      document.title = `${this.collectionTitle} - Books`
+    },
   }
 }
 </script>
