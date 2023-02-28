@@ -109,7 +109,7 @@ export default {
     }
   },
   async activated() {
-    EventBus.$on("load-collection-books", this.getBooksInCollection);
+    EventBus.$on("load-collection-books", this.entryMethod);
 
     await this.$nextTick()
 
@@ -134,11 +134,16 @@ export default {
     EventBus.$off("load-collection-books");
   },
   methods: {
-    async getBooksInCollection(collectionData) {
+    async entryMethod(collectionData) {
+      console.log("entry method")
+      console.log(collectionData.collectionId)
       this.collectionTitle = collectionData.collectionName;
-      this.updatePageTitle();
-      this.loadCollectionBooksEmitted = true;
       this.collectionId = collectionData.collectionId;
+      this.updatePageTitle();
+      await this.getBooksInCollection()
+      this.loadCollectionBooksEmitted = true;
+    },
+    async getBooksInCollection() {
       this.collectionBooks = await getBooksInCollection(
         this.collectionId,
         await this.$auth.getTokenSilently()
@@ -177,11 +182,13 @@ export default {
     },
     async deleteBooks() {
       const deleteBooksParams = new URLSearchParams({bookshelfId: this.collectionId, bookIds: this.booksSelectedIsbn});
+      console.log(deleteBooksParams.toString())
       await deleteBooksInCollection(deleteBooksParams, await this.$auth.getTokenSilently());
-      this.booksSelectedIsbn = []
+      this.booksSelectedIsbn = [];
+      this.booksSelectedITitle = [];
       this.checkIfBooksSelected();
-      await this.getBooksInCollection(this.collectionId);
-      this.deleteDialog = false
+      await this.getBooksInCollection();
+      this.closeDeleteDialog();
     },
     editBookshelf() {
       this.editFlag = !this.editFlag;
