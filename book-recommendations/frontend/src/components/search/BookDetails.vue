@@ -6,8 +6,7 @@
     >
       <div
         v-if="selectable"
-        style="margin: 0px"
-        class="d-flex flex-column align-end"
+        style="height:10px; display: flex; justify-content: flex-end"
       >
         <!--@click.stop stops the emitViewBook event from happening within the checkbox-->
         <v-checkbox @click.stop="changeSelected()" />
