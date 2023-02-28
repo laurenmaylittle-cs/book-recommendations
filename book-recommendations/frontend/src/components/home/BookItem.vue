@@ -4,6 +4,7 @@
       <v-hover
         v-slot="{ hover }"
         ref="hoverEffectRef"
+        :disabled="$vuetify.breakpoint.xsOnly"
       >
         <v-sheet
           :color="getHoverEffect(hover)"

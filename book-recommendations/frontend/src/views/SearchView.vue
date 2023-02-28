@@ -1,5 +1,12 @@
 <template>
   <v-container>
+    <v-img
+      v-if="!isLoading"
+      width="124"
+      height="21"
+      src="@/assets/poweredby_google.png"
+      @click="goToGoogle"
+    />
     <v-row
       v-if="isLoading"
       class="justify-center pt-10"
@@ -178,6 +185,9 @@ export default {
         authorList === "" ? authorList = authors[i] : authorList = authorList + ", " + authors[i]
       }
       return authorList
+    },
+    goToGoogle() {
+      window.open("https://www.google.com", "_blank")
     }
   }
 }
