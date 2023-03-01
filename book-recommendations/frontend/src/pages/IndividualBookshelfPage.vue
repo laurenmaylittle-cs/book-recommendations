@@ -1,6 +1,7 @@
 <template>
   <v-container>
     <v-btn
+      v-if="!isLoading"
       v-model="editFlag"
       color="primary"
       class="ma-7"
@@ -19,7 +20,7 @@
     </v-btn>
     <v-dialog
       v-model="deleteDialog"
-      max-width="400"
+      max-width="420"
       @click:outside="closeDeleteDialog"
     >
       <v-card>
@@ -30,8 +31,20 @@
             Remove from collection
           </v-card-title>
           <v-card-text>
-            Are you sure you want to remove the following books? <br> <br>
-            {{ checkForMultipleAuthors(booksSelectedITitle) }}
+            Are you sure you want to remove the following books?
+            <v-list dense>
+              <v-list-item
+                v-for="(title, index) in booksSelectedITitle"
+                :key="index"
+              >
+                <v-list-item-icon>
+                  <v-icon>mdi-circle-small</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  {{ title }}
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
           </v-card-text>
           <v-card-actions>
             <v-btn
@@ -40,6 +53,11 @@
               @click="deleteBooks"
             >
               Remove from collection
+              <v-progress-circular
+                v-if="deleteInProgress"
+                indeterminate
+                color="secondary"
+              />
             </v-btn>
             <v-btn
               color="secondary"
@@ -67,6 +85,7 @@
       <v-col
         v-for="book in collectionBooks"
         :key="book.title"
+        :cols="getNumberOfColumns"
       >
         <book-details
           origin="other"
@@ -106,13 +125,28 @@ export default {
       isAnyBookSelected: false,
       editFlag: false,
       deleteDialog: false,
-      editBtnText: "Edit"
+      editBtnText: "Edit",
+      deleteInProgress: false,
+    }
+  },
+  computed: {
+    getNumberOfColumns() {
+      const breakpointValues = {
+        xl: 2,
+        lg: 3,
+        md: 4,
+        xs: 12
+      };
+      const breakpoint = Object.keys(breakpointValues).find(
+        breakpoint => this.$vuetify.breakpoint[breakpoint]);
+
+      return breakpointValues[breakpoint] || 5;
     }
   },
   async activated() {
     EventBus.$on("load-collection-books", this.entryMethod);
 
-    await this.$nextTick() //asynchronous (return earlier)
+    await this.$nextTick()
 
     if (this.loadCollectionBooksEmitted === false) {
       this.collectionId = this.previousCollectionId;
@@ -181,13 +215,19 @@ export default {
       this.isAnyBookSelected = this.booksSelectedIsbn.length > 0;
     },
     async deleteBooks() {
+      if (this.booksSelectedIsbn.length === 0) {
+        return;
+      }
+      this.deleteInProgress = true;
       const deleteBooksParams = new URLSearchParams(
         {bookshelfId: this.collectionId, bookIds: this.booksSelectedIsbn});
-      this.collectionBooks = await deleteBooksInCollection(deleteBooksParams, await this.$auth.getTokenSilently());
+      this.collectionBooks = await deleteBooksInCollection(deleteBooksParams,
+        await this.$auth.getTokenSilently());
       this.booksSelectedIsbn = [];
       this.booksSelectedITitle = [];
       this.checkIfBooksSelected();
       this.closeDeleteDialog();
+      this.deleteInProgress = false;
     },
     editBookshelf() {
       this.editFlag = !this.editFlag;
@@ -210,3 +250,12 @@ export default {
   }
 }
 </script>
+<style scoped>
+.v-list .v-list-item {
+  padding: 0;
+}
+
+.v-list .v-list-item__icon {
+  margin-right: 4px;
+}
+</style>

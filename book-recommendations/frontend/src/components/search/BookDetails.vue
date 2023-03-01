@@ -1,38 +1,45 @@
 <template>
   <div>
-    <v-card
-      @click="emitViewBook"
+    <v-hover
+      v-slot="{ hover }"
+      ref="hoverEffectRef"
     >
-      <div
-        v-if="selectable"
-        style="height:10px; display: flex; justify-content: flex-end"
+      <v-card
+        :color="getHoverEffect(hover)"
+        outlined
+        @click="emitViewBook"
       >
-        <!--@click.stop stops the emitViewBook event from happening within the checkbox-->
-        <v-checkbox
-          :value="selected"
-          @click.stop="changeSelected()"
-        />
-      </div>
-      <v-card-actions class="justify-center mb-0 pt-6">
-        <a @click="emitViewBook">
-          <v-img
-            class="rounded mb-0"
-            :lazy-src="thumbnail"
-            height="192px"
-            width="128px"
-            :src="thumbnail"
+        <div
+          v-if="selectable"
+          style="height:10px; display: flex; justify-content: flex-end"
+        >
+          <!--@click.stop stops the emitViewBook event from happening within the checkbox-->
+          <v-checkbox
+            :value="selected"
+            @click.stop="changeSelected()"
           />
-        </a>
-      </v-card-actions>
-      <v-card-text class="mt-0">
-        <div class="text-subtitle-2 text--primary mt-0">
-          {{ truncateText(title, 30) }}
         </div>
-        <div class="text-subtitle-2 font-italic font-size-small">
-          {{ getTruncatedAuthor }}
-        </div>
-      </v-card-text>
-    </v-card>
+        <v-card-actions class="justify-center mb-0 pt-6">
+          <a @click="emitViewBook">
+            <v-img
+              class="rounded mb-0"
+              :lazy-src="thumbnail"
+              height="192px"
+              width="128px"
+              :src="thumbnail"
+            />
+          </a>
+        </v-card-actions>
+        <v-card-text class="mt-0">
+          <div class="text-subtitle-2 text--primary mt-0">
+            {{ truncateText(title, 30) }}
+          </div>
+          <div class="text-subtitle-2 font-italic font-size-small">
+            {{ getTruncatedAuthor }}
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-hover>
   </div>
 </template>
 
