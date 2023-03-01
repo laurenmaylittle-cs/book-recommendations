@@ -69,20 +69,14 @@ export default {
       return hover ? "blue-grey lighten-4" : "transparent";
     },
     async emitViewBook() {
-      if (this.category === "Series Books") {
-        await this.$router.push({name: 'search'});
-        EventBus.$emit('search-triggered', {
-          searchType: 'title',
-          searchTerm: this.bookTitle.toLowerCase()
-        });
-      } else {
-        await this.$router.push({name: 'book', params: {isbn: this.isbn}});
-        EventBus.$emit('view-book-other', {
-          isbn: this.isbn,
-          title: this.bookTitle,
-          authors: this.authors,
-        })
-      }
+      await this.$router.push({name: this.category === "Series Books" ? 'search' : 'book'});
+      EventBus.$emit(this.category === "Series Books" ? 'search-triggered' : 'view-book-other', {
+        searchType: 'title',
+        searchTerm: this.bookTitle.toLowerCase(),
+        isbn: this.isbn,
+        title: this.bookTitle,
+        authors: this.authors,
+      });
     }
   }
 }
