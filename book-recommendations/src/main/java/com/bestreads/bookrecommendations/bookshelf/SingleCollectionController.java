@@ -1,6 +1,7 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
 import com.bestreads.bookrecommendations.utils.AuthUtils;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class SingleCollectionController {
   }
 
   @GetMapping
-  public SingleCollection getBooksInCollection(JwtAuthenticationToken authenticationToken,
+  public CollectionBookProjection getBooksInCollection(JwtAuthenticationToken authenticationToken,
       @Param("bookshelfId") Long bookshelfId) {
     var userId = AuthUtils.getUserId(authenticationToken).orElseThrow(() -> {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user ID found in token");
@@ -33,14 +34,25 @@ public class SingleCollectionController {
         .orElseThrow(() -> {
           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No collection found");
         });
-    ;
 
-    var booksInCollection = collectionDetails.getBookDAOS()
-        .stream()
-        .toList();
     var collectionName = collectionDetails.getName();
 
-    return new SingleCollection(collectionName, booksInCollection);
+    return new CollectionBookProjection() {
+      @Override
+      public Long getId() {
+        return collectionDetails.getId();
+      }
+
+      @Override
+      public String getName() {
+        return collectionName;
+      }
+
+      @Override
+      public Set<BookDAO> getBookDAOS() {
+        return collectionDetails.getBookDAOS();
+      }
+    };
   }
 
   @PutMapping
