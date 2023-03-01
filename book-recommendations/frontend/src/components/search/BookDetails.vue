@@ -75,6 +75,10 @@ export default {
       return `${this.truncateText(this.authors, 30)} - ${this.formatDate()}`
     }
   },
+  deactivated() {
+    //clear the hover effect when navigating away from the page
+    this.$refs.hoverEffectRef._data.isActive = false;
+  },
   methods: {
     formatDate() {
       let dateToFormat = new Date(this.publishedDate)
