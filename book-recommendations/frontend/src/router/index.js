@@ -7,7 +7,8 @@ import SearchView from "@/views/SearchView";
 import HomePage from "@/pages/HomePage";
 import FindFriendsPage from "@/pages/FindFriendsPage";
 import BookShelfPage from "@/pages/BookshelfPage"
-import BookshelfBooksPage from "@/pages/BookshelfBooksPage";
+import IndividualBookshelfPage from "@/pages/IndividualBookshelfPage";
+
 
 Vue.use(VueRouter)
 
@@ -16,6 +17,9 @@ const routes = [
     path: '/',
     name: 'Root',
     component: HomePage,
+    meta: {
+      title: "BestReads"
+    }
   },
   {
     path: '/book',
@@ -30,30 +34,42 @@ const routes = [
   {
     path: '/home',
     name: 'homePage',
-    component: HomePage
+    component: HomePage,
+    meta: {
+      title: "BestReads"
+    }
   },
   {
     path: '/profile',
     name: 'profile',
     component: ProfileView,
-    beforeEnter: authGuard
+    beforeEnter: authGuard,
+    meta: {
+      title: "Profile"
+    }
   },
   {
     path: '/find-friends',
     name: 'find-friends',
     component: FindFriendsPage,
-    beforeEnter: authGuard
+    beforeEnter: authGuard,
+    meta: {
+      title: "Search for friends"
+    }
   },
   {
     path: '/bookshelf',
     name: 'bookshelf',
     component: BookShelfPage,
-    beforeEnter: authGuard
+    beforeEnter: authGuard,
+    meta: {
+      title: "Bookshelf"
+    }
   },
   {
     path: '/bookshelf/books',
-    name: 'bookshelfBooksPage',
-    component: BookshelfBooksPage,
+    name: 'individualBookshelfPage',
+    component: IndividualBookshelfPage,
     beforeEnter: authGuard
   }
 ]
@@ -63,5 +79,10 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  document.title = to.meta.title || "BestReads";
+  next();
+});
 
 export default router

@@ -1,5 +1,6 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
+import com.bestreads.bookrecommendations.book.BookDAO;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.Column;
@@ -30,6 +31,15 @@ class CollectionDAO {
       joinColumns = @JoinColumn(name = "collection_id", referencedColumnName = "id"),
       inverseJoinColumns = @JoinColumn(name = "isbn", referencedColumnName = "isbn"))
   private Set<BookDAO> bookDAOS = new LinkedHashSet<>();
+
+  CollectionDAO() {
+  }
+
+  CollectionDAO(String name, String userId, Set<BookDAO> bookDAOS) {
+    this.name = name;
+    this.userId = userId;
+    this.bookDAOS = bookDAOS;
+  }
 
   public Set<BookDAO> getBookDAOS() {
     return bookDAOS;

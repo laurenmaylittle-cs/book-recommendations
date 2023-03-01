@@ -1,26 +1,45 @@
 <template>
   <div>
-    <v-card>
-      <v-card-actions class="justify-center mb-0 pt-6">
-        <a @click="emitViewBook">
-          <v-img
-            class="rounded mb-0"
-            :lazy-src="thumbnail"
-            height="192px"
-            width="128px"
-            :src="thumbnail"
+    <v-hover
+      v-slot="{ hover }"
+      ref="hoverEffectRef"
+    >
+      <v-card
+        :color="getHoverEffect(hover)"
+        outlined
+        @click="emitViewBook"
+      >
+        <div
+          v-if="selectable"
+          style="height:10px; display: flex; justify-content: flex-end"
+        >
+          <!--@click.stop stops the emitViewBook event from happening within the checkbox-->
+          <v-checkbox
+            :value="selected"
+            @click.stop="changeSelected()"
           />
-        </a>
-      </v-card-actions>
-      <v-card-text class="mt-0">
-        <div class="text-subtitle-2 text--primary mt-0">
-          {{ truncateText(title, 30) }}
         </div>
-        <div class="text-subtitle-2 font-italic font-size-small">
-          {{ getTruncatedAuthor }}
-        </div>
-      </v-card-text>
-    </v-card>
+        <v-card-actions class="justify-center mb-0 pt-6">
+          <a @click="emitViewBook">
+            <v-img
+              class="rounded mb-0"
+              :lazy-src="thumbnail"
+              height="192px"
+              width="128px"
+              :src="thumbnail"
+            />
+          </a>
+        </v-card-actions>
+        <v-card-text class="mt-0">
+          <div class="text-subtitle-2 text--primary mt-0">
+            {{ truncateText(title, 30) }}
+          </div>
+          <div class="text-subtitle-2 font-italic font-size-small">
+            {{ getTruncatedAuthor }}
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-hover>
   </div>
 </template>
 
@@ -57,15 +76,29 @@ export default {
     bookData: {
       type: Object,
       required: true
+    },
+    selectable: {
+      type: Boolean,
+      required: false,
+      default: false
     }
+  },
+  data() {
+    return {
+      selected: false,
+    };
   },
   computed: {
     getTruncatedAuthor() {
       if (this.authors === "") {
         return this.formatDate()
       }
-      return `${this.truncateText(this.authors, 50)} - ${this.formatDate()}`
+      return `${this.truncateText(this.authors, 30)} - ${this.formatDate()}`
     }
+  },
+  deactivated() {
+    //clear the hover effect when navigating away from the page
+    this.$refs.hoverEffectRef._data.isActive = false;
   },
   methods: {
     formatDate() {
@@ -88,7 +121,15 @@ export default {
           EventBus.$emit('view-book-other', this.bookData);
           break;
       }
-
+    },
+    changeSelected() {
+      if (this.selectable) {
+        this.selected = !this.selected;
+        this.$emit(this.selected ? "selected" : "unselected", this.isbn, this.title);
+      }
+    },
+    getHoverEffect(hover) {
+      return hover ? "blue-grey lighten-4" : "#FFFFFF";
     }
   }
 }

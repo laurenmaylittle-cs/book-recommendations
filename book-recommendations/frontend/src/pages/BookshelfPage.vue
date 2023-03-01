@@ -109,8 +109,11 @@ export default {
         {min: 80, max: 90})
     },
     async goToCollection(collectionId) {
-      await this.$router.push({name: 'bookshelfBooksPage'});
-      EventBus.$emit('load-collection-books', collectionId);
+      await this.$router.push({name: 'individualBookshelfPage'});
+      EventBus.$emit('load-collection-books', {
+        collectionId: collectionId,
+        collectionName: this.collections.find(collection => collection.id === collectionId).name
+      });
     }
   }
 }

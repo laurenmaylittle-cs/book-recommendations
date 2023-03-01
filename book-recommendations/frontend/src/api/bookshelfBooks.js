@@ -6,11 +6,22 @@ import axios from "axios"
  * @param {string} token Access token to the API
  */
 export async function getBooksInCollection(collectionId, token) {
-  const result = await axios.get(`/api/private/bookshelf/singleBookshelf?bookshelfId=${collectionId}`, {
+  const result = await axios.get(`/api/private/bookshelf/books?bookshelfId=${collectionId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
+  return result.data;
+}
+
+export async function deleteBooksInCollection(deleteBooksParams, token) {
+  const result = await axios.delete(
+    `/api/private/bookshelf/books/delete`,
+    {
+      data: deleteBooksParams,
+      headers: {Authorization: `Bearer ${token}`}
+    }
+  );
   return result.data;
 }
 
