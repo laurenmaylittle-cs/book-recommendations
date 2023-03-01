@@ -65,8 +65,8 @@ class AwsPersonalizeService {
     }
   }
 
-  public List<BookDAO> getRecommendations(String itemId) {
-    var isbns = getListOfIsbns(itemId);
+  public List<BookDAO> getRecommendations(String selectedIsbn) {
+    var isbns = getListOfIsbns(selectedIsbn);
     var books = new ArrayList<BookDAO>();
 
     for (String isbn : isbns) {
