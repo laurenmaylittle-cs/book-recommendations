@@ -6,6 +6,7 @@ import com.bestreads.bookrecommendations.bookshelf.BookDAO;
 import java.util.List;
 import javax.annotation.PostConstruct;
 
+import com.bestreads.bookrecommendations.users.User;
 import com.bestreads.bookrecommendations.utils.AuthUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,12 +60,12 @@ public class AwsPersonalizeController {
             .build();
   }
 
-  @GetMapping("/public/book/get-recs")
+  @GetMapping("/public/book/recommendations")
   public List<BookDAO> getRecs(@Param("isbn") String isbn) {
-    return awsPersonalizeService.getRecs(this.personalizeRuntimeClient, campaignArn, isbn);
+    return awsPersonalizeService.getRecommendations(this.personalizeRuntimeClient, campaignArn, isbn);
   }
 
-  @PostMapping("/private/book")
+  @PostMapping("/private/book/add-book")
   public void addBook(JwtAuthenticationToken jwtAuthenticationToken, @RequestBody Book book) {
     var userId = AuthUtils.getUserId(jwtAuthenticationToken).orElseThrow(() -> {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user ID found in token");
@@ -82,11 +83,13 @@ public class AwsPersonalizeController {
     awsPersonalizeService.putEvents(this.personalizeEventsClient, awsEventTrackerId, userId, userId, book.isbn());
 
     //Updates books for recommendations
-    awsPersonalizeService.putItems(this.personalizeEventsClient, booksDatasetArn, book.isbn(), book.title(), authors, categories, book.publisher(), book.imageLinks().thumbnail());
+    awsPersonalizeService.putItems(this.personalizeEventsClient, booksDatasetArn, book);
 
     //Updates users for recommendations
-    if (userData != null) {
-      awsPersonalizeService.putUsers(this.personalizeEventsClient, usersDatasetArn, userId, userData.name(), userData.email(), String.valueOf(userData.emailVerified()).toUpperCase());
+    if (userData.isPresent()) {
+      User userToAdd = userData.get();
+      awsPersonalizeService.putUsers(this.personalizeEventsClient, usersDatasetArn, userId, userToAdd);
     }
   }
 }
+

@@ -1,20 +1,29 @@
 package com.bestreads.bookrecommendations.awspersonalize;
 
+import com.bestreads.bookrecommendations.book.Book;
 import com.bestreads.bookrecommendations.bookshelf.BookDAO;
-
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
-import software.amazon.awssdk.services.personalizeevents.PersonalizeEventsClient;
-import software.amazon.awssdk.services.personalizeevents.model.*;
 import software.amazon.awssdk.services.personalizeruntime.PersonalizeRuntimeClient;
 import software.amazon.awssdk.services.personalizeruntime.model.GetRecommendationsRequest;
 import software.amazon.awssdk.services.personalizeruntime.model.GetRecommendationsResponse;
 import software.amazon.awssdk.services.personalizeruntime.model.PredictedItem;
+import software.amazon.awssdk.services.personalizeevents.PersonalizeEventsClient;
+import software.amazon.awssdk.services.personalizeevents.model.Event;
+import software.amazon.awssdk.services.personalizeevents.model.PutEventsRequest;
+import software.amazon.awssdk.services.personalizeevents.model.PersonalizeEventsException;
+import software.amazon.awssdk.services.personalizeevents.model.Item;
+import software.amazon.awssdk.services.personalizeevents.model.PutItemsRequest;
+import software.amazon.awssdk.services.personalizeevents.model.User;
+import software.amazon.awssdk.services.personalizeevents.model.PutUsersRequest;
+
+import javax.transaction.Transactional;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.lang.String.join;
 
 
 @Service
@@ -44,9 +53,9 @@ class AwsPersonalizeService {
     }
   }
 
-  public List<BookDAO> getRecs(PersonalizeRuntimeClient personalizeRuntimeClient,
-      String campaignArn,
-      String itemId) {
+  public List<BookDAO> getRecommendations(PersonalizeRuntimeClient personalizeRuntimeClient,
+                                          String campaignArn,
+                                          String itemId) {
     var isbns = getListOfIsbns(personalizeRuntimeClient, campaignArn, itemId);
     var books = new ArrayList<BookDAO>();
 
@@ -79,7 +88,7 @@ class AwsPersonalizeService {
       }
 
     } catch (AwsServiceException e) {
-      System.err.println(e.awsErrorDetails().errorMessage());
+      throw new IllegalArgumentException("Invalid ISBN.");
     }
     return isbns;
   }
@@ -104,31 +113,29 @@ class AwsPersonalizeService {
               .eventList(event)
               .build();
 
-      int responseCode = personalizeEventsClient.putEvents(putEventsRequest)
-              .sdkHttpResponse()
-              .statusCode();
-      System.out.println("EVENTS - Response code: " + responseCode);
+      personalizeEventsClient.putEvents(putEventsRequest);
 
     } catch (PersonalizeEventsException e) {
-      System.out.println(e.awsErrorDetails().errorMessage());
+      throw new RuntimeException("Unable to add event.");
     }
   }
 
-  public void putItems(PersonalizeEventsClient personalizeEventsClient,
-                             String datasetArn, String isbn, String title, String author, String genre,
-                            String publisher, String thumbnail) {
+  public void putItems(PersonalizeEventsClient personalizeEventsClient, String datasetArn, Book book) {
+
+    var authors = join("/", book.authors());
+    var categories = join("/", book.categories());
 
     ArrayList<Item> items = new ArrayList<>();
 
     try {
       Item item1 = Item.builder()
-              .itemId(isbn)
+              .itemId(book.isbn())
               .properties(String.format("{\"%1$s\": \"%2$s\",\"%3$s\": \"%4$s\",\"%5$s\": \"%6$s\",\"%7$s\": \"%8$s\",\"%9$s\": \"%10$s\"}",
-                      "itemName", title,
-                      "itemAuthor", author,
-                      "itemGenre", genre,
-                      "itemPublisher", publisher,
-                      "itemThumbnail", thumbnail))
+                      "itemName", book.title(),
+                      "itemAuthor", authors,
+                      "itemGenre", categories,
+                      "itemPublisher", book.publisher(),
+                      "itemThumbnail", book.imageLinks().thumbnail()))
               .build();
 
       items.add(item1);
@@ -138,17 +145,15 @@ class AwsPersonalizeService {
               .items(items)
               .build();
 
-      int responseCode = personalizeEventsClient.putItems(putItemsRequest).sdkHttpResponse().statusCode();
-      System.out.println("ITEMS - Response code: " + responseCode);
+      personalizeEventsClient.putItems(putItemsRequest);
 
     } catch (PersonalizeEventsException e) {
-      System.out.println(e.awsErrorDetails().errorMessage());
+      throw new RuntimeException("Unable to add item.");
     }
   }
 
   public void putUsers(PersonalizeEventsClient personalizeEventsClient,
-                             String datasetArn, String id, String userName,
-                             String userEmail, String userVerified) {
+                        String datasetArn, String id, com.bestreads.bookrecommendations.users.User userToAdd) {
 
     ArrayList<User> users = new ArrayList<>();
 
@@ -156,9 +161,9 @@ class AwsPersonalizeService {
       User user = User.builder()
               .userId(id)
               .properties(String.format("{\"%1$s\": \"%2$s\",\"%3$s\": \"%4$s\",\"%5$s\": \"%6$s\"}",
-                      "userName", userName,
-                      "userEmail", userEmail,
-                      "userVerified", userVerified))
+                      "userName", userToAdd.name(),
+                      "userEmail", userToAdd.email(),
+                      "userVerified", Boolean.toString(userToAdd.emailVerified()).toUpperCase()))
               .build();
 
       users.add(user);
@@ -168,11 +173,10 @@ class AwsPersonalizeService {
               .users(users)
               .build();
 
-      int responseCode = personalizeEventsClient.putUsers(putUsersRequest).sdkHttpResponse().statusCode();
-      System.out.println("USERS - Response code: " + responseCode);
+      personalizeEventsClient.putUsers(putUsersRequest);
 
     } catch (PersonalizeEventsException e) {
-      System.out.println(e.awsErrorDetails().errorMessage());
+      throw new RuntimeException("Unable to add user.");
     }
   }
 }

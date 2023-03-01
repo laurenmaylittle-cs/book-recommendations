@@ -16,6 +16,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -89,9 +91,9 @@ public class Auth0Service {
     }
   }
 
-  public User searchById(String userId) {
+  public Optional<User> searchById(String userId) {
     if (userId.isEmpty()) {
-      return null;
+      return Optional.empty();
     }
     StringBuilder uri = new StringBuilder(
         "%s/users/%s".formatted(auth0ApiUri, userId));
@@ -103,7 +105,7 @@ public class Auth0Service {
     try {
       var httpResponse = HttpClient.newHttpClient()
           .send(httpRequest, HttpResponse.BodyHandlers.ofString());
-      return extractFromHttpResponse(httpResponse, false).get(0);
+      return Optional.ofNullable(extractFromHttpResponse(httpResponse, false).get(0));
     } catch (IOException | InterruptedException e) {
       throw new RuntimeException(e);
     }
