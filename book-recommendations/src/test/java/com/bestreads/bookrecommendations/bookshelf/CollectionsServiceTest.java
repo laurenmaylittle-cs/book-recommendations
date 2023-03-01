@@ -1,11 +1,14 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.bestreads.bookrecommendations.book.BookDAO;
 import java.util.Optional;
 import java.util.Set;
+import javax.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -120,7 +123,7 @@ class CollectionsServiceTest {
     ArgumentCaptor<CollectionDAO> collectionDAOArgumentCaptor =
         ArgumentCaptor.forClass(CollectionDAO.class);
 
-    collectionsService.updateCollectionName(1L, "Wishlist", userId);
+    collectionsService.updateCollectionName(1L, "Wishlist");
     verify(collectionsRepository).save(collectionDAOArgumentCaptor.capture());
 
     assertEquals("Wishlist", collectionDAOArgumentCaptor.getValue().getName());
@@ -133,13 +136,8 @@ class CollectionsServiceTest {
     when(collectionsRepository.findById(1L))
         .thenReturn(Optional.empty());
 
-    ArgumentCaptor<CollectionDAO> collectionArgumentCaptor = ArgumentCaptor.forClass(
-        CollectionDAO.class);
-
-    collectionsService.updateCollectionName(1L, "Collection Spring", userId);
-    verify(collectionsRepository).save(collectionArgumentCaptor.capture());
-
-    assertEquals("Collection Spring", collectionArgumentCaptor.getValue().getName());
-    assertEquals(userId, collectionArgumentCaptor.getValue().getUserId());
+    assertThrows(EntityNotFoundException.class, () -> {
+      collectionsService.updateCollectionName(1L, "Collection Spring");
+    });
   }
 }
