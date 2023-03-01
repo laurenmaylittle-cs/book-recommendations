@@ -13,8 +13,17 @@ export async function exportData(bookData, token) {
     headers: {
       authorization: `Bearer ${token}`,
     }
-  });
+  })
 }
 
-
-
+export async function isAwsEnabled(token) {
+  return await axios.get(
+    '/api/public/book/personalise-status', {
+      headers: {
+        authorization: `Bearer ${token}`,
+      }
+    })
+    .then(response => {
+      return response.data;
+    })
+}

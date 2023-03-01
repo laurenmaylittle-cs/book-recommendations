@@ -4,6 +4,7 @@ import Vuetify from "vuetify";
 import {mount} from "@vue/test-utils";
 import {createNewCollection} from "@/api/bookshelf";
 import flushPromises from "flush-promises";
+import {storeMock} from "./mocks/storeMock";
 
 jest.mock("@/api/bookshelf");
 
@@ -13,6 +14,9 @@ async function createComponentWrapper({props} = {}) {
   document.body.setAttribute("data-app", "true");
   const wrapper = mount(CreateCollectionModal, {
     vuetify,
+    mocks: {
+      $store: storeMock,
+    },
     propsData: {
       ...props,
     },

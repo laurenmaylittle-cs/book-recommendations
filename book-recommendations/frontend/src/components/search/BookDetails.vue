@@ -2,10 +2,7 @@
   <div>
     <v-card>
       <v-card-actions class="justify-center mb-0 pt-6">
-        <router-link
-          :to="{ name: 'book', params: {isbn:isbn}}"
-        >
-          <!-- TODO BES-66 redirect to view book page-->
+        <a @click="emitViewBook">
           <v-img
             class="rounded mb-0"
             :lazy-src="thumbnail"
@@ -13,7 +10,7 @@
             width="128px"
             :src="thumbnail"
           />
-        </router-link>
+        </a>
       </v-card-actions>
       <v-card-text class="mt-0">
         <div class="text-subtitle-2 text--primary mt-0">
@@ -28,6 +25,7 @@
 </template>
 
 <script>
+import {EventBus} from "@/event-bus";
 
 export default {
   name: 'BookDetails',
@@ -36,7 +34,7 @@ export default {
       type: String,
       default: 'Book title'
     },
-    author: {
+    authors: {
       type: String,
       default: 'Author'
     },
@@ -51,14 +49,22 @@ export default {
     isbn: {
       type: String,
       required: true
+    },
+    origin: {
+      type: String, // from which page the book is being viewed (effect how the book data is displayed on view book)
+      required: true // either 'search' or 'other'
+    },
+    bookData: {
+      type: Object,
+      required: true
     }
   },
   computed: {
     getTruncatedAuthor() {
-      if (this.author === "") {
+      if (this.authors === "") {
         return this.formatDate()
       }
-      return `${this.truncateText(this.author, 50)} - ${this.formatDate()}`
+      return `${this.truncateText(this.authors, 50)} - ${this.formatDate()}`
     }
   },
   methods: {
@@ -71,6 +77,18 @@ export default {
         return text.substring(0, maxCharacterCount) + '...'
       }
       return text
+    },
+    async emitViewBook() {
+      await this.$router.push({name: 'book'});
+      switch (this.origin) {
+        case 'search':
+          EventBus.$emit('view-book', this.bookData);
+          break;
+        case 'other':
+          EventBus.$emit('view-book-other', this.bookData);
+          break;
+      }
+
     }
   }
 }

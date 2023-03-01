@@ -1,16 +1,20 @@
 package com.bestreads.bookrecommendations.awspersonalize;
 
 import com.bestreads.bookrecommendations.book.Book;
-import com.bestreads.bookrecommendations.bookshelf.BookDAO;
+import com.bestreads.bookrecommendations.book.BookDAO;
+import com.bestreads.bookrecommendations.book.BookDAOService;
+import java.util.ArrayList;
+import java.util.List;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
+import software.amazon.awssdk.services.personalize.PersonalizeClient;
 import software.amazon.awssdk.services.personalizeruntime.PersonalizeRuntimeClient;
 import software.amazon.awssdk.services.personalizeruntime.model.GetRecommendationsRequest;
 import software.amazon.awssdk.services.personalizeruntime.model.GetRecommendationsResponse;
 import software.amazon.awssdk.services.personalizeruntime.model.PredictedItem;
-import software.amazon.awssdk.services.personalizeevents.PersonalizeEventsClient;
 import software.amazon.awssdk.services.personalizeevents.model.Event;
 import software.amazon.awssdk.services.personalizeevents.model.PutEventsRequest;
 import software.amazon.awssdk.services.personalizeevents.model.PersonalizeEventsException;
@@ -19,19 +23,17 @@ import software.amazon.awssdk.services.personalizeevents.model.PutItemsRequest;
 import software.amazon.awssdk.services.personalizeevents.model.User;
 import software.amazon.awssdk.services.personalizeevents.model.PutUsersRequest;
 
-import javax.transaction.Transactional;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+
 
 import static java.lang.String.join;
 
 @Service
 class AwsPersonalizeService {
 
-  private final BookEntityRepository bookEntityRepository;
+  private final BookDAOService bookDAOService;
+  private final PersonalizeClient personalizeClient;
   private final PersonalizeRuntimeClient personalizeRuntimeClient;
-  private final PersonalizeEventsClient personalizeEventsClient;
 
   @Value("${AWS_CAMPAIGN_ARN}")
   private String campaignArn;
@@ -46,27 +48,18 @@ class AwsPersonalizeService {
   private String usersDatasetArn;
 
   @Autowired
-  AwsPersonalizeService(BookEntityRepository bookEntityRepository,
-                        PersonalizeRuntimeClient personalizeRuntimeClient,
-                        PersonalizeEventsClient personalizeEventsClient) {
-    this.bookEntityRepository = bookEntityRepository;
+  AwsPersonalizeService(BookDAOService bookDAOService, PersonalizeClient personalizeClient,
+      PersonalizeRuntimeClient personalizeRuntimeClient) {
+    this.bookDAOService = bookDAOService;
+    this.personalizeClient = personalizeClient;
     this.personalizeRuntimeClient = personalizeRuntimeClient;
-    this.personalizeEventsClient = personalizeEventsClient;
   }
 
   @Transactional
-  public void addBookToDb(String isbn, String title, String author, String genre, String publisher, String thumbnail) {
-    var book = new BookDAO();
-    book.setTitle(title);
-    book.setIsbn(isbn);
-    book.setAuthor(author);
-    book.setGenre(genre);
-    book.setThumbnail(thumbnail);
-    book.setPublisher(publisher);
-
-    var currentBook = bookEntityRepository.findByIsbn(isbn);
-    if (currentBook.isEmpty()) {
-      bookEntityRepository.save(book);
+  public void addBookToDb(Book bookToAdd) {
+    var book = bookDAOService.findBookDAOByISBN(bookToAdd.isbn());
+    if (book.isEmpty()) {
+      bookDAOService.addNewBook(bookToAdd);
     }
   }
 
@@ -75,7 +68,7 @@ class AwsPersonalizeService {
     var books = new ArrayList<BookDAO>();
 
     for (String isbn : isbns) {
-      var book = bookEntityRepository.findByIsbn(isbn);
+      var book = bookDAOService.findBookDAOByISBN(isbn);
       book.ifPresent(books::add);
       if (books.size() == 5) {
         break;
@@ -97,12 +90,11 @@ class AwsPersonalizeService {
       List<PredictedItem> items = recommendationsResponse.itemList();
 
       for (PredictedItem item : items) {
-        System.out.println("Item Id is : " + item.itemId());
         isbns.add(item.itemId());
       }
 
     } catch (AwsServiceException e) {
-      throw new IllegalArgumentException("Invalid ISBN.");
+      throw new IllegalArgumentException("Invalid ISBN provided");
     }
     return isbns;
   }

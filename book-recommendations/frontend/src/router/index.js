@@ -9,7 +9,6 @@ import FindFriendsPage from "@/pages/FindFriendsPage";
 import BookShelfPage from "@/pages/BookshelfPage"
 import BookshelfBooksPage from "@/pages/BookshelfBooksPage";
 
-
 Vue.use(VueRouter)
 
 const routes = [
@@ -17,51 +16,57 @@ const routes = [
     path: '/',
     name: 'Root',
     component: HomePage,
+    meta: {
+      title: "BestReads"
+    }
   },
   {
-    path: '/book/:isbn',
+    path: '/book',
     name: 'book',
     component: ViewBookPage,
-    props: true
   },
   {
-    path: '/default-about-vue',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  },
-  {
-    path: '/search/:searchType/:searchTerm',
+    path: '/search',
     name: 'search',
     component: SearchView
   },
   {
     path: '/home',
     name: 'homePage',
-    component: HomePage
+    component: HomePage,
+    meta: {
+      title: "BestReads"
+    }
   },
   {
     path: '/profile',
     name: 'profile',
     component: ProfileView,
-    beforeEnter: authGuard
+    beforeEnter: authGuard,
+    meta: {
+      title: "Profile"
+    }
   },
   {
     path: '/find-friends',
     name: 'find-friends',
     component: FindFriendsPage,
-    beforeEnter: authGuard
+    beforeEnter: authGuard,
+    meta: {
+      title: "Search for friends"
+    }
   },
   {
     path: '/bookshelf',
     name: 'bookshelf',
     component: BookShelfPage,
-    beforeEnter: authGuard
+    beforeEnter: authGuard,
+    meta: {
+      title: "Bookshelf"
+    }
   },
   {
-    path: '/bookshelf/:collectionId',
+    path: '/bookshelf/books',
     name: 'bookshelfBooksPage',
     component: BookshelfBooksPage,
     beforeEnter: authGuard
@@ -73,5 +78,10 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  document.title = to.meta.title || "BestReads";
+  next();
+});
 
 export default router

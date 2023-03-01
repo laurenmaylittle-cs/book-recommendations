@@ -2,6 +2,7 @@ package com.bestreads.bookrecommendations.awspersonalize;
 
 import com.bestreads.bookrecommendations.auth0.Auth0Service;
 import com.bestreads.bookrecommendations.book.Book;
+import com.bestreads.bookrecommendations.book.BookDAO;
 import com.bestreads.bookrecommendations.bookshelf.BookDAO;
 import java.util.List;
 
@@ -11,7 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import static java.lang.String.join;
@@ -21,6 +26,10 @@ import static java.lang.String.join;
 public class AwsPersonalizeController {
 
   private final AwsPersonalizeService awsPersonalizeService;
+
+  @Value("${AWS_IS_ENABLED}")
+  private boolean awsEnabled;
+
   private final Auth0Service auth0Service;
 
   @Autowired
@@ -39,6 +48,11 @@ public class AwsPersonalizeController {
     var userId = AuthUtils.getUserId(jwtAuthenticationToken).orElseThrow(() -> {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user ID found in token");
     });
+
+    if (!book.isbn().isEmpty()) {
+      awsPersonalizeService.addBookToDb(book);
+    }
+
     var formattedId = userId.replace("|", "%7C");
     var userData = auth0Service.searchById(formattedId);
 
@@ -60,5 +74,9 @@ public class AwsPersonalizeController {
       awsPersonalizeService.putUsers(userId, userToAdd);
     }
   }
-}
 
+  @GetMapping("/public/book/personalise-status")
+  public boolean isAwsEnabled() {
+    return this.awsEnabled;
+  }
+}

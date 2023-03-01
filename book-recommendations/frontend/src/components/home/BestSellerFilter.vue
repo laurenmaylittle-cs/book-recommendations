@@ -72,6 +72,9 @@ export default {
     onChange() {
       this.$emit("change", this.selectedCategories);
     },
+    reset() {
+      this.selectedCategories = [];
+    }
   }
 }
 </script>

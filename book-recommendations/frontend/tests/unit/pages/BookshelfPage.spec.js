@@ -3,6 +3,7 @@ import {mount} from "@vue/test-utils";
 import Vuetify from "vuetify";
 import {getCollection, getCollectionsForUser} from "@/api/bookshelf";
 import flushPromises from "flush-promises";
+import {storeMock} from "../mocks/storeMock";
 
 jest.mock("@/api/bookshelf");
 
@@ -15,7 +16,8 @@ async function createComponentWrapper({props} = {}) {
     mocks: {
       $auth: {
         getTokenSilently: jest.fn().mockResolvedValue('token-001')
-      }
+      },
+      $store: storeMock
     },
     propsData: {
       ...props,

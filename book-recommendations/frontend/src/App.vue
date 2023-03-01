@@ -9,7 +9,12 @@
     />
     <v-main :style="style">
       <v-container fluid>
-        <router-view />
+        <keep-alive
+          :key="$route.fullPath"
+          :max="2"
+        >
+          <router-view />
+        </keep-alive>
       </v-container>
     </v-main>
     <footer-bar :service-name="serviceName" />
