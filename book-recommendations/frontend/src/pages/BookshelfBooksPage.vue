@@ -13,7 +13,7 @@
     </v-row>
     <v-row v-if="!isLoading">
       <h1 class="mt-0 mb-5 ml-4">
-        {{ collectionBooks.collectionName }}
+        {{ collectionBooks.name }}
       </h1>
       <v-btn
         text
@@ -74,7 +74,7 @@
     </v-row>
     <v-row no-gutters>
       <v-col
-        v-for="book in collectionBooks.booksInCollection"
+        v-for="book in collectionBooks.bookDAOS"
         :key="book.title"
       >
         <book-details
@@ -162,7 +162,7 @@ export default {
       }
       let token = await this.$auth.getTokenSilently();
 
-      this.collectionBooks.collectionName = this.collectionName
+      this.collectionBooks.name = this.collectionName
       await updateCollectionName(this.collectionId, token, this.collectionName)
       this.dialog = false;
       this.collectionUpdateInProgress = true;
