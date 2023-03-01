@@ -1,9 +1,12 @@
 package com.bestreads.bookrecommendations.utils;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 public class AuthUtils {
 
@@ -26,5 +29,11 @@ public class AuthUtils {
       logger.log(Level.SEVERE, "User id not found in token");
       return Optional.empty();
     }
+  }
+
+  public static String getUserIdOrBadRequest(JwtAuthenticationToken authenticationToken) {
+    return AuthUtils.getUserId(authenticationToken).orElseThrow(() -> {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user ID found in token");
+    });
   }
 }

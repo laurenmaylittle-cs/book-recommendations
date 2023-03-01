@@ -201,7 +201,7 @@ export default {
       this.clearDialog();
     },
     async navigateToCollection(collection) {
-      await this.$router.push({name: 'bookshelfBooksPage'});
+      await this.$router.push({name: 'individualBookshelfPage'});
       EventBus.$emit('load-collection-books', {
         collectionId: collection.id,
         collectionName: collection.name

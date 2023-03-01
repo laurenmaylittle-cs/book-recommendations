@@ -1,34 +1,38 @@
 <template>
   <div>
-    <v-hover
-      v-slot="{ hover }"
-      ref="hoverEffectRef"
+    <v-card
+      @click="emitViewBook"
     >
-      <v-card
-        :color="getHoverEffect(hover)"
-        outlined
+      <div
+        v-if="selectable"
+        style="height:10px; display: flex; justify-content: flex-end"
       >
-        <v-card-actions class="justify-center mb-0 pt-4">
-          <a @click="emitViewBook">
-            <v-img
-              class="rounded mb-0"
-              :lazy-src="thumbnail"
-              height="192px"
-              width="128px"
-              :src="thumbnail"
-            />
-          </a>
-        </v-card-actions>
-        <v-card-text class="mt-0 ">
-          <div class="text-subtitle-2 text--primary mt-0">
-            {{ truncateText(title, 30) }}
-          </div>
-          <div class="text-subtitle-2 font-italic font-size-small">
-            {{ getTruncatedAuthor }}
-          </div>
-        </v-card-text>
-      </v-card>
-    </v-hover>
+        <!--@click.stop stops the emitViewBook event from happening within the checkbox-->
+        <v-checkbox
+          :value="selected"
+          @click.stop="changeSelected()"
+        />
+      </div>
+      <v-card-actions class="justify-center mb-0 pt-6">
+        <a @click="emitViewBook">
+          <v-img
+            class="rounded mb-0"
+            :lazy-src="thumbnail"
+            height="192px"
+            width="128px"
+            :src="thumbnail"
+          />
+        </a>
+      </v-card-actions>
+      <v-card-text class="mt-0">
+        <div class="text-subtitle-2 text--primary mt-0">
+          {{ truncateText(title, 30) }}
+        </div>
+        <div class="text-subtitle-2 font-italic font-size-small">
+          {{ getTruncatedAuthor }}
+        </div>
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 
@@ -65,7 +69,17 @@ export default {
     bookData: {
       type: Object,
       required: true
+    },
+    selectable: {
+      type: Boolean,
+      required: false,
+      default: false
     }
+  },
+  data() {
+    return {
+      selected: false,
+    };
   },
   computed: {
     getTruncatedAuthor() {
@@ -99,6 +113,12 @@ export default {
         case 'other':
           EventBus.$emit('view-book-other', this.bookData);
           break;
+      }
+    },
+    changeSelected() {
+      if (this.selectable) {
+        this.selected = !this.selected;
+        this.$emit(this.selected ? "selected" : "unselected", this.isbn, this.title);
       }
     },
     getHoverEffect(hover) {
