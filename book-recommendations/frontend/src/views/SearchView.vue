@@ -102,6 +102,7 @@ export default {
   },
   activated() {
     EventBus.$on('search-triggered', this.performSearch);
+    this._updatePageTitle();
   },
   deactivated() {
     EventBus.$off('search-triggered')
@@ -109,6 +110,7 @@ export default {
   methods: {
     async performSearch(queryDetails) {
       this._resetAndUpdateSearchData(queryDetails);
+      this._updatePageTitle();
       this.isLoading = true;
 
       if (queryDetails.searchType === "title") {
@@ -125,6 +127,9 @@ export default {
       this.nextSearchResults = [];
       this.searchTerm = queryDetails.searchTerm;
       this.searchType = queryDetails.searchType;
+    },
+    _updatePageTitle() {
+      document.title = `Search results for ${this.searchTerm}`;
     },
     async searchByAuthor(author, startIndex) {
       this.searchResults = await searchByAuthor(author, startIndex)
