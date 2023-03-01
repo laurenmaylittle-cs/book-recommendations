@@ -3,14 +3,17 @@ package com.bestreads.bookrecommendations.awspersonalize;
 import com.bestreads.bookrecommendations.book.Book;
 import com.bestreads.bookrecommendations.book.BookDAO;
 import com.bestreads.bookrecommendations.book.BookDAOService;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
-import software.amazon.awssdk.services.personalize.PersonalizeClient;
+import software.amazon.awssdk.services.personalizeevents.PersonalizeEventsClient;
 import software.amazon.awssdk.services.personalizeruntime.PersonalizeRuntimeClient;
 import software.amazon.awssdk.services.personalizeruntime.model.GetRecommendationsRequest;
 import software.amazon.awssdk.services.personalizeruntime.model.GetRecommendationsResponse;
@@ -25,15 +28,14 @@ import software.amazon.awssdk.services.personalizeevents.model.PutUsersRequest;
 
 import java.time.Instant;
 
-
 import static java.lang.String.join;
 
 @Service
 class AwsPersonalizeService {
 
   private final BookDAOService bookDAOService;
-  private final PersonalizeClient personalizeClient;
   private final PersonalizeRuntimeClient personalizeRuntimeClient;
+  private final PersonalizeEventsClient personalizeEventsClient;
 
   @Value("${AWS_CAMPAIGN_ARN}")
   private String campaignArn;
@@ -48,11 +50,11 @@ class AwsPersonalizeService {
   private String usersDatasetArn;
 
   @Autowired
-  AwsPersonalizeService(BookDAOService bookDAOService, PersonalizeClient personalizeClient,
-      PersonalizeRuntimeClient personalizeRuntimeClient) {
+  AwsPersonalizeService(BookDAOService bookDAOService, PersonalizeRuntimeClient personalizeRuntimeClient,
+                        PersonalizeEventsClient personalizeEventsClient) {
     this.bookDAOService = bookDAOService;
-    this.personalizeClient = personalizeClient;
     this.personalizeRuntimeClient = personalizeRuntimeClient;
+    this.personalizeEventsClient = personalizeEventsClient;
   }
 
   @Transactional

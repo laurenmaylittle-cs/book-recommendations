@@ -3,12 +3,12 @@ package com.bestreads.bookrecommendations.awspersonalize;
 import com.bestreads.bookrecommendations.auth0.Auth0Service;
 import com.bestreads.bookrecommendations.book.Book;
 import com.bestreads.bookrecommendations.book.BookDAO;
-import com.bestreads.bookrecommendations.bookshelf.BookDAO;
 import java.util.List;
 
 import com.bestreads.bookrecommendations.users.User;
 import com.bestreads.bookrecommendations.utils.AuthUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-
-import static java.lang.String.join;
 
 @RestController
 @RequestMapping("/api")
@@ -48,19 +46,13 @@ public class AwsPersonalizeController {
     var userId = AuthUtils.getUserId(jwtAuthenticationToken).orElseThrow(() -> {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user ID found in token");
     });
-
-    if (!book.isbn().isEmpty()) {
-      awsPersonalizeService.addBookToDb(book);
-    }
-
     var formattedId = userId.replace("|", "%7C");
     var userData = auth0Service.searchById(formattedId);
 
-    var authors = join("/", book.authors());
-    var categories = join("/", book.categories());
-
     //Adds book to our database
-    awsPersonalizeService.addBookToDb(book.isbn(), book.title(), authors, categories, book.publisher(), book.imageLinks().thumbnail());
+    if (!book.isbn().isEmpty()) {
+      awsPersonalizeService.addBookToDb(book);
+    }
 
     //Updates interactions for recommendations
     awsPersonalizeService.putEvents(userId, userId, book.isbn());
