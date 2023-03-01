@@ -4,6 +4,7 @@
       <v-hover
         v-slot="{ hover }"
         ref="hoverEffectRef"
+        :disabled="$vuetify.breakpoint.xsOnly"
       >
         <v-sheet
           :color="getHoverEffect(hover)"
@@ -51,6 +52,10 @@ export default {
     isbn: {
       type: String,
       required: true
+    },
+    category: {
+      type: String,
+      required: true
     }
   },
   deactivated() {
@@ -66,13 +71,15 @@ export default {
     },
     async emitViewBook() {
       if (this.$route.name !== "book") {
-        await this.$router.push({name: 'book', params: {isbn: this.isbn}});
+        await this.$router.push({name: this.category === "Series Books" ? 'search' : 'book'});
       }
-      EventBus.$emit('view-book-other', {
+      EventBus.$emit(this.category === "Series Books" ? 'search-triggered' : 'view-book-other', {
+        searchType: 'title',
+        searchTerm: this.bookTitle.toLowerCase(),
         isbn: this.isbn,
         title: this.bookTitle,
         authors: this.authors,
-      })
+      });
     }
   }
 }
