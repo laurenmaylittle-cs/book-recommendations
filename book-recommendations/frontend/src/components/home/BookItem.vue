@@ -65,7 +65,9 @@ export default {
       return hover ? "blue-grey lighten-4" : "transparent";
     },
     async emitViewBook() {
-      await this.$router.push({name: 'book', params: {isbn: this.isbn}});
+      if (this.$route.name !== "book") {
+        await this.$router.push({name: 'book', params: {isbn: this.isbn}});
+      }
       EventBus.$emit('view-book-other', {
         isbn: this.isbn,
         title: this.bookTitle,
