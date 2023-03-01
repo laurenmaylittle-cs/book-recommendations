@@ -249,8 +249,7 @@ export default {
       }
     },
     async isAwsEnabledAndIsbnValid() {
-      const token = await this.$auth.getTokenSilently();
-      return await isAwsEnabled(token) && this.isIsbnValid;
+      return await isAwsEnabled() && this.isIsbnValid;
     },
   }
 }
