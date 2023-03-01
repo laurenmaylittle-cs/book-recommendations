@@ -86,8 +86,12 @@ export default {
       if (this.authors === "") {
         return this.formatDate()
       }
-      return `${this.truncateText(this.authors, 50)} - ${this.formatDate()}`
+      return `${this.truncateText(this.authors, 30)} - ${this.formatDate()}`
     }
+  },
+  deactivated() {
+    //clear the hover effect when navigating away from the page
+    this.$refs.hoverEffectRef._data.isActive = false;
   },
   methods: {
     formatDate() {
@@ -110,13 +114,15 @@ export default {
           EventBus.$emit('view-book-other', this.bookData);
           break;
       }
-
     },
     changeSelected() {
       if (this.selectable) {
         this.selected = !this.selected;
         this.$emit(this.selected ? "selected" : "unselected", this.isbn, this.title);
       }
+    },
+    getHoverEffect(hover) {
+      return hover ? "blue-grey lighten-4" : "#FFFFFF";
     }
   }
 }

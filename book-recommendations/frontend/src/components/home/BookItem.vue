@@ -51,6 +51,10 @@ export default {
     isbn: {
       type: String,
       required: true
+    },
+    category: {
+      type: String,
+      required: true
     }
   },
   deactivated() {
@@ -65,12 +69,14 @@ export default {
       return hover ? "blue-grey lighten-4" : "transparent";
     },
     async emitViewBook() {
-      await this.$router.push({name: 'book', params: {isbn: this.isbn}});
-      EventBus.$emit('view-book-other', {
+      await this.$router.push({name: this.category === "Series Books" ? 'search' : 'book'});
+      EventBus.$emit(this.category === "Series Books" ? 'search-triggered' : 'view-book-other', {
+        searchType: 'title',
+        searchTerm: this.bookTitle.toLowerCase(),
         isbn: this.isbn,
         title: this.bookTitle,
         authors: this.authors,
-      })
+      });
     }
   }
 }
