@@ -30,7 +30,7 @@
                     <v-text-field
                       v-model="collectionName"
                       label="Collection name"
-                      :rules="collectionNameValidation"
+                      :rules="collectionValidationRules"
                     />
                   </v-col>
                 </v-row>
@@ -69,6 +69,7 @@
 <script>
 
 import {createNewCollection} from "@/api/bookshelf";
+import {mapGetters} from "vuex";
 
 export default {
   name: "CreateCollectionModal",
@@ -76,11 +77,10 @@ export default {
     dialog: false,
     collectionName: "",
     collectionUpdateInProgress: false,
-    collectionNameValidation: [
-      v => !!v || 'Collection name required',
-      v => (v && v.length <= 16) || 'Collection name must be less than 16 characters'
-    ],
   }),
+  computed: {
+    ...mapGetters(['collectionValidationRules'])
+  },
   methods: {
     async createCollection() {
       if (!this.$refs.form.validate()) {

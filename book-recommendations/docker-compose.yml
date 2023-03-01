@@ -15,6 +15,11 @@ services:
       - AUTH0_ISSUER_URI=$AUTH0_ISSUER_URI
       - CLIENT_SECRET=$CLIENT_SECRET
       - CLIENT_ID=$CLIENT_ID
+      - AWS_CAMPAIGN_ARN=$AWS_CAMPAIGN_ARN
+      - AWS_REGION=$AWS_REGION
+      - AWS_IS_ENABLED=$AWS_IS_ENABLED
+      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 
   client:
     image: "augmart/book-recommendations-frontend"

@@ -25,11 +25,13 @@
         :key="book.isbn"
       >
         <book-details
-          :author="checkForMultipleAuthors(book.authors)"
+          origin="search"
+          :authors="checkForMultipleAuthors(book.authors)"
           :title="book.title"
           :published-date="book.publishedDate"
           :thumbnail="book.imageLinks.thumbnail"
           :isbn="book.isbn"
+          :book-data="book"
         />
       </v-col>
     </v-row>
@@ -68,6 +70,7 @@
 <script>
 import {searchByAuthor, searchByTitle} from "@/api/search";
 import BookDetails from "@/components/search/BookDetails";
+import {EventBus} from "@/event-bus";
 
 export default {
   name: "SearchView",
@@ -76,8 +79,8 @@ export default {
     return {
       searchResults: [],
       nextSearchResults: [],
-      searchTerm: this.$route.params.searchTerm,
-      searchType: this.$route.params.searchType,
+      searchTerm: "",
+      searchType: "",
       isLoading: true,
       nextPageAvailable: true,
       previousPageAvailable: false,
@@ -87,7 +90,7 @@ export default {
   },
   computed: {
     getNumberOfResults() {
-      const numberOfResults = this.searchResults.length
+      const numberOfResults = this.searchResults.length;
       if (numberOfResults > 1) {
         return `Showing ${this.currentStartIndex} to ${(this.currentStartIndex
           + numberOfResults)} results for ${this.searchTerm}`
@@ -97,25 +100,39 @@ export default {
       return `There are no results for ${this.searchTerm}`
     },
   },
-  async mounted() {
-    if (this.searchType === "isbn") {
-      await this.searchByIsbn(this.searchTerm)
-    } else if (this.searchType === "author") {
-      await this.searchByAuthor(this.searchTerm, this.currentStartIndex)
-    } else {
-      await this.searchByTitle(this.searchTerm, this.currentStartIndex)
-    }
-    if (this.searchResults.length < this.numberOfItemsPerPage) {
-      this.nextPageAvailable = false
-    }
-    this.isLoading = false
+  activated() {
+    EventBus.$on('search-triggered', this.performSearch);
+    this._updatePageTitle();
+  },
+  deactivated() {
+    EventBus.$off('search-triggered')
   },
   methods: {
+    async performSearch(queryDetails) {
+      this._resetAndUpdateSearchData(queryDetails);
+      this._updatePageTitle();
+      this.isLoading = true;
+
+      if (queryDetails.searchType === "title") {
+        await this.searchByTitle(queryDetails.searchTerm, this.currentStartIndex);
+      } else {
+        await this.searchByAuthor(queryDetails.searchTerm, this.currentStartIndex);
+      }
+
+      this.nextPageAvailable = this.searchResults.length >= this.numberOfItemsPerPage;
+      this.isLoading = false;
+    },
+    _resetAndUpdateSearchData(queryDetails) {
+      this.searchResults = [];
+      this.nextSearchResults = [];
+      this.searchTerm = queryDetails.searchTerm;
+      this.searchType = queryDetails.searchType;
+    },
+    _updatePageTitle() {
+      document.title = `Search results for ${this.searchTerm}`;
+    },
     async searchByAuthor(author, startIndex) {
       this.searchResults = await searchByAuthor(author, startIndex)
-    },
-    async searchByIsbn(isbn) {
-      this.searchResults = await searchByIsbn(isbn)
     },
     async searchByTitle(title, startIndex) {
       this.searchResults = await searchByTitle(title, startIndex)
