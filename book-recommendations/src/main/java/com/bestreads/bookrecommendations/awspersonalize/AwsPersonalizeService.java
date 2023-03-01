@@ -3,6 +3,7 @@ package com.bestreads.bookrecommendations.awspersonalize;
 import com.bestreads.bookrecommendations.book.Book;
 import com.bestreads.bookrecommendations.bookshelf.BookDAO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
 import software.amazon.awssdk.services.personalizeruntime.PersonalizeRuntimeClient;
@@ -25,20 +26,36 @@ import java.util.List;
 
 import static java.lang.String.join;
 
-
 @Service
 class AwsPersonalizeService {
 
   private final BookEntityRepository bookEntityRepository;
+  private final PersonalizeRuntimeClient personalizeRuntimeClient;
+  private final PersonalizeEventsClient personalizeEventsClient;
+
+  @Value("${AWS_CAMPAIGN_ARN}")
+  private String campaignArn;
+
+  @Value("${AWS_EVENT_TRACKER_ID}")
+  private String eventTrackerId;
+
+  @Value("${AWS_BOOKS_DATASET_ARN}")
+  private String booksDatasetArn;
+
+  @Value("${AWS_USERS_DATASET_ARN}")
+  private String usersDatasetArn;
 
   @Autowired
-  AwsPersonalizeService(BookEntityRepository bookEntityRepository) {
+  AwsPersonalizeService(BookEntityRepository bookEntityRepository,
+                        PersonalizeRuntimeClient personalizeRuntimeClient,
+                        PersonalizeEventsClient personalizeEventsClient) {
     this.bookEntityRepository = bookEntityRepository;
+    this.personalizeRuntimeClient = personalizeRuntimeClient;
+    this.personalizeEventsClient = personalizeEventsClient;
   }
 
   @Transactional
-  public void addBookToDb(String isbn, String title, String author, String genre,
-      String publisher, String thumbnail) {
+  public void addBookToDb(String isbn, String title, String author, String genre, String publisher, String thumbnail) {
     var book = new BookDAO();
     book.setTitle(title);
     book.setIsbn(isbn);
@@ -53,10 +70,8 @@ class AwsPersonalizeService {
     }
   }
 
-  public List<BookDAO> getRecommendations(PersonalizeRuntimeClient personalizeRuntimeClient,
-                                          String campaignArn,
-                                          String itemId) {
-    var isbns = getListOfIsbns(personalizeRuntimeClient, campaignArn, itemId);
+  public List<BookDAO> getRecommendations(String itemId) {
+    var isbns = getListOfIsbns(itemId);
     var books = new ArrayList<BookDAO>();
 
     for (String isbn : isbns) {
@@ -69,8 +84,7 @@ class AwsPersonalizeService {
     return books;
   }
 
-  private List<String> getListOfIsbns(PersonalizeRuntimeClient personalizeRuntimeClient,
-      String campaignArn, String itemId) {
+  private List<String> getListOfIsbns(String itemId) {
     var isbns = new ArrayList<String>();
     try {
       GetRecommendationsRequest recommendationsRequest = GetRecommendationsRequest.builder()
@@ -93,11 +107,7 @@ class AwsPersonalizeService {
     return isbns;
   }
 
-  public void putEvents(PersonalizeEventsClient personalizeEventsClient,
-                               String trackingId,
-                               String sessionId,
-                               String userId,
-                               String itemId) {
+  public void putEvents(String sessionId, String userId, String itemId) {
 
     try {
       Event event = Event.builder()
@@ -107,7 +117,7 @@ class AwsPersonalizeService {
               .build();
 
       PutEventsRequest putEventsRequest = PutEventsRequest.builder()
-              .trackingId(trackingId)
+              .trackingId(eventTrackerId)
               .userId(userId)
               .sessionId(sessionId)
               .eventList(event)
@@ -120,7 +130,7 @@ class AwsPersonalizeService {
     }
   }
 
-  public void putItems(PersonalizeEventsClient personalizeEventsClient, String datasetArn, Book book) {
+  public void putItems(Book book) {
 
     var authors = join("/", book.authors());
     var categories = join("/", book.categories());
@@ -141,7 +151,7 @@ class AwsPersonalizeService {
       items.add(item1);
 
       PutItemsRequest putItemsRequest = PutItemsRequest.builder()
-              .datasetArn(datasetArn)
+              .datasetArn(booksDatasetArn)
               .items(items)
               .build();
 
@@ -152,8 +162,7 @@ class AwsPersonalizeService {
     }
   }
 
-  public void putUsers(PersonalizeEventsClient personalizeEventsClient,
-                        String datasetArn, String id, com.bestreads.bookrecommendations.users.User userToAdd) {
+  public void putUsers(String id, com.bestreads.bookrecommendations.users.User userToAdd) {
 
     ArrayList<User> users = new ArrayList<>();
 
@@ -169,7 +178,7 @@ class AwsPersonalizeService {
       users.add(user);
 
       PutUsersRequest putUsersRequest = PutUsersRequest.builder()
-              .datasetArn(datasetArn)
+              .datasetArn(usersDatasetArn)
               .users(users)
               .build();
 
