@@ -1,8 +1,25 @@
 import {shallowMount} from "@vue/test-utils";
 import BookItem from "@/components/home/BookItem";
+import Vuetify from "vuetify";
 
 function createComponentWrapper({props} = {}) {
+  const breakpoint = {
+    xs: false,
+    sm: false,
+    md: false,
+    lg: false,
+    xl: true,
+  };
+  let vuetify = new Vuetify();
+  let breakPointMock = {
+    init: jest.fn(),
+    framework: {},
+    ...breakpoint,
+  }
+
+  vuetify.framework.breakpoint = breakPointMock;
   return shallowMount(BookItem, {
+    vuetify,
     propsData: {
       bookImageLink: "https://google/com/image.jpg",
       bookTitle: "THE LORD OF THE RINGS",

@@ -106,6 +106,18 @@
       </v-col>
       <view-book-thumbnail :thumbnail="bookData.imageLinks.thumbnail" />
     </v-row>
+    <v-col
+      v-if="isIsbnValid && !isLoading"
+      :cols="getColsForBranding"
+      :offset="getOffSetForBranding"
+    >
+      <v-img
+        width="124"
+        height="21"
+        src="@/assets/poweredby_google.png"
+        @click="goToGoogle"
+      />
+    </v-col>
     <v-row
       v-if="!isLoading && bookData !== null"
       class="pt-0 ma-0 align-center"
@@ -156,6 +168,12 @@ export default {
     },
     isIsbnValid() {
       return this.isbn ? (this.isbn.length === 10 || this.isbn.length === 13) : false
+    },
+    getColsForBranding() {
+      return this.$vuetify.breakpoint.xs ? 7 : 2
+    },
+    getOffSetForBranding() {
+      return this.$vuetify.breakpoint.xs ? 5 : 9
     }
   },
   async activated() {
@@ -229,6 +247,9 @@ export default {
         return details.join(', ');
       }
       return details.toString();
+    },
+    goToGoogle() {
+      window.open("https://www.google.com", "_blank")
     }
   }
 }
