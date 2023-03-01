@@ -1,6 +1,5 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
-import com.bestreads.bookrecommendations.book.BookDAO;
 import com.bestreads.bookrecommendations.utils.AuthUtils;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,7 @@ public class IndividualBookshelfController {
   }
 
   @DeleteMapping("/delete")
-  public List<BookDAO> deleteBookInCollection(JwtAuthenticationToken authenticationToken,
+  public CollectionBookProjection deleteBookInCollection(JwtAuthenticationToken authenticationToken,
       @RequestParam Long bookshelfId,
       @RequestParam List<Long> bookIds) {
     var userId = AuthUtils.getUserIdOrBadRequest(authenticationToken);
@@ -49,7 +48,10 @@ public class IndividualBookshelfController {
     }
 
     collectionsService.deleteBooksFromCollection(bookshelfId, bookIds);
-    return collectionsService.getBooksInCollectionByIdAndUserOrBadRequest(bookshelfId, userId);
+    
+    return collectionsService.findByIdAndUser(bookshelfId, userId).orElseThrow(() -> {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No collection found");
+    });
   }
 
   @PutMapping
