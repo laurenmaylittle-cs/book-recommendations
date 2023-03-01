@@ -25,6 +25,7 @@
                 :book-title="books[+index + i].title"
                 :isbn="books[+index + i].isbn"
                 :authors="books[+index + i].authors"
+                :category="bestSellerCategory"
               />
             </template>
           </v-row>
