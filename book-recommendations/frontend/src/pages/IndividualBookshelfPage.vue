@@ -225,8 +225,8 @@ export default {
         await this.$auth.getTokenSilently());
       this.booksSelectedIsbn = [];
       this.booksSelectedITitle = [];
-      this.closeDeleteDialog();
       this.checkIfBooksSelected();
+      this.closeDeleteDialog();
       this.deleteInProgress = false;
     },
     editBookshelf() {
