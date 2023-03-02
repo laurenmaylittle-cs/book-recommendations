@@ -25,6 +25,9 @@ class BookControllerTest {
   @MockBean
   private BookSearchService bookSearchService;
 
+  @MockBean
+  private BookDAOService bookDAOService;
+
   private static Book book;
   private static final String bookJson =
       """ 
@@ -103,6 +106,6 @@ class BookControllerTest {
                 bookTitle),
             Objects.requireNonNull(result.getResolvedException()).getMessage()));
 
-    ;
+
   }
 }
