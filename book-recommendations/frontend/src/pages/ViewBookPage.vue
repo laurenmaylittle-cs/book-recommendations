@@ -170,10 +170,29 @@ export default {
       return this.isbn ? (this.isbn.length === 10 || this.isbn.length === 13) : false
     },
     getColsForBranding() {
-      return this.$vuetify.breakpoint.xs ? 7 : 2
+      const colsToTake = {
+        xl: 2,
+        lg: 2,
+        md: 3,
+        xs: 7
+      };
+      const cols = Object.keys(colsToTake).find(
+        col => this.$vuetify.breakpoint[col]);
+
+      return colsToTake[cols] || 5;
     },
     getOffSetForBranding() {
-      return this.$vuetify.breakpoint.xs ? 5 : 9
+      const offSetValues = {
+        xl: 9,
+        lg: 9,
+        md: 9,
+        xs: 5
+      };
+
+      const offset = Object.keys(offSetValues).find(
+        ofst => this.$vuetify.breakpoint[ofst]);
+
+      return offSetValues[offset] || 9;
     }
   },
   async activated() {
