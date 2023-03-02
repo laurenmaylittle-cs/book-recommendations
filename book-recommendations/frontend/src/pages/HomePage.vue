@@ -23,6 +23,15 @@
       :best-seller-category="category.list_name"
       :books="category.books"
     />
+    <v-col
+      v-if="categories.length > 0 && !isLoading"
+    >
+      <v-img
+        width="124"
+        src="@/assets/poweredby_nytimes.png"
+        @click="goToNYTimes"
+      />
+    </v-col>
   </v-container>
 </template>
 
@@ -70,6 +79,9 @@ export default {
       this.categories = await getBestSellers();
       this.categories.sort((a, b) => a.list_name.localeCompare(b.list_name));
       this.isLoading = false;
+    },
+    goToNYTimes() {
+      window.open("https://developer.nytimes.com/", "_blank");
     },
   }
 }

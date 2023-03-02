@@ -7,8 +7,19 @@
       <v-card
         :color="getHoverEffect(hover)"
         outlined
+        @click="emitViewBook"
       >
-        <v-card-actions class="justify-center mb-0 pt-4">
+        <div
+          v-if="selectable"
+          style="height:10px; display: flex; justify-content: flex-end"
+        >
+          <!--@click.stop stops the emitViewBook event from happening within the checkbox-->
+          <v-checkbox
+            :value="selected"
+            @click.stop="changeSelected()"
+          />
+        </div>
+        <v-card-actions class="justify-center mb-0 pt-6">
           <a @click="emitViewBook">
             <v-img
               class="rounded mb-0"
@@ -19,7 +30,7 @@
             />
           </a>
         </v-card-actions>
-        <v-card-text class="mt-0 ">
+        <v-card-text class="mt-0">
           <div class="text-subtitle-2 text--primary mt-0">
             {{ truncateText(title, 30) }}
           </div>
@@ -65,7 +76,17 @@ export default {
     bookData: {
       type: Object,
       required: true
+    },
+    selectable: {
+      type: Boolean,
+      required: false,
+      default: false
     }
+  },
+  data() {
+    return {
+      selected: false,
+    };
   },
   computed: {
     getTruncatedAuthor() {
@@ -99,6 +120,12 @@ export default {
         case 'other':
           EventBus.$emit('view-book-other', this.bookData);
           break;
+      }
+    },
+    changeSelected() {
+      if (this.selectable) {
+        this.selected = !this.selected;
+        this.$emit(this.selected ? "selected" : "unselected", this.isbn, this.title);
       }
     },
     getHoverEffect(hover) {

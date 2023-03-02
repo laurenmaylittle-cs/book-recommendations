@@ -1,14 +1,12 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
 import static java.util.Comparator.comparing;
-import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.Stream.concat;
 
-import com.bestreads.bookrecommendations.book.Book;
 import com.bestreads.bookrecommendations.book.BookDAO;
-import com.bestreads.bookrecommendations.book.BookDAORepository;
+import com.bestreads.bookrecommendations.book.BookDAOService;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
@@ -23,13 +21,13 @@ class CollectionsBookService {
 
   private final CollectionsRepository collectionsRepository;
 
-  private final BookDAORepository bookDAORepository;
+  private final BookDAOService bookDAOService;
 
   @Autowired
   CollectionsBookService(CollectionsRepository collectionsRepository,
-      BookDAORepository bookDAORepository) {
+      BookDAOService bookDAOService) {
     this.collectionsRepository = collectionsRepository;
-    this.bookDAORepository = bookDAORepository;
+    this.bookDAOService = bookDAOService;
   }
 
   @Transactional
@@ -42,9 +40,8 @@ class CollectionsBookService {
 
   @Transactional
   Set<CollectionBookJson> updateCollectionsForBook(String userId,
-      CollectionBookRootJson collectionBookRootJson, String isbn) {
-    var book = bookDAORepository.findByIsbn(isbn)
-        .orElseGet(() -> createNewBookDAOFromBook(collectionBookRootJson.book()));
+      CollectionBookRootJson collectionBookRootJson) {
+    var book = bookDAOService.addNewBook(collectionBookRootJson.book());
 
     var newCollections = createNewCollections(collectionBookRootJson.collections(), userId, book);
     var updatedCollections = updateExistingCollections(
@@ -72,19 +69,6 @@ class CollectionsBookService {
         .map(x -> new CollectionBookJson(x.getId(), x.getName(), associatedToBook))
         .sorted(comparing(CollectionBookJson::name))
         .collect(toCollection(LinkedHashSet::new));
-  }
-
-  private BookDAO createNewBookDAOFromBook(Book book) {
-    var newBook = new BookDAO();
-    newBook.setIsbn(book.isbn());
-    newBook.setAuthor(
-        ofNullable(book.authors()).map(a -> String.join(", ", a)).orElse(""));
-    newBook.setTitle(book.title());
-    newBook.setThumbnail(book.imageLinks().thumbnail());
-    newBook.setGenre(ofNullable(book.categories()).map(c -> c.get(0)).orElse(""));
-    newBook.setPublisher(ofNullable(book.publisher()).orElse(""));
-    newBook.setPublishedDate(ofNullable(book.publishedDate()).orElse(""));
-    return bookDAORepository.save(newBook);
   }
 
   private Set<CollectionDAO> createNewCollections(List<CollectionBookJson> collectionBookJsons,

@@ -106,6 +106,10 @@ public class BookDAO implements Serializable {
     this.publisher = publisher;
   }
 
+  public String getPublisher() {
+    return publisher;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

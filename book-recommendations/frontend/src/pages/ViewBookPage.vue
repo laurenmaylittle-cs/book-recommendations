@@ -106,6 +106,18 @@
       </v-col>
       <view-book-thumbnail :thumbnail="bookData.imageLinks.thumbnail" />
     </v-row>
+    <v-col
+      v-if="isIsbnValid && !isLoading"
+      :cols="getColsForBranding"
+      :offset="getOffSetForBranding"
+    >
+      <v-img
+        width="124"
+        height="21"
+        src="@/assets/poweredby_google.png"
+        @click="goToGoogle"
+      />
+    </v-col>
     <v-row
       v-if="!isLoading && bookData !== null"
       class="pt-0 ma-0 align-center"
@@ -129,6 +141,7 @@ import UserRatings from "@/components/viewbook/UserRatings";
 import AboutBook from "@/components/viewbook/AboutBook";
 import {EventBus} from "@/event-bus";
 import BookCollections from "@/components/viewbook/BookCollections.vue";
+import {getRecs, exportData, isAwsEnabled} from "@/api/personalize";
 
 export default {
   name: 'ViewBook',
@@ -148,6 +161,7 @@ export default {
       viewBookEmitted: false,
       ratingsLoaded: false,
       collectionsLoaded: false,
+      recommendations: []
     }
   },
   computed: {
@@ -156,6 +170,12 @@ export default {
     },
     isIsbnValid() {
       return this.isbn ? (this.isbn.length === 10 || this.isbn.length === 13) : false
+    },
+    getColsForBranding() {
+      return this.$vuetify.breakpoint.xs ? 7 : 2
+    },
+    getOffSetForBranding() {
+      return this.$vuetify.breakpoint.xs ? 5 : 9
     }
   },
   async activated() {
@@ -183,14 +203,17 @@ export default {
     EventBus.$off(['search-triggered', 'view-book', 'view-book-other']);
   },
   methods: {
-    populateBookData(bookData) {
+    async populateBookData(bookData) {
       this.viewBookEmitted = true;
       if (bookData) {
         this.bookData = bookData;
         this.updateDocumentTitle();
         this.isbn = bookData.isbn;
+        if (await this.isAwsEnabledAndIsbnValid()) {
+          await this.getRecommendations();
+          await this.postDataIfAuthenticated();
+        }
       }
-
       this.isLoading = false;
     },
     async getBookData(queryData) {
@@ -206,6 +229,10 @@ export default {
         this.bookData = await getBookInfo(this.isbn, queryData.title, queryData.authors);
         this.updateDocumentTitle();
         this.isLoading = false;
+        if (await this.isAwsEnabledAndIsbnValid()) {
+          await this.getRecommendations();
+          await this.postDataIfAuthenticated();
+        }
       } catch (error) {
         this.isLoading = false;
       }
@@ -229,6 +256,21 @@ export default {
         return details.join(', ');
       }
       return details.toString();
+    },
+    async getRecommendations() {
+      this.recommendations = await getRecs(this.isbn);
+    },
+    async postDataIfAuthenticated() {
+      if (this.$auth.isAuthenticated) {
+        const token = await this.$auth.getTokenSilently();
+        await exportData(this.bookData, token)
+      }
+    },
+    async isAwsEnabledAndIsbnValid() {
+      return await isAwsEnabled() && this.isIsbnValid;
+    },
+    goToGoogle() {
+      window.open("https://www.google.com", "_blank")
     }
   }
 }
