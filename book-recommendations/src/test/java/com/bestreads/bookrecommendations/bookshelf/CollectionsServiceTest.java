@@ -1,11 +1,14 @@
 package com.bestreads.bookrecommendations.bookshelf;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.bestreads.bookrecommendations.book.BookDAO;
 import java.util.Optional;
 import java.util.Set;
+import javax.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +30,23 @@ class CollectionsServiceTest {
   private final String userId = "USER_ID1234";
   private CollectionProjection collectionProjectionOne;
   private CollectionProjection collectionProjectionTwo;
+
+  private final CollectionBookProjection collectionBookProjection = new CollectionBookProjection() {
+    @Override
+    public Long getId() {
+      return 1L;
+    }
+
+    @Override
+    public String getName() {
+      return "collectionName";
+    }
+
+    @Override
+    public Set<BookDAO> getBookDAOS() {
+      return Set.of(new BookDAO());
+    }
+  };
 
   @BeforeEach
   void setUp() {
@@ -88,5 +108,36 @@ class CollectionsServiceTest {
 
     assertEquals("Collection Spring", collectionArgumentCaptor.getValue().getName());
     assertEquals(userId, collectionArgumentCaptor.getValue().getUserId());
+  }
+
+  @Test
+  void updateCollectionName() {
+    var collection = new CollectionDAO();
+    collection.setId(1L);
+    collection.setName("Want to read");
+    collection.setUserId(userId);
+
+    when(collectionsRepository.findById(1L))
+        .thenReturn(Optional.of(collection));
+
+    ArgumentCaptor<CollectionDAO> collectionDAOArgumentCaptor =
+        ArgumentCaptor.forClass(CollectionDAO.class);
+
+    collectionsService.updateCollectionName(1L, "Wishlist");
+    verify(collectionsRepository).save(collectionDAOArgumentCaptor.capture());
+
+    assertEquals("Wishlist", collectionDAOArgumentCaptor.getValue().getName());
+    assertEquals(1L, collectionDAOArgumentCaptor.getValue().getId());
+    assertEquals(userId, collectionDAOArgumentCaptor.getValue().getUserId());
+  }
+
+  @Test
+  void updateCollection_noExistingCollection() {
+    when(collectionsRepository.findById(1L))
+        .thenReturn(Optional.empty());
+
+    assertThrows(EntityNotFoundException.class, () -> {
+      collectionsService.updateCollectionName(1L, "Collection Spring");
+    });
   }
 }
