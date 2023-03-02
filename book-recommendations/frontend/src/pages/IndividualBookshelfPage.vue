@@ -24,16 +24,16 @@
           <v-card-text>
             <v-form
               ref="form"
-              onsubmit="dialog=false"
+              onsubmit="return false"
               @submit="updateCollection"
             >
               <v-container>
                 <v-row>
                   <v-col>
                     <v-text-field
-                      v-model="collectionName"
+                      v-model="newCollectionName"
                       label="Collection name"
-                      :rules="collectionNameValidation"
+                      :rules="collectionValidationRules"
                     />
                   </v-col>
                 </v-row>
@@ -46,12 +46,17 @@
                   @click="updateCollection"
                 >
                   Update
+                  <v-progress-circular
+                    v-if="collectionNameUpdateInProgress"
+                    indeterminate
+                    color="primary"
+                  />
                 </v-btn>
                 <v-btn
                   ref="closeBtn"
                   color="secondary"
                   text
-                  @click="dialog=false"
+                  @click="resetUpdateState"
                 >
                   Cancel
                 </v-btn>
@@ -62,7 +67,7 @@
       </v-dialog>
     </v-row>
     <v-btn
-      v-if="!isLoading"
+      v-if="!isLoading && collectionBooks.bookDAOS.length >= 1"
       v-model="editFlag"
       color="primary"
       class="ma-7"
@@ -70,6 +75,31 @@
     >
       {{ editBtnText }}
     </v-btn>
+    <template v-if="!isLoading && collectionBooks.bookDAOS.length == 0">
+      <v-row
+        class="justify-center pt-10"
+      >
+        <v-col
+          cols="12"
+          sm="8"
+          md="6"
+        >
+          <v-card
+            class="elevation-12"
+            color="blue-grey blue-grey-lighten-1"
+          >
+            <v-card-title class="headline white--text">
+              No books in collection
+            </v-card-title>
+            <v-card-text class="white--text">
+              You can add books to this collection by clicking the "Add book to collection" button
+              on the
+              book details page.
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </template>
     <v-btn
       v-if="editFlag"
       :disabled="!isAnyBookSelected"
@@ -172,6 +202,7 @@ import {
   updateCollectionName
 } from "@/api/bookshelfBooks";
 import {EventBus} from "@/event-bus";
+import {mapGetters} from "vuex";
 
 export default {
   name: "IndividualBookshelfPage",
@@ -194,10 +225,8 @@ export default {
       deleteInProgress: false,
       dialog: false,
       collectionName: '',
-      collectionNameValidation: [
-        v => !!v || 'Collection name required',
-        v => (v && v.length <= 15) || 'Collection name must be less than 16 characters'
-      ],
+      newCollectionName: '',
+      collectionNameUpdateInProgress: false,
     }
   },
   computed: {
@@ -212,7 +241,8 @@ export default {
         breakpoint => this.$vuetify.breakpoint[breakpoint]);
 
       return breakpointValues[breakpoint] || 5;
-    }
+    },
+    ...mapGetters(['collectionValidationRules']),
   },
   async activated() {
     EventBus.$on("load-collection-books", this.entryMethod);
@@ -329,13 +359,18 @@ export default {
       if (!this.$refs.form.validate()) {
         return;
       }
-      let token = await this.$auth.getTokenSilently();
+      this.collectionNameUpdateInProgress = true;
+      const token = await this.$auth.getTokenSilently();
 
-      await updateCollectionName(this.collectionId, token, this.collectionName)
-      this.collectionBooks.name = this.collectionName
+      await updateCollectionName(this.collectionId, token, this.newCollectionName)
+      this.collectionBooks.name = this.newCollectionName;
+      this.resetUpdateState();
+    },
+    resetUpdateState() {
+      this.collectionNameUpdateInProgress = false;
+      this.newCollectionName = '';
       this.dialog = false;
-      this.collectionUpdateInProgress = true;
-    }
+    },
   }
 }
 </script>

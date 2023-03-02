@@ -85,6 +85,9 @@ export default {
   async mounted() {
     await this.getCollections();
   },
+  async activated() {
+    await this.getCollections();
+  },
   methods: {
     async getCollections() {
       this.collections = await getCollectionsForUser(await this.$auth.getTokenSilently());
