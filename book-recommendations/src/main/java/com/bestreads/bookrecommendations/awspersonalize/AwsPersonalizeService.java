@@ -44,8 +44,8 @@ class AwsPersonalizeService {
     }
   }
 
-  public List<BookDAO> getRecommendations(String itemId) {
-    var isbns = getListOfIsbns(itemId);
+  public List<BookDAO> getRecommendations(String chosenBook) {
+    var isbns = getListOfIsbns(chosenBook);
     var books = new ArrayList<BookDAO>();
 
     for (String isbn : isbns) {
@@ -58,6 +58,11 @@ class AwsPersonalizeService {
     return books;
   }
 
+  /**
+   * This method takes in an isbn, connects to our campaign and returns a list of similar books.
+   * @param itemId - isbn of the current book we want to get similar items of
+   * @return a list of isbns that we can use to then display the similar items
+   */
   private List<String> getListOfIsbns(String itemId) {
     var isbns = new ArrayList<String>();
     try {
