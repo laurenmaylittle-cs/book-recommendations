@@ -8,14 +8,13 @@ import static org.mockito.Mockito.when;
 
 import com.bestreads.bookrecommendations.book.Book;
 import com.bestreads.bookrecommendations.book.BookDAO;
-import com.bestreads.bookrecommendations.book.BookDAORepository;
+import com.bestreads.bookrecommendations.book.BookDAOService;
 import com.bestreads.bookrecommendations.book.ImageLinks;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +31,7 @@ class CollectionsBookServiceTest {
   private CollectionsRepository collectionsRepository;
 
   @Mock
-  private BookDAORepository bookDAORepository;
+  private BookDAOService bookDAOService;
 
   @InjectMocks
   private CollectionsBookService collectionsBookService;
@@ -136,26 +135,22 @@ class CollectionsBookServiceTest {
         isbn
     );
 
+    BookDAO newBookDAOForBook = new BookDAO(
+        book.title(),
+        String.join(", ", book.authors()),
+        book.imageLinks().thumbnail(),
+        book.publishedDate(),
+        book.isbn(),
+        book.categories().toString(),
+        book.publisher()
+    );
+
     CollectionDAO existingCollection = new CollectionDAO(
         "Existing Collection",
         userId,
         new LinkedHashSet<>()
     );
     existingCollection.setId(2L);
-
-    CollectionDAO newCollection = new CollectionDAO(
-        "New Collection",
-        userId,
-        Set.of(new BookDAO(
-            book.title(),
-            String.join(", ", book.authors()),
-            book.imageLinks().thumbnail(),
-            book.publishedDate(),
-            book.isbn(),
-            book.categories().toString(),
-            book.publisher()
-        ))
-    );
 
     CollectionBookRootJson collectionBookRootJson = new CollectionBookRootJson(
         List.of(
@@ -166,15 +161,13 @@ class CollectionsBookServiceTest {
     );
 
     // Set up mock behavior
-    when(bookDAORepository.findByIsbn(isbn)).thenReturn(Optional.empty());
-
     Set<CollectionDAO> existingCollections = Set.of(existingCollection);
     when(collectionsRepository.findAllCollectionByUserId(userId)).thenReturn(existingCollections);
 
-    when(bookDAORepository.save(any())).thenAnswer(invocation -> {
+    when(bookDAOService.addNewBook(any())).thenAnswer(invocation -> {
       Object argument = invocation.getArgument(0);
-      if (argument instanceof BookDAO) {
-        ((BookDAO) argument).setId(1L);
+      if (argument instanceof Book && ((Book) argument).isbn().equals(isbn)) {
+        return newBookDAOForBook;
       }
       return argument;
     });
@@ -192,16 +185,14 @@ class CollectionsBookServiceTest {
     // Invoke the method under test
     Set<CollectionBookJson> result = collectionsBookService.updateCollectionsForBook(
         userId,
-        collectionBookRootJson,
-        isbn
+        collectionBookRootJson
     );
 
     // Verify the results
-    ArgumentCaptor<BookDAO> bookArg = ArgumentCaptor.forClass(BookDAO.class);
+    ArgumentCaptor<Book> bookArg = ArgumentCaptor.forClass(Book.class);
     ArgumentCaptor<Set<CollectionDAO>> collectionArg = ArgumentCaptor.forClass(Set.class);
 
-    verify(bookDAORepository).findByIsbn(isbn);
-    verify(bookDAORepository).save(bookArg.capture());
+    verify(bookDAOService).addNewBook(bookArg.capture());
     verify(collectionsRepository).saveAll(collectionArg.capture());
 
     Set<CollectionBookJson> expected = new HashSet<>();
@@ -211,9 +202,9 @@ class CollectionsBookServiceTest {
     assertEquals(expected, result);
 
     // Verify the book was saved
-    BookDAO savedBook = bookArg.getValue();
-    assertEquals(isbn, savedBook.getIsbn());
-    assertEquals(book.title(), savedBook.getTitle());
+    Book savedBook = bookArg.getValue();
+    assertEquals(isbn, savedBook.isbn());
+    assertEquals(book.title(), savedBook.title());
 
     // Verify the collections were saved
     Set<CollectionDAO> savedCollections = collectionArg.getValue();

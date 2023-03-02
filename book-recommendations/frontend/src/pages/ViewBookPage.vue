@@ -141,6 +141,7 @@ import UserRatings from "@/components/viewbook/UserRatings";
 import AboutBook from "@/components/viewbook/AboutBook";
 import {EventBus} from "@/event-bus";
 import BookCollections from "@/components/viewbook/BookCollections.vue";
+import {getRecs, exportData, isAwsEnabled} from "@/api/personalize";
 
 export default {
   name: 'ViewBook',
@@ -160,6 +161,7 @@ export default {
       viewBookEmitted: false,
       ratingsLoaded: false,
       collectionsLoaded: false,
+      recommendations: []
     }
   },
   computed: {
@@ -201,14 +203,17 @@ export default {
     EventBus.$off(['search-triggered', 'view-book', 'view-book-other']);
   },
   methods: {
-    populateBookData(bookData) {
+    async populateBookData(bookData) {
       this.viewBookEmitted = true;
       if (bookData) {
         this.bookData = bookData;
         this.updateDocumentTitle();
         this.isbn = bookData.isbn;
+        if (await this.isAwsEnabledAndIsbnValid()) {
+          await this.getRecommendations();
+          await this.postDataIfAuthenticated();
+        }
       }
-
       this.isLoading = false;
     },
     async getBookData(queryData) {
@@ -224,6 +229,10 @@ export default {
         this.bookData = await getBookInfo(this.isbn, queryData.title, queryData.authors);
         this.updateDocumentTitle();
         this.isLoading = false;
+        if (await this.isAwsEnabledAndIsbnValid()) {
+          await this.getRecommendations();
+          await this.postDataIfAuthenticated();
+        }
       } catch (error) {
         this.isLoading = false;
       }
@@ -247,6 +256,18 @@ export default {
         return details.join(', ');
       }
       return details.toString();
+    },
+    async getRecommendations() {
+      this.recommendations = await getRecs(this.isbn);
+    },
+    async postDataIfAuthenticated() {
+      if (this.$auth.isAuthenticated) {
+        const token = await this.$auth.getTokenSilently();
+        await exportData(this.bookData, token)
+      }
+    },
+    async isAwsEnabledAndIsbnValid() {
+      return await isAwsEnabled() && this.isIsbnValid;
     },
     goToGoogle() {
       window.open("https://www.google.com", "_blank")

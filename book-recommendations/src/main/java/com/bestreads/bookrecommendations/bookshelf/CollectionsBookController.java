@@ -47,7 +47,6 @@ public class CollectionsBookController {
         () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid user id")
     );
 
-    return collectionsBookService.updateCollectionsForBook(userId, collectionsData,
-        collectionsData.book().isbn());
+    return collectionsBookService.updateCollectionsForBook(userId, collectionsData);
   }
 }
