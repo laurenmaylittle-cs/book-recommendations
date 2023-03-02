@@ -1,5 +1,66 @@
 <template>
   <v-container>
+    <v-row v-if="!isLoading">
+      <h1 class="mt-0 mb-5 ml-4">
+        {{ collectionBooks.name }}
+      </h1>
+      <v-btn
+        text
+        class="mt-1"
+        @click="openDialog"
+      >
+        <v-icon>
+          mdi-pencil
+        </v-icon>
+      </v-btn>
+    </v-row>
+    <v-row>
+      <v-dialog
+        v-model="dialog"
+        max-width="290"
+        @click:outside="dialog=false"
+      >
+        <v-card>
+          <v-card-text>
+            <v-form
+              ref="form"
+              onsubmit="dialog=false"
+              @submit="updateCollection"
+            >
+              <v-container>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      v-model="collectionName"
+                      label="Collection name"
+                      :rules="collectionNameValidation"
+                    />
+                  </v-col>
+                </v-row>
+              </v-container>
+              <v-card-actions>
+                <v-btn
+                  ref="saveCollectionBtn"
+                  color="primary"
+                  text
+                  @click="updateCollection"
+                >
+                  Update
+                </v-btn>
+                <v-btn
+                  ref="closeBtn"
+                  color="secondary"
+                  text
+                  @click="dialog=false"
+                >
+                  Cancel
+                </v-btn>
+              </v-card-actions>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+    </v-row>
     <v-btn
       v-if="!isLoading"
       v-model="editFlag"
@@ -83,7 +144,7 @@
     </v-row>
     <v-row no-gutters>
       <v-col
-        v-for="book in collectionBooks"
+        v-for="book in collectionBooks.bookDAOS"
         :key="book.title"
         :cols="getNumberOfColumns"
       >
@@ -105,7 +166,11 @@
 </template>
 <script>
 import BookDetails from "@/components/search/BookDetails";
-import {deleteBooksInCollection, getBooksInCollection} from "@/api/bookshelfBooks";
+import {
+  deleteBooksInCollection,
+  getBooksInCollection,
+  updateCollectionName
+} from "@/api/bookshelfBooks";
 import {EventBus} from "@/event-bus";
 
 export default {
@@ -119,7 +184,7 @@ export default {
       isLoading: true,
       previousBookData: null,
       loadCollectionBooksEmitted: false,
-      collectionBooks: [],
+      collectionBooks: {},
       booksSelectedIsbn: [],
       booksSelectedITitle: [],
       isAnyBookSelected: false,
@@ -127,6 +192,12 @@ export default {
       deleteDialog: false,
       editBtnText: "Edit",
       deleteInProgress: false,
+      dialog: false,
+      collectionName: '',
+      collectionNameValidation: [
+        v => !!v || 'Collection name required',
+        v => (v && v.length <= 15) || 'Collection name must be less than 16 characters'
+      ],
     }
   },
   computed: {
@@ -247,6 +318,24 @@ export default {
     updatePageTitle() {
       document.title = `${this.collectionTitle} - Books`
     },
+    openDialog() {
+      this.dialog = true;
+      this.$nextTick(() => {
+        //workaround for vuetify bug not clearing validation  when submitting forms
+        this.$refs.form.resetValidation();
+      });
+    },
+    async updateCollection() {
+      if (!this.$refs.form.validate()) {
+        return;
+      }
+      let token = await this.$auth.getTokenSilently();
+
+      await updateCollectionName(this.collectionId, token, this.collectionName)
+      this.collectionBooks.name = this.collectionName
+      this.dialog = false;
+      this.collectionUpdateInProgress = true;
+    }
   }
 }
 </script>

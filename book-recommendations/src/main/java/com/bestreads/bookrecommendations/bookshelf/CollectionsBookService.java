@@ -40,9 +40,8 @@ class CollectionsBookService {
 
   @Transactional
   Set<CollectionBookJson> updateCollectionsForBook(String userId,
-      CollectionBookRootJson collectionBookRootJson, String isbn) {
-    var book = bookDAOService.findBookDAOByISBN(isbn)
-        .orElseGet(() -> bookDAOService.addNewBook(collectionBookRootJson.book()));
+      CollectionBookRootJson collectionBookRootJson) {
+    var book = bookDAOService.addNewBook(collectionBookRootJson.book());
 
     var newCollections = createNewCollections(collectionBookRootJson.collections(), userId, book);
     var updatedCollections = updateExistingCollections(

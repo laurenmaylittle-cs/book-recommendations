@@ -6,11 +6,12 @@ import axios from "axios"
  * @param {string} token Access token to the API
  */
 export async function getBooksInCollection(collectionId, token) {
-  const result = await axios.get(`/api/private/bookshelf/books?bookshelfId=${collectionId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const result = await axios.get(
+    `/api/private/bookshelf/books?bookshelfId=${collectionId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
   return result.data;
 }
 
@@ -23,4 +24,14 @@ export async function deleteBooksInCollection(deleteBooksParams, token) {
     }
   );
   return result.data;
+}
+
+export async function updateCollectionName(collectionId, token, newName) {
+  await axios({
+    method: 'PUT',
+    url: `/api/private/bookshelf/books?bookshelfId=${collectionId}&newCollectionName=${newName}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }
