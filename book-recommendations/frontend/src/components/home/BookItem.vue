@@ -70,7 +70,9 @@ export default {
       return hover ? "blue-grey lighten-4" : "transparent";
     },
     async emitViewBook() {
-      await this.$router.push({name: this.category === "Series Books" ? 'search' : 'book'});
+      if (this.$route.name !== "book") {
+        await this.$router.push({name: this.category === "Series Books" ? 'search' : 'book'});
+      }
       EventBus.$emit(this.category === "Series Books" ? 'search-triggered' : 'view-book-other', {
         searchType: 'title',
         searchTerm: this.bookTitle.toLowerCase(),

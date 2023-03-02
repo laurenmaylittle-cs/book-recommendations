@@ -130,6 +130,12 @@
         :publisher="bookData.publisher"
       />
     </v-row>
+    <v-row v-if="!isLoading && isIsbnValid">
+      <book-category-carousel
+        best-seller-category="You may also like"
+        :books="recommendations"
+      />
+    </v-row>
   </v-container>
 </template>
 
@@ -142,11 +148,13 @@ import AboutBook from "@/components/viewbook/AboutBook";
 import {EventBus} from "@/event-bus";
 import BookCollections from "@/components/viewbook/BookCollections.vue";
 import {getRecs, exportData, isAwsEnabled} from "@/api/personalize";
+import BookCategoryCarousel from "@/components/home/BookCategoryCarousel";
 
 export default {
   name: 'ViewBook',
   components: {
     BookCollections,
+    BookCategoryCarousel,
     AboutBook,
     UserRatings,
     AverageRatings,
