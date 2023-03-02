@@ -34,12 +34,10 @@ public class BookController {
 
   @PostMapping("/private/book/add-book")
   public void addBookToDb(JwtAuthenticationToken jwtAuthenticationToken, @RequestBody Book book) {
-    var userId = AuthUtils.getUserId(jwtAuthenticationToken).orElseThrow(() -> {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user ID found in token");
-    });
+    var userId = AuthUtils.getUserIdOrBadRequest(jwtAuthenticationToken);
 
     if (!book.isbn().isEmpty()) {
-      bookDAOService.addBookToDb(book);
+      bookDAOService.addNewBook(book);
     }
   }
 }

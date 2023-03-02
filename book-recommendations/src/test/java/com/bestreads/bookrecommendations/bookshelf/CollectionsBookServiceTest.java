@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -162,8 +161,6 @@ class CollectionsBookServiceTest {
     );
 
     // Set up mock behavior
-    when(bookDAOService.findBookDAOByISBN(isbn)).thenReturn(Optional.empty());
-
     Set<CollectionDAO> existingCollections = Set.of(existingCollection);
     when(collectionsRepository.findAllCollectionByUserId(userId)).thenReturn(existingCollections);
 
@@ -188,15 +185,13 @@ class CollectionsBookServiceTest {
     // Invoke the method under test
     Set<CollectionBookJson> result = collectionsBookService.updateCollectionsForBook(
         userId,
-        collectionBookRootJson,
-        isbn
+        collectionBookRootJson
     );
 
     // Verify the results
     ArgumentCaptor<Book> bookArg = ArgumentCaptor.forClass(Book.class);
     ArgumentCaptor<Set<CollectionDAO>> collectionArg = ArgumentCaptor.forClass(Set.class);
 
-    verify(bookDAOService).findBookDAOByISBN(isbn);
     verify(bookDAOService).addNewBook(bookArg.capture());
     verify(collectionsRepository).saveAll(collectionArg.capture());
 
