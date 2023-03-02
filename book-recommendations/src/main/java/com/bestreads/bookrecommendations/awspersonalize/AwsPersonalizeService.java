@@ -1,16 +1,13 @@
 package com.bestreads.bookrecommendations.awspersonalize;
 
-import com.bestreads.bookrecommendations.book.Book;
 import com.bestreads.bookrecommendations.book.BookDAO;
 import com.bestreads.bookrecommendations.book.BookDAOService;
 import java.util.ArrayList;
 import java.util.List;
-import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
-import software.amazon.awssdk.services.personalize.PersonalizeClient;
 import software.amazon.awssdk.services.personalizeruntime.PersonalizeRuntimeClient;
 import software.amazon.awssdk.services.personalizeruntime.model.GetRecommendationsRequest;
 import software.amazon.awssdk.services.personalizeruntime.model.GetRecommendationsResponse;
@@ -21,7 +18,6 @@ import software.amazon.awssdk.services.personalizeruntime.model.PredictedItem;
 class AwsPersonalizeService {
 
   private final BookDAOService bookDAOService;
-  private final PersonalizeClient personalizeClient;
   private final PersonalizeRuntimeClient personalizeRuntimeClient;
 
 
@@ -29,19 +25,9 @@ class AwsPersonalizeService {
   private String campaignArn;
 
   @Autowired
-  AwsPersonalizeService(BookDAOService bookDAOService, PersonalizeClient personalizeClient,
-      PersonalizeRuntimeClient personalizeRuntimeClient) {
+  AwsPersonalizeService(BookDAOService bookDAOService, PersonalizeRuntimeClient personalizeRuntimeClient) {
     this.bookDAOService = bookDAOService;
-    this.personalizeClient = personalizeClient;
     this.personalizeRuntimeClient = personalizeRuntimeClient;
-  }
-
-  @Transactional
-  public void addBookToDb(Book bookToAdd) {
-    var book = bookDAOService.findBookDAOByISBN(bookToAdd.isbn());
-    if (book.isEmpty()) {
-      bookDAOService.addNewBook(bookToAdd);
-    }
   }
 
   public List<BookDAO> getRecommendations(String chosenBook) {

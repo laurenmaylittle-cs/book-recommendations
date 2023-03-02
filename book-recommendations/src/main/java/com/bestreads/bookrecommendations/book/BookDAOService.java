@@ -21,6 +21,14 @@ public class BookDAOService {
   }
 
   @Transactional
+  public void addBookToDb(Book bookToAdd) {
+    var book = findBookDAOByISBN(bookToAdd.isbn());
+    if (book.isEmpty()) {
+      addNewBook(bookToAdd);
+    }
+  }
+
+  @Transactional
   public BookDAO addNewBook(Book book) {
     var newBook = new BookDAO();
     newBook.setIsbn(book.isbn());
