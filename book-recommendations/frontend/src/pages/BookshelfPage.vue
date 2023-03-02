@@ -82,7 +82,7 @@ export default {
       deep: true
     }
   },
-  async mounted() {
+  async activated() {
     await this.getCollections();
   },
   methods: {
