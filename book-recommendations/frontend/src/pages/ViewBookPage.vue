@@ -130,7 +130,7 @@
         :publisher="bookData.publisher"
       />
     </v-row>
-    <v-row v-if="!isLoading && isIsbnValid">
+    <v-row v-if="!isLoading && isIsbnValid && recommendations.length > 0">
       <book-category-carousel
         best-seller-category="You may also like"
         :books="recommendations"

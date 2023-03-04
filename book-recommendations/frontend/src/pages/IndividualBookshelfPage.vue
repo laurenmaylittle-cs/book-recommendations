@@ -180,7 +180,7 @@
       >
         <book-details
           origin="other"
-          :author="book.author"
+          :authors="book.author"
           :title="book.title"
           :thumbnail="book.thumbnail"
           :isbn="book.isbn"
