@@ -6,7 +6,6 @@ import com.bestreads.bookrecommendations.book.BookDAOService;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,14 +54,6 @@ class AwsPersonalizeService {
     this.bookDAOService = bookDAOService;
     this.personalizeRuntimeClient = personalizeRuntimeClient;
     this.personalizeEventsClient = personalizeEventsClient;
-  }
-
-  @Transactional
-  public void addBookToDb(Book bookToAdd) {
-    var book = bookDAOService.findBookDAOByISBN(bookToAdd.isbn());
-    if (book.isEmpty()) {
-      bookDAOService.addNewBook(bookToAdd);
-    }
   }
 
   public List<BookDAO> getRecommendations(String selectedIsbn) {

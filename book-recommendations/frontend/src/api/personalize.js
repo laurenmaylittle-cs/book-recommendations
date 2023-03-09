@@ -16,6 +16,14 @@ export async function exportData(bookData, token) {
   })
 }
 
+export async function updateAws(bookData, token) {
+  return await axios.post("/api/private/book/update-aws", bookData, {
+    headers: {
+      authorization: `Bearer ${token}`,
+    }
+  })
+}
+
 export async function isAwsEnabled() {
   return await axios.get('/api/public/book/personalise-status')
   .then(response => {

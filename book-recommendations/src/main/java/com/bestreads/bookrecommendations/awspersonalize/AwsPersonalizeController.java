@@ -2,6 +2,8 @@ package com.bestreads.bookrecommendations.awspersonalize;
 
 import com.bestreads.bookrecommendations.book.BookDAO;
 import java.util.List;
+
+import com.bestreads.bookrecommendations.book.BookDAOService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
@@ -13,11 +15,9 @@ import com.bestreads.bookrecommendations.book.Book;
 
 import com.bestreads.bookrecommendations.users.User;
 import com.bestreads.bookrecommendations.utils.AuthUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api")
@@ -40,18 +40,11 @@ public class AwsPersonalizeController {
     return awsPersonalizeService.getRecommendations(isbn);
   }
 
-  @PostMapping("/private/book/add-book")
+  @PostMapping("/private/book/update-aws")
   public void addBook(JwtAuthenticationToken jwtAuthenticationToken, @RequestBody Book book) {
-    var userId = AuthUtils.getUserId(jwtAuthenticationToken).orElseThrow(() -> {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user ID found in token");
-    });
+    var userId = AuthUtils.getUserIdOrBadRequest(jwtAuthenticationToken);
     var formattedId = userId.replace("|", "%7C");
     var userData = auth0Service.searchById(formattedId);
-
-    //Adds book to our database
-    if (!book.isbn().isEmpty()) {
-      awsPersonalizeService.addBookToDb(book);
-    }
 
     //Updates interactions for recommendations
     awsPersonalizeService.putEvents(userId, userId, book.isbn());

@@ -147,7 +147,7 @@ import UserRatings from "@/components/viewbook/UserRatings";
 import AboutBook from "@/components/viewbook/AboutBook";
 import {EventBus} from "@/event-bus";
 import BookCollections from "@/components/viewbook/BookCollections.vue";
-import {getRecs, exportData, isAwsEnabled} from "@/api/personalize";
+import {getRecs, exportData, isAwsEnabled, updateAws} from "@/api/personalize";
 import BookCategoryCarousel from "@/components/home/BookCategoryCarousel";
 
 export default {
@@ -290,7 +290,8 @@ export default {
     async postDataIfAuthenticated() {
       if (this.$auth.isAuthenticated) {
         const token = await this.$auth.getTokenSilently();
-        await exportData(this.bookData, token)
+        await exportData(this.bookData, token);
+        await updateAws(this.bookData, token);
       }
     },
     async isAwsEnabledAndIsbnValid() {

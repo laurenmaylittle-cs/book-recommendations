@@ -10,12 +10,9 @@ import com.bestreads.bookrecommendations.book.Book;
 import com.bestreads.bookrecommendations.book.BookDAO;
 import com.bestreads.bookrecommendations.book.BookDAOService;
 import com.bestreads.bookrecommendations.book.ImageLinks;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -161,8 +158,6 @@ class CollectionsBookServiceTest {
     );
 
     // Set up mock behavior
-    when(bookDAOService.findBookDAOByISBN(isbn)).thenReturn(Optional.empty());
-
     Set<CollectionDAO> existingCollections = Set.of(existingCollection);
     when(collectionsRepository.findAllCollectionByUserId(userId)).thenReturn(existingCollections);
 
@@ -187,15 +182,13 @@ class CollectionsBookServiceTest {
     // Invoke the method under test
     Set<CollectionBookJson> result = collectionsBookService.updateCollectionsForBook(
         userId,
-        collectionBookRootJson,
-            isbn
+        collectionBookRootJson
     );
 
     // Verify the results
     ArgumentCaptor<Book> bookArg = ArgumentCaptor.forClass(Book.class);
     ArgumentCaptor<Set<CollectionDAO>> collectionArg = ArgumentCaptor.forClass(Set.class);
 
-    verify(bookDAOService).findBookDAOByISBN(isbn);
     verify(bookDAOService).addNewBook(bookArg.capture());
     verify(collectionsRepository).saveAll(collectionArg.capture());
 
@@ -207,7 +200,6 @@ class CollectionsBookServiceTest {
 
     // Verify the book was saved
     Book savedBook = bookArg.getValue();
-    assertEquals(isbn, savedBook.isbn());
     assertEquals(book.title(), savedBook.title());
 
     // Verify the collections were saved
