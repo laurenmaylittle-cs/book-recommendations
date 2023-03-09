@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -189,7 +188,7 @@ class CollectionsBookServiceTest {
     Set<CollectionBookJson> result = collectionsBookService.updateCollectionsForBook(
         userId,
         collectionBookRootJson,
-        isbn
+            isbn
     );
 
     // Verify the results

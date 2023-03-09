@@ -1,22 +1,22 @@
 package com.bestreads.bookrecommendations.awspersonalize;
 
-import com.bestreads.bookrecommendations.auth0.Auth0Service;
-import com.bestreads.bookrecommendations.book.Book;
 import com.bestreads.bookrecommendations.book.BookDAO;
 import java.util.List;
-
-import com.bestreads.bookrecommendations.users.User;
-import com.bestreads.bookrecommendations.utils.AuthUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.bestreads.bookrecommendations.auth0.Auth0Service;
+import com.bestreads.bookrecommendations.book.Book;
+
+import com.bestreads.bookrecommendations.users.User;
+import com.bestreads.bookrecommendations.utils.AuthUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -24,11 +24,10 @@ import org.springframework.web.server.ResponseStatusException;
 public class AwsPersonalizeController {
 
   private final AwsPersonalizeService awsPersonalizeService;
+  private final Auth0Service auth0Service;
 
   @Value("${AWS_IS_ENABLED}")
   private boolean awsEnabled;
-
-  private final Auth0Service auth0Service;
 
   @Autowired
   public AwsPersonalizeController(AwsPersonalizeService awsPersonalizeService, Auth0Service auth0Service) {

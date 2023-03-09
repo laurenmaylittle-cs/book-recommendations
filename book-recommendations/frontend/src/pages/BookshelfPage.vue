@@ -85,6 +85,9 @@ export default {
   async mounted() {
     await this.getCollections();
   },
+  async activated() {
+    await this.getCollections();
+  },
   methods: {
     async getCollections() {
       this.collections = await getCollectionsForUser(await this.$auth.getTokenSilently());
@@ -109,7 +112,7 @@ export default {
         {min: 80, max: 90})
     },
     async goToCollection(collectionId) {
-      await this.$router.push({name: 'bookshelfBooksPage'});
+      await this.$router.push({name: 'individualBookshelfPage'});
       EventBus.$emit('load-collection-books', {
         collectionId: collectionId,
         collectionName: this.collections.find(collection => collection.id === collectionId).name

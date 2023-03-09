@@ -78,8 +78,7 @@ class CollectionsBookControllerTest {
         CollectionBookRootJson.class);
 
     when(
-        collectionsBookService.updateCollectionsForBook(eq(userId), collectionBookCaptor.capture(),
-            eq(isbn)))
+        collectionsBookService.updateCollectionsForBook(eq(userId), collectionBookCaptor.capture()))
         .thenReturn(new HashSet<>(Set.of(new CollectionBookJson(1L, "Winter", true))));
 
     var requestBody = """
@@ -131,8 +130,7 @@ class CollectionsBookControllerTest {
         .andExpect(content().json(expectedJSON));
 
     verify(collectionsBookService).updateCollectionsForBook(eq(userId),
-        collectionBookCaptor.capture(),
-        eq(isbn));
+        collectionBookCaptor.capture());
 
     CollectionBookRootJson capturedCollectionBook = collectionBookCaptor.getValue();
     assertTrue("1", capturedCollectionBook.collections().size() == 1);

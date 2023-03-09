@@ -106,6 +106,18 @@
       </v-col>
       <view-book-thumbnail :thumbnail="bookData.imageLinks.thumbnail" />
     </v-row>
+    <v-col
+      v-if="isIsbnValid && !isLoading"
+      :cols="getColsForBranding"
+      :offset="getOffSetForBranding"
+    >
+      <v-img
+        width="124"
+        height="21"
+        src="@/assets/poweredby_google.png"
+        @click="goToGoogle"
+      />
+    </v-col>
     <v-row
       v-if="!isLoading && bookData !== null"
       class="pt-0 ma-0 align-center"
@@ -116,6 +128,12 @@
         :original-description="bookData.description"
         :pages="bookData.pageCount"
         :publisher="bookData.publisher"
+      />
+    </v-row>
+    <v-row v-if="!isLoading && isIsbnValid && recommendations.length > 0">
+      <book-category-carousel
+        best-seller-category="You may also like"
+        :books="recommendations"
       />
     </v-row>
   </v-container>
@@ -130,11 +148,13 @@ import AboutBook from "@/components/viewbook/AboutBook";
 import {EventBus} from "@/event-bus";
 import BookCollections from "@/components/viewbook/BookCollections.vue";
 import {getRecs, exportData, isAwsEnabled} from "@/api/personalize";
+import BookCategoryCarousel from "@/components/home/BookCategoryCarousel";
 
 export default {
   name: 'ViewBook',
   components: {
     BookCollections,
+    BookCategoryCarousel,
     AboutBook,
     UserRatings,
     AverageRatings,
@@ -159,6 +179,31 @@ export default {
     isIsbnValid() {
       return this.isbn ? (this.isbn.length === 10 || this.isbn.length === 13) : false
     },
+    getColsForBranding() {
+      const colsToTake = {
+        xl: 2,
+        lg: 2,
+        md: 3,
+        xs: 7
+      };
+      const cols = Object.keys(colsToTake).find(
+        col => this.$vuetify.breakpoint[col]);
+
+      return colsToTake[cols] || 5;
+    },
+    getOffSetForBranding() {
+      const offSetValues = {
+        xl: 9,
+        lg: 9,
+        md: 9,
+        xs: 5
+      };
+
+      const offset = Object.keys(offSetValues).find(
+        ofst => this.$vuetify.breakpoint[ofst]);
+
+      return offSetValues[offset] || 9;
+    }
   },
   async activated() {
     //view-book - from search results
@@ -249,9 +294,11 @@ export default {
       }
     },
     async isAwsEnabledAndIsbnValid() {
-      const token = await this.$auth.getTokenSilently();
-      return await isAwsEnabled(token) && this.isIsbnValid;
+      return await isAwsEnabled() && this.isIsbnValid;
     },
+    goToGoogle() {
+      window.open("https://www.google.com", "_blank")
+    }
   }
 }
 </script>
