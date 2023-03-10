@@ -4,6 +4,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 
 @Service
 public class BookDAOService {
@@ -19,6 +21,7 @@ public class BookDAOService {
     return bookDAORepository.findByIsbn(isbn);
   }
 
+  @Transactional
   public BookDAO addNewBook(Book book) {
     var newBook = new BookDAO();
     newBook.setIsbn(book.isbn());

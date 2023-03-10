@@ -11,7 +11,6 @@ import com.bestreads.bookrecommendations.book.BookDAO;
 import com.bestreads.bookrecommendations.book.BookDAOService;
 import com.bestreads.bookrecommendations.book.ImageLinks;
 
-import java.util.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +19,13 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Collections;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 @ExtendWith(MockitoExtension.class)
 class CollectionsBookServiceTest {

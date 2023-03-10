@@ -116,7 +116,7 @@ class AwsPersonalizeService {
       personalizeEventsClient.putEvents(putEventsRequest);
 
     } catch (PersonalizeEventsException e) {
-      throw new RuntimeException("Unable to add event.");
+      throw new RuntimeException("Unable to add event to the interactions dataset. It is likely an invalid sessionId provided.");
     }
   }
 
@@ -148,7 +148,7 @@ class AwsPersonalizeService {
       personalizeEventsClient.putItems(putItemsRequest);
 
     } catch (PersonalizeEventsException e) {
-      throw new RuntimeException("Unable to add item.");
+      throw new RuntimeException("Unable to add item to the items dataset. It is likely there are invalid Item properties.");
     }
   }
 
@@ -175,7 +175,7 @@ class AwsPersonalizeService {
       personalizeEventsClient.putUsers(putUsersRequest);
 
     } catch (PersonalizeEventsException e) {
-      throw new RuntimeException("Unable to add user.");
+      throw new RuntimeException("Unable to add user to the users dataset. It is likely there are invalid User properties.");
     }
   }
 }
