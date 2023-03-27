@@ -90,11 +90,10 @@ export default {
   },
   computed: {
     getTruncatedAuthor() {
-      if (this.authors === "") {
-        return this.formatDate()
-      }
-      return `${this.truncateText(this.authors, 30)} - ${this.formatDate()}`
-    }
+      return this.authors === ""
+        ? this.formatDate()
+        : this.authorsWithFormattedDate();
+    },
   },
   deactivated() {
     //clear the hover effect when navigating away from the page
@@ -102,8 +101,21 @@ export default {
   },
   methods: {
     formatDate() {
-      let dateToFormat = new Date(this.publishedDate)
+      // If there's no published date, return an empty string
+      if (this.publishedDate === null || this.publishedDate === "") {
+        return "";
+      }
+
+      // Return the formatted year of the published date
+      const dateToFormat = new Date(this.publishedDate);
       return dateToFormat.getFullYear();
+    },
+    authorsWithFormattedDate() {
+      // Return the truncated authors with the formatted date
+      const truncatedAuthors = this.truncateText(this.authors, 30);
+      const datePart = this.publishedDate === null ? "" : `- ${this.formatDate()}`;
+
+      return `${truncatedAuthors} ${datePart}`;
     },
     truncateText(text, maxCharacterCount) {
       if (text.length > maxCharacterCount) {
