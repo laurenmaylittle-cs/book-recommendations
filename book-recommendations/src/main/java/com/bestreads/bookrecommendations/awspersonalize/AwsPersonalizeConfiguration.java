@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.personalizeevents.PersonalizeEventsClient;
 import software.amazon.awssdk.services.personalizeruntime.PersonalizeRuntimeClient;
 
 @Configuration
@@ -14,5 +15,10 @@ public class AwsPersonalizeConfiguration {
     @Bean
     public PersonalizeRuntimeClient personalizeRuntimeClient() {
         return PersonalizeRuntimeClient.builder().region(region).build();
+    }
+
+    @Bean
+    public PersonalizeEventsClient personalizeEventsClient() {
+        return PersonalizeEventsClient.builder().region(region).build();
     }
 }

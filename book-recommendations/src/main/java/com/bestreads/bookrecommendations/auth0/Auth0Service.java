@@ -17,6 +17,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -91,6 +93,26 @@ public class Auth0Service {
     }
   }
 
+  public Optional<User> searchById(String userId) {
+    if (userId.isEmpty()) {
+      return Optional.empty();
+    }
+    StringBuilder uri = new StringBuilder(
+        "%s/users/%s".formatted(auth0ApiUri, userId));
+
+    apiKey = getAuthToken();
+
+    var httpRequest = getGetHttpRequest(uri.toString());
+
+    try {
+      var httpResponse = HttpClient.newHttpClient()
+          .send(httpRequest, HttpResponse.BodyHandlers.ofString());
+      return Optional.ofNullable(extractFromHttpResponse(httpResponse, false).get(0));
+    } catch (IOException | InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   private List<User> extractFromHttpResponse(HttpResponse<String> httpResponse,
       boolean includeFollowers) {
     if (!checkHttpStatusResponse200Ok(httpResponse)) {
@@ -122,6 +144,7 @@ public class Auth0Service {
   private ObjectMapper getObjectMapper() {
     var objectMapper = new ObjectMapper();
     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
     return objectMapper;
   }
 
